@@ -12,9 +12,20 @@ Each annotation collection is also represented as pandas data frame: AnnotationC
 """
 
 from catma_gitlab.catma_gitlab_functions import *
+#from catma_gitlab_functions import *
 import os
 import json
 import pandas as pd
+
+
+class Property:
+    def __init__(self, uuid, name, possible_value):
+        self.uuid = uuid
+        self.name = name
+        self.possible_value_list = possible_value
+
+    def __repr__(self):
+        return self.name
 
 
 class Tag:
@@ -32,6 +43,15 @@ class Tag:
         self.id = self.json['uuid']
         self.parent_id = self.json['parentUuid'] if 'parentUuid' in self.json else None
         self.properties = self.json['userDefinedPropertyDefinitions']
+        self.properties_list = [
+            Property(
+                uuid=item,
+                name=self.properties[item]['name'],
+                possible_value=self.properties[item]["possibleValueList"]
+                ) for item in self.properties
+        ]
+        self.properties_dict = {repr(item): item for item in self.properties_list}
+
         self.child_tags = []
         self.parent = None
 
@@ -112,6 +132,40 @@ class Annotation:
         }
 
 
+    def modify_property_values(self, tag: str, prop:str, value:list):
+        """
+        Modifies Property Values if the annotation is tagged by defined Tag and Property.
+        """
+        if self.tag.name == tag and prop in self.properties:
+            # open annotation json file
+            with open(self.direction) as json_input:
+                json_dict = json.load(json_input)
+
+            prop_uuid = self.tag.properties_dict[prop].uuid
+
+            # set new property value
+            json_dict["body"]['properties']['user'][prop_uuid] = value
+
+            # write new annotation json file
+            with open(self.direction, 'w') as json_output:
+                json_output.write(json.dumps(json_dict))
+
+    def delete_property(self, tag: str, prop:str):
+        if self.tag.name == tag and prop in self.properties:
+            # open annotation json file
+            with open(self.direction) as json_input:
+                json_dict = json.load(json_input)
+
+            prop_uuid = self.tag.properties_dict[prop].uuid
+
+            # delete property
+            json_dict["body"]['properties']['user'].pop(prop_uuid)
+
+            # write new annotation json file
+            with open(self.direction, 'w') as json_output:
+                json_output.write(json.dumps(json_dict))
+
+
 class AnnotationCollection:
     """
         Class which represents a CATMA annotation collection.
@@ -135,16 +189,17 @@ class AnnotationCollection:
             ) for annotation in os.listdir(root_direction + '/collections/' + self.id + '/annotations/')
         ]
         self.annotations = sorted(self.annotations, key=lambda a: a.start_point)
+        self.tags = [an.tag for an in self.annotations]
 
         # create pandas data frame for annotation collection
-        self.annotations_table = pd.DataFrame(
+        self.df = pd.DataFrame(
             [
                 (self.text.title, self.name, a.tag.name, a.properties, a.pretext, a.text, a.posttext, a.start_point, a.end_point)
                 for a in self.annotations
             ], columns=['document', 'annotation collection', 'tag', 'properties', 'pretext',
                         'annotation', 'posttext', 'start_point', 'end_point']
         )
-        self.annotations_table = split_property_dict_to_column((self.annotations_table))
+        self.df = split_property_dict_to_column((self.df))
 
     def __repr__(self):
         return self.name
@@ -156,6 +211,15 @@ class AnnotationCollection:
             if annotation.tag.name == tag_name
             or annotation.tag.parent.name == tag_name
         ]
+
+    def annotate_properties(self, tag: str, prop: str, value: list):
+        for an in self.annotations:
+            an.modify_property_values(tag=tag, prop=prop, value=value)
+
+    def delete_properties(self, tag: str, prop: str, value: list):
+        for an in self.annotations:
+            an.delete_property(tag=tag, prop=prop, value=value)
+
 
 
 class CatmaProject:
@@ -189,14 +253,26 @@ class CatmaProject:
 
 
 if __name__ == '__main__':
-    project_direction = '../Catma_Annotationen/'
+    project_direction = '../Test_Annotationen/'
     os.chdir(project_direction)
-
-    project = 'CATMA_DD5E9DF1-0F5C-4FBD-B333-D507976CA3C7_EvENT_root'
+    project_uuid = os.listdir()[0]
+    project = project_uuid
 
     corpus = CatmaProject(
         root_direction=project
     )
-    for ac in corpus.annotation_collections:
-        print(ac)
-        print(ac.annotations_table.head(5))
+    # prop_to_annotate = 'mental'
+    # for ac in corpus.annotation_collections:
+    #     for an in ac.annotations[:5]:
+    #         print(an.properties)
+    #         an.modify_property_values(prop='mental', value=['ja', 'nein'])
+    #         print(an.properties)
+    #
+
+    prop_to_delete = 'persistent'
+    for an in corpus.annotation_collections[0].annotations[:5]:
+        print(an.properties)
+        an.delete_property(prop=prop_to_delete)
+
+
+
