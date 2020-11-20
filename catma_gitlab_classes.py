@@ -8,11 +8,10 @@ Some classes to represent a CATMA project cloned from gitlab including
     - Project class
 
 Each annotation is accessible from a project object.
-Each annotation collection is also represented as pandas data frame: AnnotationCollection.table
+Each annotation collection is also represented as pandas data frame: AnnotationCollection.df
 """
 
 from catma_gitlab.catma_gitlab_functions import *
-#from catma_gitlab_functions import *
 import os
 import json
 import pandas as pd
@@ -67,7 +66,7 @@ class Tag:
         for item in self.properties_list:
             if item.name == old_prop:
                 self.json['userDefinedPropertyDefinitions'][item.uuid]['name'] = new_prop
-        # write new tag property json file
+        # write new tag json file
         with open(self.file_direction, 'w') as json_output:
             json_output.write(json.dumps(self.json))
 
@@ -80,7 +79,7 @@ class Tag:
                     if v == old_value:
                         pv[index] = new_value
                 self.json['userDefinedPropertyDefinitions'][item.uuid]["possibleValueList"] = pv
-        # write new tag property json file
+        # write new tag json file
         with open(self.file_direction, 'w') as json_output:
             json_output.write(json.dumps(self.json))
 
@@ -302,6 +301,7 @@ class CatmaProject:
                 catma_id=direction
             ) for direction in os.listdir(tagsets_direction)
         ]
+        self.tagset_dict = {tagset.name: tagset for tagset in self.tagsets}
 
         self.annotation_collections = [
             AnnotationCollection(
@@ -309,6 +309,7 @@ class CatmaProject:
                 catma_id=direction
             ) for direction in os.listdir(collections_direction)
         ]
+        self.ac_dict = {ac.name: ac for ac in self.annotation_collections}
 
     def get_annotation_by_tag(self, tag_name):
         for ac in self.annotation_collections:
@@ -319,11 +320,8 @@ if __name__ == '__main__':
     project_direction = '../Catma_Annotationen/'
     os.chdir(project_direction)
     project_uuid = os.listdir()[0]
-    project = project_uuid
 
-    corpus = CatmaProject(
-        root_direction=project
-    )
+    project = CatmaProject(root_direction=project_uuid)
 
-    for ac in corpus.annotation_collections:
-        print(ac.name, ac.df.head(5))
+    for ac in project.annotation_collections:
+        print(ac.df.head(5))

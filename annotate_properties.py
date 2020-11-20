@@ -23,7 +23,10 @@ def display_text(an: cg.Annotation):
 	)
 
 
-def annotate(ac_name:str, tag:str, prop:str, start_point:int, end_point:int):
+def annotate(ac_name: str, tag: str, prop: str, start_point: int, end_point: int):
+	"""
+	Function to annotate annotation tag properties in Jupyter Notebook.
+	"""
 	project = cg.CatmaProject(os.listdir()[0])
 	for ac in project.annotation_collections:
 		if ac.name == ac_name:

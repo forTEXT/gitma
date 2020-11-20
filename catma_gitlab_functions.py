@@ -1,6 +1,5 @@
-import pandas as pd
-import json
 from catma_gitlab.catma_gitlab_classes import *
+
 
 def get_first_and_last_text_pointer(annotation_json_dict):
     """
@@ -23,6 +22,9 @@ def get_annotated_text(json_data, plain_text):
 
 
 def split_property_dict_to_column(ac_df):
+    """
+    Creates pandas DataFrame columns for each property in annotation collection.
+    """
     properties_dict = {}
 
     for index, item in enumerate(ac_df['properties']):
