@@ -1,4 +1,6 @@
 import pandas as pd
+import json
+from catma_gitlab.catma_gitlab_classes import *
 
 def get_first_and_last_text_pointer(annotation_json_dict):
     """
@@ -57,3 +59,4 @@ def duplicate_rows_with_multiple_property_values(df, property_row):
     
     df_new = pd.DataFrame(list(duplicate_generator(df)))
     return df_new
+

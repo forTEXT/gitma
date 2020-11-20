@@ -63,6 +63,27 @@ class Tag:
             if tag.parent_id == self.id:
                 self.child_tags.append(tag)
 
+    def rename_property(self, old_prop: str, new_prop: str):
+        for item in self.properties_list:
+            if item.name == old_prop:
+                self.json['userDefinedPropertyDefinitions'][item.uuid]['name'] = new_prop
+        # write new tag property json file
+        with open(self.file_direction, 'w') as json_output:
+            json_output.write(json.dumps(self.json))
+
+    def rename_possible_property_value(self, prop: str, old_value: str, new_value: str):
+        for item in self.properties_list:
+            if item.name == prop:
+                print('ja')
+                pv = self.json['userDefinedPropertyDefinitions'][item.uuid]["possibleValueList"]
+                for index, v in enumerate(pv):
+                    if v == old_value:
+                        pv[index] = new_value
+                self.json['userDefinedPropertyDefinitions'][item.uuid]["possibleValueList"] = pv
+        # write new tag property json file
+        with open(self.file_direction, 'w') as json_output:
+            json_output.write(json.dumps(self.json))
+
 
 class Tagset:
     """
@@ -89,6 +110,23 @@ class Tagset:
         for tag in self.tag_list:
             tag.get_parent_tag(self.tag_dict)
             tag.get_child_tags(self.tag_list)
+
+    def edit_property_names(self, tag_names: list, old_prop: str, new_prop: str):
+        """
+        Renames Property for all Tags given as tag_names.
+        """
+        tags_to_edit = [tag for tag in self.tag_list if tag in tag_names]
+        for tag in tags_to_edit:
+            tag.rename_property(old_prop=old_prop, new_prop=new_prop)
+
+    def edit_possible_property_values(self, tag_names: list, prop: str, old_value: str, new_value: str):
+        """
+        Renames Property for all Tags given as tag_names.
+        """
+        tags_to_edit = [tag for tag in self.tag_list if tag.name in tag_names]
+        print(tags_to_edit)
+        for tag in tags_to_edit:
+            tag.rename_possible_property_value(prop=prop, old_value= old_value, new_value=new_value)
 
 
 class Text:
@@ -131,8 +169,29 @@ class Annotation:
                 self.data['body']['properties']['user'][prop] for prop in self.data['body']['properties']['user']
         }
 
+    def modify_property_value(self, tag: str, prop:str, old_value: str, new_value: str):
+        """
+        Modifies Property Values if the annotation is tagged by defined Tag and Property.
+        """
+        if self.tag.name == tag and prop in self.properties:
+            # open annotation json file
+            with open(self.direction) as json_input:
+                json_dict = json.load(json_input)
 
-    def modify_property_values(self, tag: str, prop:str, value:list):
+            prop_uuid = self.tag.properties_dict[prop].uuid
+
+            # set new property value
+            values = json_dict["body"]['properties']['user'][prop_uuid]
+            for index, value in enumerate(values):
+                if value == old_value:
+                    values[index] = new_value
+            json_dict["body"]['properties']['user'][prop_uuid] = values
+
+            # write new annotation json file
+            with open(self.direction, 'w') as json_output:
+                json_output.write(json.dumps(json_dict))
+
+    def set_property_values(self, tag: str, prop:str, value:list):
         """
         Modifies Property Values if the annotation is tagged by defined Tag and Property.
         """
@@ -151,6 +210,9 @@ class Annotation:
                 json_output.write(json.dumps(json_dict))
 
     def delete_property(self, tag: str, prop:str):
+        """
+        Delete Property Values if the annotation is tagged by defined Tag and Property.
+        """
         if self.tag.name == tag and prop in self.properties:
             # open annotation json file
             with open(self.direction) as json_input:
@@ -204,7 +266,6 @@ class AnnotationCollection:
     def __repr__(self):
         return self.name
 
-
     def get_annotation_by_tag(self, tag_name: str):
         return [
             annotation for annotation in self.annotations
@@ -214,12 +275,15 @@ class AnnotationCollection:
 
     def annotate_properties(self, tag: str, prop: str, value: list):
         for an in self.annotations:
-            an.modify_property_values(tag=tag, prop=prop, value=value)
+            an.set_property_values(tag=tag, prop=prop, value=value)
+
+    def rename_property_value(self, tag: str, prop: str, old_value: str, new_value: str):
+        for an in self.annotations:
+            an.modify_property_value(tag=tag, prop=prop, old_value=old_value, new_value=new_value)
 
     def delete_properties(self, tag: str, prop: str, value: list):
         for an in self.annotations:
-            an.delete_property(tag=tag, prop=prop, value=value)
-
+            an.delete_property(tag=tag, prop=prop)
 
 
 class CatmaProject:
@@ -227,7 +291,6 @@ class CatmaProject:
     Class which represents a CATMA project including the texts, the annotation collections and the tagsets using
     the classes Text, AnnotationCollection and Tagset.
     :param root_direction:  direction of a CATMA gitlab root folder/project
-    :param load_intrinsic: if false the project is loaded without intrinsic markup
     """
     def __init__(self, root_direction):
         tagsets_direction = root_direction + '/tagsets/'
@@ -253,7 +316,7 @@ class CatmaProject:
 
 
 if __name__ == '__main__':
-    project_direction = '../Test_Annotationen/'
+    project_direction = '../Catma_Annotationen/'
     os.chdir(project_direction)
     project_uuid = os.listdir()[0]
     project = project_uuid
@@ -261,18 +324,6 @@ if __name__ == '__main__':
     corpus = CatmaProject(
         root_direction=project
     )
-    # prop_to_annotate = 'mental'
-    # for ac in corpus.annotation_collections:
-    #     for an in ac.annotations[:5]:
-    #         print(an.properties)
-    #         an.modify_property_values(prop='mental', value=['ja', 'nein'])
-    #         print(an.properties)
-    #
 
-    prop_to_delete = 'persistent'
-    for an in corpus.annotation_collections[0].annotations[:5]:
-        print(an.properties)
-        an.delete_property(prop=prop_to_delete)
-
-
-
+    for ac in corpus.annotation_collections:
+        print(ac.name, ac.df.head(5))
