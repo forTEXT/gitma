@@ -194,7 +194,7 @@ class Annotation:
         """
         Modifies Property Values if the annotation is tagged by defined Tag and Property.
         """
-        if self.tag.name == tag and prop in self.properties:
+        if self.tag.name == tag:
             # open annotation json file
             with open(self.direction) as json_input:
                 json_dict = json.load(json_input)

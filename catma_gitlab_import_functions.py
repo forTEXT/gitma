@@ -3,7 +3,6 @@ import json
 import uuid
 
 
-
 def create_tag_dict(tag_name: str, tag_uuid, parent_tag_uuid: str, tagset_uuid, property_names: list):
     color_uuid = 'CATMA_' + str(uuid.uuid1()).upper()
     author_uuid = 'CATMA_' + str(uuid.uuid1()).upper()
