@@ -30,15 +30,15 @@ def split_property_dict_to_column(ac_df):
     for index, item in enumerate(ac_df['properties']):
         for key in item:
             if key not in properties_dict:
-                prev_list = index * ['nan']
-                prev_list.append(str(item[key]))
+                prev_list = index * [['nan']]
+                prev_list.append(item[key])
                 properties_dict[key] = prev_list
             else:
-                properties_dict[key].append(str(item[key]))
+                properties_dict[key].append(item[key])
 
         for prop in properties_dict:
             if prop not in item:
-                properties_dict[prop].append('nan')
+                properties_dict[prop].append(['nan'])
 
     for prop in properties_dict:
         ac_df[f'prop:{prop}'] = properties_dict[prop]
@@ -46,7 +46,7 @@ def split_property_dict_to_column(ac_df):
     return ac_df.drop(columns='properties')
 
 
-def duplicate_rows_with_multiple_property_values(df, property_row):
+def duplicate_rows(df, property_row):
     def duplicate_generator(df):
         for index, row in df.iterrows():
             if len(row[property_row]) > 1:
@@ -56,9 +56,13 @@ def duplicate_rows_with_multiple_property_values(df, property_row):
                     yield row_dict
             else:
                 row_dict = dict(row)
-                row_dict[property_row] = row[property_row][0]
-                yield dict(row)
-    
+                if len(row[property_row]) > 0:
+                    row_dict[property_row] = row[property_row][0]
+                    yield dict(row_dict)
+                else:
+                    row_dict[property_row] = 'nan'
+                    yield dict(row_dict)
+
     df_new = pd.DataFrame(list(duplicate_generator(df)))
     return df_new
 

@@ -31,6 +31,9 @@ def select_annotation_collection(projects_direction):
         def select_ac(ac_id):
             ac = AnnotationCollection(project_direction, catma_id=ac_id)
             df = ac.df
+            for col in df.columns:
+                if 'prop:' in col:
+                    df[col] = df[col].astype(str)
             df['short_annotations'] = [
                 item[:40] + '[...]' if len(item) > 40 else item for item in df['annotation']
             ]

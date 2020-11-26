@@ -265,6 +265,14 @@ class AnnotationCollection:
     def __repr__(self):
         return self.name
 
+    def get_tag_stats(self):
+        return self.df.tag.value_counts()
+
+    def get_property_stats(self):
+        return pd.DataFrame(
+            {col: duplicate_rows(self.df, col)[col].value_counts() for col in self.df.columns if 'prop:' in col}
+        ).T
+
     def get_annotation_by_tag(self, tag_name: str):
         return [
             annotation for annotation in self.annotations
@@ -324,4 +332,5 @@ if __name__ == '__main__':
     project = CatmaProject(root_direction=project_uuid)
 
     for ac in project.annotation_collections:
-        print(ac.df.head(5))
+        print(ac.df.head)
+        print(ac.get_property_stats())
