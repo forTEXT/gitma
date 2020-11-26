@@ -1,5 +1,5 @@
 from catma_gitlab.catma_gitlab_classes import *
-
+import pandas as pd
 
 def get_first_and_last_text_pointer(annotation_json_dict):
     """
