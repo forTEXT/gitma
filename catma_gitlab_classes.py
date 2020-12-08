@@ -332,8 +332,5 @@ if __name__ == '__main__':
 
     project = CatmaProject(root_direction=project_uuid)
 
-    for tagset in project.tagsets:
-        print(tagset.name)
-    # for ac in project.annotation_collections:
-    #     print(ac.df.head)
-    #     print(ac.get_property_stats())
+    for ac in project.annotation_collections:
+        print(ac.df.head())
