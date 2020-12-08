@@ -114,7 +114,8 @@ class Tagset:
         """
         Renames Property for all Tags given as tag_names.
         """
-        tags_to_edit = [tag for tag in self.tag_list if tag in tag_names]
+        tags_to_edit = [tag for tag in self.tag_list if tag.name in tag_names]
+        print(tags_to_edit)
         for tag in tags_to_edit:
             tag.rename_property(old_prop=old_prop, new_prop=new_prop)
 
@@ -190,7 +191,7 @@ class Annotation:
             with open(self.direction, 'w') as json_output:
                 json_output.write(json.dumps(json_dict))
 
-    def set_property_values(self, tag: str, prop:str, value:list):
+    def set_property_values(self, tag: str, prop: str, value: list):
         """
         Modifies Property Values if the annotation is tagged by defined Tag and Property.
         """
@@ -325,12 +326,14 @@ class CatmaProject:
 
 
 if __name__ == '__main__':
-    project_direction = '../Catma_Annotationen/'
+    project_direction = '../catma_annotationen_backup/'
     os.chdir(project_direction)
     project_uuid = os.listdir()[0]
 
     project = CatmaProject(root_direction=project_uuid)
 
-    for ac in project.annotation_collections:
-        print(ac.df.head)
-        print(ac.get_property_stats())
+    for tagset in project.tagsets:
+        print(tagset.name)
+    # for ac in project.annotation_collections:
+    #     print(ac.df.head)
+    #     print(ac.get_property_stats())

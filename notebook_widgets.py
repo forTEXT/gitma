@@ -71,7 +71,7 @@ def select_annotation_collection(projects_direction):
                             )
                         else:
                             fig = px.scatter(
-                                prop_df, x='start_point', y='tag',
+                                prop_df, x='start_point', y='tag', height=300,
                                 color='tag', opacity=0.5, marginal_x='histogram',
                                 hover_data=['pretext', 'short_annotations', 'posttext'],
                                 title=f'<{tag}> in "{document_title}" (AC: {ac_title})'.upper()
@@ -80,17 +80,18 @@ def select_annotation_collection(projects_direction):
                         prop_df = tag_df[tag_df[prop] != 'nan']
                         if tag == 'all':
                             fig = px.scatter(
-                                prop_df, x='start_point', y=prop,
-                                facet_row='tag', color='tag', opacity=0.5,
+                                prop_df, x='start_point', y=prop, facet_row='tag',
+                                color='tag', opacity=0.5, height=800,
                                 hover_data=['pretext', 'short_annotations', 'posttext', prop],
                                 title=f'{prop} in "{document_title}" (AC: {ac_title})'.upper())
                         else:
                             if len(prop_df) == 0:
                                 plot = False
                             else:
+                                values = prop_df[prop].unique()
                                 fig = px.scatter(
                                     prop_df, x='start_point',
-                                    y=prop, color='tag', opacity=0.5,
+                                    y=prop, color='tag', opacity=0.5, height=len(values)*100,
                                     hover_data=['pretext', 'short_annotations', 'posttext', prop],
                                     title=f'Values of {prop} in <{tag}> in "{document_title}" \
                                     (AC: {ac_title})'.upper())
