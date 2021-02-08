@@ -46,23 +46,40 @@ def split_property_dict_to_column(ac_df):
     return ac_df.drop(columns='properties')
 
 
-def duplicate_rows(df, property_row):
+def duplicate_rows(df, property_col):
+    """
+    Duplicates rows in AnnotationCollection dataframe if multiple property values exist in defined porperty column.
+    """
     def duplicate_generator(df):
         for index, row in df.iterrows():
-            if len(row[property_row]) > 1:
-                for item in row[property_row]:
+            if len(row[property_col]) > 1:
+                for item in row[property_col]:
                     row_dict = dict(row)
-                    row_dict[property_row] = item
+                    row_dict[property_col] = item
                     yield row_dict
             else:
                 row_dict = dict(row)
-                if len(row[property_row]) > 0:
-                    row_dict[property_row] = row[property_row][0]
+                if len(row[property_col]) > 0:
+                    row_dict[property_col] = row[property_col][0]
                     yield dict(row_dict)
                 else:
-                    row_dict[property_row] = 'nan'
+                    row_dict[property_col] = 'nan'
                     yield dict(row_dict)
 
     df_new = pd.DataFrame(list(duplicate_generator(df)))
     return df_new
+
+
+def get_tag_collocations(ac: AnnotationCollection, collocation_span: int):
+    tag_names = [t.name for t in ac.tags]
+    collocation_dict = {tag: {t: 0 for t in tag_names if t != tag} for tag in tag_names}
+    for index, row in ac.df.iterrows():
+        max_sp = row['start_point'] + collocation_span
+        min_sp = row['start_point'] - collocation_span
+        col_df = ac.df[(min_sp < ac.df['start_point']) & (ac.df['start_point'] < max_sp)]
+        for tag in col_df['tag']:
+            if tag in collocation_dict[row['tag']]:
+                collocation_dict[row['tag']][tag] += 1
+
+    return pd.DataFrame(collocation_dict)
 

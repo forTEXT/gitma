@@ -28,11 +28,11 @@ class Property:
 
 
 class Tag:
-    """
-    Class which represents a CATMA Tag.
-    :param: direction of a CATMA tag json file.
-    """
     def __init__(self, json_file_direction: str):
+        """
+        Class which represents a CATMA Tag.
+        :param: direction of a CATMA tag json file.
+        """
         self.file_direction = json_file_direction
 
         with open(json_file_direction) as json_input:
@@ -85,13 +85,13 @@ class Tag:
 
 
 class Tagset:
-    """
-    Class which represents a CATMA Tagset.
-    :param root_direction: direction of a CATMA gitlab root folder
-    :param catma_id: UUID of the tagset which corresponds with the folder name in the "tagsets" direction.
-
-    """
     def __init__(self, root_direction: str, catma_id: str):
+        """
+        Class which represents a CATMA Tagset.
+        :param root_direction: direction of a CATMA gitlab root folder
+        :param catma_id: UUID of the tagset which corresponds with the folder name in the "tagsets" direction.
+
+        """
         tagset_direction = root_direction + '/tagsets/' + catma_id
         with open(tagset_direction + '/header.json') as header_input:
             header = json.load(header_input)
@@ -130,10 +130,10 @@ class Tagset:
 
 
 class Text:
-    """
-    Class which represents a CATMA document.
-    """
     def __init__(self, root_direction: str, catma_id: str):
+        """
+        Class which represents a CATMA document.
+        """
         with open(root_direction + '/documents/' + catma_id + '/header.json') as text_header_input:
             text_header = json.load(text_header_input)
 
@@ -146,12 +146,12 @@ class Text:
 
 
 class Annotation:
-    """
-    Class which represents a CATMA annotation.
-    :param direction: the annotations direction
-    :param plain_text: annotated text as CATMA document
-    """
     def __init__(self, direction: str, plain_text: str, context=10):
+        """
+        Class which represents a CATMA annotation.
+        :param direction: the annotations direction
+        :param plain_text: annotated text as CATMA document
+        """
         self.direction = direction
         with open(direction, 'r', encoding='utf-8') as ip:
             self.data = json.load(ip)
@@ -229,12 +229,12 @@ class Annotation:
 
 
 class AnnotationCollection:
-    """
+    def __init__(self, root_direction: str, catma_id: str):
+        """
         Class which represents a CATMA annotation collection.
         :param root_direction:  direction of a CATMA gitlab root folder
         :param catma_id: uuid of the collection (folder)
         """
-    def __init__(self, root_direction: str, catma_id: str):
         self.id = catma_id
 
         with open(root_direction + '/collections/' + self.id + '/header.json') as header_json:
@@ -281,6 +281,9 @@ class AnnotationCollection:
             or annotation.tag.parent.name == tag_name
         ]
 
+    def get_collocations(self, collocation_span=50):
+        return get_tag_collocations(self, collocation_span=collocation_span)
+
     def annotate_properties(self, tag: str, prop: str, value: list):
         for an in self.annotations:
             an.set_property_values(tag=tag, prop=prop, value=value)
@@ -295,12 +298,12 @@ class AnnotationCollection:
 
 
 class CatmaProject:
-    """
-    Class which represents a CATMA project including the texts, the annotation collections and the tagsets using
-    the classes Text, AnnotationCollection and Tagset.
-    :param root_direction:  direction of a CATMA gitlab root folder/project
-    """
     def __init__(self, root_direction):
+        """
+        Class which represents a CATMA project including the texts, the annotation collections and the tagsets using
+        the classes Text, AnnotationCollection and Tagset.
+        :param root_direction:  direction of a CATMA gitlab root folder/project
+        """
         tagsets_direction = root_direction + '/tagsets/'
         collections_direction = root_direction + '/collections/'
 
@@ -334,3 +337,5 @@ if __name__ == '__main__':
 
     for ac in project.annotation_collections:
         print(ac.df.head())
+        print(ac.get_collocations())
+        print(ac.get_collocations(collocation_span=100))
