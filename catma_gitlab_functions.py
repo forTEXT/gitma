@@ -1,5 +1,12 @@
-from catma_gitlab.catma_gitlab_classes import *
 import pandas as pd
+import os
+
+
+def test_empty_ac(root_direction, ac_id):
+    if os.path.isdir(
+            f'{root_direction}/collections/{ac_id}/annotations'):
+        return True
+
 
 def get_first_and_last_text_pointer(annotation_json_dict):
     """
@@ -70,7 +77,7 @@ def duplicate_rows(df, property_col):
     return df_new
 
 
-def get_tag_collocations(ac: AnnotationCollection, collocation_span: int):
+def get_tag_collocations(ac, collocation_span: int):
     tag_names = [t.name for t in ac.tags]
     collocation_dict = {tag: {t: 0 for t in tag_names if t != tag} for tag in tag_names}
     for index, row in ac.df.iterrows():
@@ -82,4 +89,29 @@ def get_tag_collocations(ac: AnnotationCollection, collocation_span: int):
                 collocation_dict[row['tag']][tag] += 1
 
     return pd.DataFrame(collocation_dict)
+
+
+def get_collocation_network(collocation_df: pd.DataFrame, gexf_file: str):
+    """
+    Returns Gephi file for tag collocation data frame created by get_tag_collocation.
+    """
+    import networkx as nx
+
+    nodes = [
+        (c, {'size': collocation_df[c].sum()}) for c in collocation_df.index
+    ]
+
+    edges = []
+    for index, row in collocation_df.iterrows():
+        for col in list(collocation_df):
+            if index != col:
+                edges.append((index, col, row[col]))
+
+    G = nx.Graph()
+    G.add_nodes_from(nodes)
+    G.add_weighted_edges_from(edges)
+    nx.write_gexf(G, f'../{gexf_file}.gexf')
+
+
+
 

@@ -73,7 +73,6 @@ class Tag:
     def rename_possible_property_value(self, prop: str, old_value: str, new_value: str):
         for item in self.properties_list:
             if item.name == prop:
-                print('ja')
                 pv = self.json['userDefinedPropertyDefinitions'][item.uuid]["possibleValueList"]
                 for index, v in enumerate(pv):
                     if v == old_value:
@@ -126,7 +125,7 @@ class Tagset:
         tags_to_edit = [tag for tag in self.tag_list if tag.name in tag_names]
         print(tags_to_edit)
         for tag in tags_to_edit:
-            tag.rename_possible_property_value(prop=prop, old_value= old_value, new_value=new_value)
+            tag.rename_possible_property_value(prop=prop, old_value=old_value, new_value=new_value)
 
 
 class Text:
@@ -169,7 +168,7 @@ class Annotation:
                 self.data['body']['properties']['user'][prop] for prop in self.data['body']['properties']['user']
         }
 
-    def modify_property_value(self, tag: str, prop:str, old_value: str, new_value: str):
+    def modify_property_value(self, tag: str, prop: str, old_value: str, new_value: str):
         """
         Modifies Property Values if the annotation is tagged by defined Tag and Property.
         """
@@ -209,7 +208,7 @@ class Annotation:
             with open(self.direction, 'w') as json_output:
                 json_output.write(json.dumps(json_dict))
 
-    def delete_property(self, tag: str, prop:str):
+    def delete_property(self, tag: str, prop: str):
         """
         Delete Property Values if the annotation is tagged by defined Tag and Property.
         """
@@ -256,12 +255,13 @@ class AnnotationCollection:
         # create pandas data frame for annotation collection
         self.df = pd.DataFrame(
             [
-                (self.text.title, self.name, a.tag.name, a.properties, a.pretext, a.text, a.posttext, a.start_point, a.end_point)
+                (self.text.title, self.name, a.tag.name, a.properties, a.pretext,
+                 a.text, a.posttext, a.start_point, a.end_point)
                 for a in self.annotations
             ], columns=['document', 'annotation collection', 'tag', 'properties', 'pretext',
                         'annotation', 'posttext', 'start_point', 'end_point']
         )
-        self.df = split_property_dict_to_column((self.df))
+        self.df = split_property_dict_to_column(self.df)
 
     def __repr__(self):
         return self.name
@@ -284,6 +284,10 @@ class AnnotationCollection:
     def get_collocations(self, collocation_span=50):
         return get_tag_collocations(self, collocation_span=collocation_span)
 
+    def create_collocation_gephi(self, collocation_span=50):
+        df = self.get_collocations(collocation_span=collocation_span)
+        get_collocation_network(df, 'default_gephi_file')
+
     def annotate_properties(self, tag: str, prop: str, value: list):
         for an in self.annotations:
             an.set_property_values(tag=tag, prop=prop, value=value)
@@ -292,7 +296,7 @@ class AnnotationCollection:
         for an in self.annotations:
             an.modify_property_value(tag=tag, prop=prop, old_value=old_value, new_value=new_value)
 
-    def delete_properties(self, tag: str, prop: str, value: list):
+    def delete_properties(self, tag: str, prop: str):
         for an in self.annotations:
             an.delete_property(tag=tag, prop=prop)
 
@@ -319,13 +323,26 @@ class CatmaProject:
             AnnotationCollection(
                 root_direction=root_direction,
                 catma_id=direction
-            ) for direction in os.listdir(collections_direction)
+            ) for direction in os.listdir(collections_direction) if test_empty_ac(root_direction, direction)
         ]
-        self.ac_dict = {ac.name: ac for ac in self.annotation_collections}
+        self.ac_dict = {an_co.name: an_co for an_co in self.annotation_collections}
 
     def get_annotation_by_tag(self, tag_name):
-        for ac in self.annotation_collections:
-            return ac.get_annotation_by_tag(tag_name)
+        for an_co in self.annotation_collections:
+            return an_co.get_annotation_by_tag(tag_name)
+
+    def iaa(self, ac1: str, ac2: str, tag_filter=None, filter_both_ac=False, level='tag'):
+        """
+        Computes Cohen's Kappa and Krippendorf's Alpha for 2 Annotation Collections.
+        """
+        from catma_gitlab.catma_gitlab_metrics import get_iaa
+        get_iaa(
+            ac1=self.ac_dict[ac1],
+            ac2=self.ac_dict[ac2],
+            tag_filter=tag_filter,
+            filter_both_ac=filter_both_ac,
+            level=level
+        )
 
 
 if __name__ == '__main__':
@@ -336,6 +353,11 @@ if __name__ == '__main__':
     project = CatmaProject(root_direction=project_uuid)
 
     for ac in project.annotation_collections:
-        print(ac.df.head())
-        print(ac.get_collocations())
-        print(ac.get_collocations(collocation_span=100))
+        print(ac.name)
+
+    # project.iaa('Effi_Briest_MW', 'Effi_Briest_GS', tag_filter=['stative_event', 'process'])
+    # project.iaa('Effi_Briest_MW', 'Effi_Briest_GS', tag_filter=['stative_event', 'process'], filter_both_ac=True)
+    project.iaa('Effi_Briest_GS', 'Effi_Briest_MW')
+    project.iaa('Effi_Briest_MW', 'Effi_Briest_GS')
+
+
