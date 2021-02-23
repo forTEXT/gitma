@@ -346,7 +346,7 @@ class CatmaProject:
 
 
 if __name__ == '__main__':
-    project_direction = '../catma_annotationen_backup/'
+    project_direction = ''
     os.chdir(project_direction)
     project_uuid = os.listdir()[0]
 
@@ -354,10 +354,4 @@ if __name__ == '__main__':
 
     for ac in project.annotation_collections:
         print(ac.name)
-
-    # project.iaa('Effi_Briest_MW', 'Effi_Briest_GS', tag_filter=['stative_event', 'process'])
-    # project.iaa('Effi_Briest_MW', 'Effi_Briest_GS', tag_filter=['stative_event', 'process'], filter_both_ac=True)
-    project.iaa('Effi_Briest_GS', 'Effi_Briest_MW')
-    project.iaa('Effi_Briest_MW', 'Effi_Briest_GS')
-
-
+        print(ac.df.head())

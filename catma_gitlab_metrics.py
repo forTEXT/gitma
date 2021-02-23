@@ -3,6 +3,23 @@ import pandas as pd
 from catma_gitlab.catma_gitlab_classes import Annotation, AnnotationCollection
 
 
+def filter_ac_by_tag(ac1: AnnotationCollection, ac2: AnnotationCollection, tag_filter=None, filter_both_ac=True):
+    """
+    Returns list of filtered annotations.
+    """
+    if tag_filter:
+        ac1_annotations = [an for an in ac1.annotations if an.tag.name in tag_filter]
+        if filter_both_ac:
+            ac2_annotations = [an for an in ac2.annotations if an.tag.name in tag_filter]
+        else:
+            ac2_annotations = ac2.annotations
+    else:
+        ac1_annotations = ac1.annotations
+        ac2_annotations = ac2.annotations
+
+    return ac1_annotations, ac2_annotations
+
+
 def get_same_text(annotation_list1, annotation_list2):
     """
     All text parts only annotate by one coder gets excluded.
@@ -79,16 +96,8 @@ def get_annotation_pairs(
     To avoid pairing of embedded annotations in case of discontinuous annotations
     only the first overlapping annotation by second annotator gets paired.
     """
-    if tag_filter:
-        ac1_annotations = [an for an in ac1.annotations if an.tag.name in tag_filter]
-        if filter_both_ac:
-            ac2_annotations = [an for an in ac2.annotations if an.tag.name in tag_filter]
-        else:
-            ac2_annotations = ac2.annotations
-    else:
-        ac1_annotations = ac1.annotations
-        ac2_annotations = ac2.annotations
-
+    ac1_annotations, ac2_annotations = filter_ac_by_tag(ac1=ac1, ac2=ac2, tag_filter=tag_filter,
+                                                        filter_both_ac=filter_both_ac)
     ac1_annotations, ac2_annotations = get_same_text(ac1_annotations, ac2_annotations)
 
     pair_list = []
@@ -101,7 +110,9 @@ def get_annotation_pairs(
         else:
             pair_list.append((an1, overlapping_annotations[0]))     # pairs first overlapping annotation
 
-    string_difference = np.mean([get_overlap_percentage(an_pair) for an_pair in pair_list]) * 100
+    string_difference = np.mean(
+        [get_overlap_percentage(an_pair) for an_pair in pair_list if an_pair[1].tag.name != '#None#']
+    ) * 100
 
     print(f"""
         Finished search for overlapping annotations.
@@ -132,7 +143,7 @@ def get_iaa_data(annotation_pairs: list, level='tag'):
 def get_iaa(ac1: AnnotationCollection, ac2: AnnotationCollection,
             tag_filter=None, filter_both_ac=False,
             level='tag', distance='binary'):
-    from nltk.metrics.agreement import AnnotationTask as AT
+    from nltk.metrics.agreement import AnnotationTask as AnTa
     from nltk.metrics import interval_distance, binary_distance
 
     if distance == 'inteval':
@@ -142,7 +153,7 @@ def get_iaa(ac1: AnnotationCollection, ac2: AnnotationCollection,
 
     annotation_pairs = get_annotation_pairs(ac1, ac2, tag_filter=tag_filter, filter_both_ac=filter_both_ac)
     data = list(get_iaa_data(annotation_pairs, level=level))
-    annotation_task = AT(data=data, distance=distance_function)
+    annotation_task = AnTa(data=data, distance=distance_function)
     print(f"""
         Cohen's Kappa: {annotation_task.kappa()}
         Krippendorf Alpha: {annotation_task.alpha()}
