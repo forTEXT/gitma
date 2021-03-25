@@ -44,7 +44,7 @@ The module is based on CATMAs git access: https://catma.de/documentation/git-acc
         annotation.set_property_values(
             tag='tag_name',
             prop='property_name',
-            value='property_value'
+            value=['property_value']
         )
         
 ### Compute Inter Annotator Agreement
