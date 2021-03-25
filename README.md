@@ -10,15 +10,15 @@ The module is based on CATMAs git access: https://catma.de/documentation/git-acc
 
 ### Import
 
-    from catma_gitlab.catma_gitlab_classes import Project
+    from catma_gitlab.catma_gitlab_classes import CatmaProject
     
 ### Load project
     
     project_direction = your_project_direction  # where your CATMA projects are located 
     project_uuid = your_project_uuid            # your CATMA project git clone folder 
-    project = Project(
+    project = CatmaProject(
         project_direction=project_direction,
-        project_uuid=project_uuis,
+        project_uuid=project_uuid,
         filter_intrinsic_markup=False
     )
     
