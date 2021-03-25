@@ -12,7 +12,7 @@ The module is based on CATMAs git access: https://catma.de/documentation/git-acc
 
     from catma_gitlab.catma_gitlab_classes import CatmaProject
     
-### Load project
+### Load Project
     
     project_direction = your_project_direction  # where your CATMA projects are located 
     project_uuid = your_project_uuid            # your CATMA project git clone folder 
@@ -22,18 +22,38 @@ The module is based on CATMAs git access: https://catma.de/documentation/git-acc
         filter_intrinsic_markup=False
     )
     
-### Show annotation collections
+### Show Annotation Collections
     
     for ac in project.annotation_collections:
         print(ac.name)
         
-### Show annotations as pandas DataFrame
+### Show Annotations as Pandas DataFrame
 
     for ac in project.annotation_collections:
         print(ac.df.head(5))
         
-### Show tagsets and tags
+### Show Tagsets and Tags
     for tagset in project.tagsets:
         print(tagset.name)
         print([tag.name for tag in tagset.tag_list])
+        
+### Change Property Values
+    your_annotation_collection_name = ''
+    ac = project.ac_dict[your_annotation_collection_name]
+    for annotation in ac.annotations:
+        annotation.set_property_values(
+            tag='tag_name',
+            prop='property_name',
+            value='property_value'
+        )
+        
+### Compute Inter Annotator Agreement
+    project.iaa(
+        ac1='first_annotation_collection_name',
+        ac2='second_annotation_collection_name',
+        tag_filter=None,                     # else list with tag names
+        filter_both_ac=False,
+    )
+        
+    
     
