@@ -6,7 +6,6 @@ import os
 from catma_gitlab.catma_gitlab_classes import AnnotationCollection
 from ipywidgets import interact, Dropdown, Layout
 import plotly.express as px
-from IPython.display import display
 
 
 def select_annotation_collection(projects_direction):

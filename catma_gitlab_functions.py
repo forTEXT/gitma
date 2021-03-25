@@ -111,7 +111,3 @@ def get_collocation_network(collocation_df: pd.DataFrame, gexf_file: str):
     G.add_nodes_from(nodes)
     G.add_weighted_edges_from(edges)
     nx.write_gexf(G, f'../{gexf_file}.gexf')
-
-
-
-

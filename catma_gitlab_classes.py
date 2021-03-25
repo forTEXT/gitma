@@ -145,7 +145,7 @@ class Text:
 
 
 class Annotation:
-    def __init__(self, direction: str, plain_text: str, context=10):
+    def __init__(self, direction: str, plain_text: str, context=20):
         """
         Class which represents a CATMA annotation.
         :param direction: the annotations direction
@@ -192,7 +192,7 @@ class Annotation:
 
     def set_property_values(self, tag: str, prop: str, value: list):
         """
-        Modifies Property Values if the annotation is tagged by defined Tag and Property.
+        Set Property Values if the annotation is tagged by defined Tag and Property.
         """
         if self.tag.name == tag:
             # open annotation json file
@@ -240,8 +240,11 @@ class AnnotationCollection:
             self.header = json.load(header_json)
 
         self.name = self.header['name']
+
         self.plain_text_id = self.header['sourceDocumentId']
         self.text = Text(root_direction=root_direction, catma_id=self.plain_text_id)
+
+        print(f"Loaded Annotation Collection '{self.name}' for {self.text.title}")
 
         self.annotations = [
             Annotation(
@@ -302,12 +305,17 @@ class AnnotationCollection:
 
 
 class CatmaProject:
-    def __init__(self, root_direction):
+    def __init__(self, project_direction, root_direction, filter_intrinsic_markup=True):
         """
         Class which represents a CATMA project including the texts, the annotation collections and the tagsets using
         the classes Text, AnnotationCollection and Tagset.
-        :param root_direction:  direction of a CATMA gitlab root folder/project
+        :param project_direction: direction where the project is located
+        :param root_direction:  UUID of a CATMA project
+        :param filter_intrinsic_markup: if False intrinsic markup is not filtered out, default=True
         """
+        cwd = os.getcwd()                       # get the current direction to return after loaded the project
+        os.chdir(project_direction)
+
         tagsets_direction = root_direction + '/tagsets/'
         collections_direction = root_direction + '/collections/'
 
@@ -323,9 +331,19 @@ class CatmaProject:
             AnnotationCollection(
                 root_direction=root_direction,
                 catma_id=direction
-            ) for direction in os.listdir(collections_direction) if test_empty_ac(root_direction, direction)
+            ) for direction in os.listdir(collections_direction)
+            if test_empty_ac(                   # test if any annotation exist in annotation collectio
+                root_direction,
+                direction
+            ) and not test_intrinsic(           # test whether intrinsic markup is to be loaded
+                root_direction,
+                direction,
+                filter_intrinsic_markup
+            )
         ]
         self.ac_dict = {an_co.name: an_co for an_co in self.annotation_collections}
+
+        os.chdir(cwd)
 
     def get_annotation_by_tag(self, tag_name):
         for an_co in self.annotation_collections:
@@ -347,11 +365,12 @@ class CatmaProject:
 
 if __name__ == '__main__':
     project_direction = ''
-    os.chdir(project_direction)
-    project_uuid = os.listdir()[0]
+    project_uuid = ''
 
-    project = CatmaProject(root_direction=project_uuid)
+    project = CatmaProject(
+        project_direction=project_direction,
+        root_direction=project_uuid,
+        filter_intrinsic_markup=False)
 
     for ac in project.annotation_collections:
-        print(ac.name)
-        print(ac.df.head())
+        print(ac.name, ac.df.head())
