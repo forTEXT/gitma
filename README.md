@@ -8,9 +8,12 @@ The module is based on CATMAs git access: https://catma.de/documentation/git-acc
 
 ## Example
 
+### Import
+
     from catma_gitlab.catma_gitlab_classes import Project
     
-    # load project
+### Load project
+    
     project_direction = your_project_direction  # where your CATMA projects are located 
     project_uuid = your_project_uuid            # your CATMA project git clone folder 
     project = Project(
@@ -19,15 +22,17 @@ The module is based on CATMAs git access: https://catma.de/documentation/git-acc
         filter_intrinsic_markup=False
     )
     
-    # show annotation collection
+### Show annotation collections
+    
     for ac in project.annotation_collections:
         print(ac.name)
         
-    # show annotations as pandas DataFrame
+### Show annotations as pandas DataFrame
+
     for ac in project.annotation_collections:
         print(ac.df.head(5))
         
-    # show tagsets and tags
+### Show tagsets and tags
     for tagset in project.tagsets:
         print(tagset.name)
         print([tag.name for tag in tagset.tag_list])
