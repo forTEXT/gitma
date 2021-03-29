@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import json
 
 
 def test_empty_ac(root_direction, ac_id):
@@ -111,3 +112,18 @@ def get_collocation_network(collocation_df: pd.DataFrame, gexf_file: str):
     G.add_nodes_from(nodes)
     G.add_weighted_edges_from(edges)
     nx.write_gexf(G, f'../{gexf_file}.gexf')
+
+
+def test_intrinsic(project_uuid: str, direction: str, test_positive=True):
+    """
+    This Function tests if a Catma Annotation Collection is intrinsic markup.
+    Returns True if so.
+    :param project_uuid: CATMA gitlab root project uuids
+    :param direction: annotation collection direction
+    :param test_positive: what should be returned if it is intrinsic markup
+    """
+    with open(f'{project_uuid}/collections/{direction}/header.json', 'r') as header_input:
+        header_dict = json.load(header_input)
+
+    if header_dict['name'] == 'Intrinsic Markup':
+        return test_positive

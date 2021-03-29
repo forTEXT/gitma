@@ -12,6 +12,7 @@ Each annotation collection is also represented as pandas data frame: AnnotationC
 """
 
 from catma_gitlab.catma_gitlab_functions import *
+from catma_gitlab.catma_gitlab_vizualize import plot_scatter_bar
 import os
 import json
 import pandas as pd
@@ -269,10 +270,10 @@ class AnnotationCollection:
     def __repr__(self):
         return self.name
 
-    def get_tag_stats(self):
+    def tag_stats(self):
         return self.df.tag.value_counts()
 
-    def get_property_stats(self):
+    def property_stats(self):
         return pd.DataFrame(
             {col: duplicate_rows(self.df, col)[col].value_counts() for col in self.df.columns if 'prop:' in col}
         ).T
@@ -284,11 +285,11 @@ class AnnotationCollection:
             or annotation.tag.parent.name == tag_name
         ]
 
-    def get_collocations(self, collocation_span=50):
+    def collocations(self, collocation_span=50):
         return get_tag_collocations(self, collocation_span=collocation_span)
 
     def create_collocation_gephi(self, collocation_span=50):
-        df = self.get_collocations(collocation_span=collocation_span)
+        df = self.collocations(collocation_span=collocation_span)
         get_collocation_network(df, 'default_gephi_file')
 
     def annotate_properties(self, tag: str, prop: str, value: list):
@@ -302,6 +303,9 @@ class AnnotationCollection:
     def delete_properties(self, tag: str, prop: str):
         for an in self.annotations:
             an.delete_property(tag=tag, prop=prop)
+
+    def plotly_plot(self, y_axis='tag', prop=None, color_prop=None):
+        plot_scatter_bar(self.df, y_axis=y_axis, prop=prop, color_prop=color_prop)
 
 
 class CatmaProject:
@@ -371,6 +375,3 @@ if __name__ == '__main__':
         project_direction=project_direction,
         root_direction=project_uuid,
         filter_intrinsic_markup=False)
-
-    for ac in project.annotation_collections:
-        print(ac.name, ac.df.head())
