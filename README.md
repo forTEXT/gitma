@@ -2,7 +2,7 @@
 
 ## Description
 Classes for CATMA Projects, Annotation Collections and Tagsets.
-The module is based on CATMAs git access: https://catma.de/documentation/git-access/
+The module makes use of CATMAs git access: https://catma.de/documentation/git-access/
 
 
 
