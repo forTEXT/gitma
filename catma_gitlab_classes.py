@@ -12,6 +12,7 @@ Each annotation collection is also represented as pandas data frame: AnnotationC
 """
 
 from catma_gitlab.catma_gitlab_functions import *
+from catma_gitlab.read_annotation import *
 from catma_gitlab.catma_gitlab_vizualize import plot_scatter_bar
 import os
 import json
@@ -156,17 +157,20 @@ class Annotation:
         with open(direction, 'r', encoding='utf-8') as ip:
             self.data = json.load(ip)
 
-        self.start_point, self.end_point = get_first_and_last_text_pointer(self.data)
+        self.date = get_date(self.data)
+        self.author = get_author(self.data)
+        self.start_point = get_start_point(self.data)
+        self.end_point = get_end_point(self.data)
         self.text = ' '.join(list(get_annotated_text(self.data, plain_text)))
         self.pretext = plain_text[self.start_point - context: self.start_point]
         self.posttext = plain_text[self.end_point: self.end_point + context]
 
-        tag_direction = self.data['body']['tag'].replace('https://git.catma.de/', '') + '/propertydefs.json'
+        tag_direction = get_tag_direction(self.data)
         self.tag = Tag(tag_direction)
 
+        user_properties = get_user_properties(self.data)
         self.properties = {
-            self.tag.properties[prop]['name']:
-                self.data['body']['properties']['user'][prop] for prop in self.data['body']['properties']['user']
+            self.tag.properties[prop]['name']: user_properties[prop] for prop in user_properties
         }
 
     def modify_property_value(self, tag: str, prop: str, old_value: str, new_value: str):
@@ -260,10 +264,10 @@ class AnnotationCollection:
         self.df = pd.DataFrame(
             [
                 (self.text.title, self.name, a.tag.name, a.properties, a.pretext,
-                 a.text, a.posttext, a.start_point, a.end_point)
+                 a.text, a.posttext, a.start_point, a.end_point, a.date)
                 for a in self.annotations
             ], columns=['document', 'annotation collection', 'tag', 'properties', 'pretext',
-                        'annotation', 'posttext', 'start_point', 'end_point']
+                        'annotation', 'posttext', 'start_point', 'end_point', 'date']
         )
         self.df = split_property_dict_to_column(self.df)
 
@@ -366,6 +370,23 @@ class CatmaProject:
             level=level
         )
 
+    def plot_progression(self):
+        import matplotlib.pyplot as plt
+
+        fig, ax = plt.subplots(
+            nrows=len(project.annotation_collections),
+            figsize=[8, 15]
+        )
+
+        for index, ac in enumerate(project.annotation_collections):
+            x_values = ac.df['date']
+            y_values = range(len(ac.df))
+            ax[index].scatter(x_values, y_values, alpha=0.3)
+            ax[index].set_title(repr(ac))
+
+        fig.tight_layout()
+        plt.show()
+
 
 if __name__ == '__main__':
     project_direction = ''
@@ -375,3 +396,4 @@ if __name__ == '__main__':
         project_direction=project_direction,
         root_direction=project_uuid,
         filter_intrinsic_markup=False)
+

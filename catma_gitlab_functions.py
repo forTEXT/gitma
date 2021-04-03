@@ -9,17 +9,6 @@ def test_empty_ac(root_direction, ac_id):
         return True
 
 
-def get_first_and_last_text_pointer(annotation_json_dict):
-    """
-    A function that takes a CATMA annotation dict and returns the first and last text pointer
-    to get the annotated string.
-    """
-    return [
-        annotation_json_dict['target']['items'][0]['selector']['start'],
-        annotation_json_dict['target']['items'][-1]['selector']['end']
-    ]
-
-
 def get_annotated_text(json_data, plain_text):
     """
     Reads in annotation json as a dictionary and yield all text segments from plaintext within
