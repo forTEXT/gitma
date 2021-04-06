@@ -1,8 +1,8 @@
-# Module for CATMA gitlab access
+# Package for CATMA gitlab access
 
 ## Description
 Classes for CATMA Projects, Annotation Collections and Tagsets.
-The module makes use of CATMAs git access: https://catma.de/documentation/git-access/
+The package makes use of CATMAs git access: https://catma.de/documentation/git-access/
 
 
 

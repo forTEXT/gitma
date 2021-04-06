@@ -1,42 +1,69 @@
-from catma_gitlab.catma_gitlab_classes import Tag
-import uuid
 import json
 from datetime import datetime
+from catma_gitlab.catma_gitlab_classes import Tag, Tagset, Text, AnnotationCollection
+
+
+def find_tag_by_name(tagset: Tagset, tag_name: str) -> Tag:
+    tag = [tag for tag in tagset.tag_list if tag.name == tag_name][0]
+    return tag
 
 
 def annotation_id(p_uuid, ac_uuid):
-    return f'https://git.catma.de/{p_uuid}/collections/{ac_uuid}/C_{str(uuid.uuid1())}.json'
+    import uuid
+    uuid = str(uuid.uuid1()).upper()
+    url = f'https://git.catma.de/{p_uuid}/collections/{ac_uuid}/annotations/CATMA_{uuid}.json'
+    direction = f'{p_uuid}/collections/{ac_uuid}/annotations/CATMA_{uuid}.json'
+    return url, direction
+
+
+def get_target_list(start_points: list, end_points: list, text_uuid) -> list:
+    target_list = []
+    for pair in zip(start_points, end_points):
+        target_list.append({
+            "selector": {
+                "end": pair[1],
+                "start": pair[0],
+                "type": "TextPositionSelector"
+            },
+            "source": text_uuid,
+        })
+
+    return target_list
 
 
 def write_annotation_json(
         project_uuid: str,
-        annotation_collection_uuid: str,
-        tagset_uuid: str,
-        start_point: int,
-        end_point: int,
-        tag_direction: str,
+        annotation_collection: AnnotationCollection,
+        tagset: Tagset,
+        text: Text,
+        start_points: list,
+        end_points: list,
+        tag: Tag,
         property_annotations: dict,
         author: str):
 
-    annotation_file = annotation_id(project_uuid, annotation_collection_uuid)
-    tag = Tag(tag_direction)
+    annotation_url, annotation_direction = annotation_id(project_uuid, annotation_collection.uuid)
+    tag_direction = tag.file_direction
     tag_url = "https://git.catma.de/" + tag_direction
 
-    context_dict = {}
+    context_dict = {
+        tag.time_property: f'{tag_url}/{tag.time_property}',
+        tag.user_property: f'{tag_url}/{tag.user_property}'
+    }
     property_dict = {
         "system": {
-            "CATMA_54A5F93F-5333-3F0D-92F7-7BD5930DB9E6": [str(datetime.today().strftime('%Y-%m-%dT%H:%M:%S'))],
-            "CATMA_AB27F1D4-303A-3622-BB2C-72C310D0C1BF": [author]
-        }
+            tag.time_property: [str(datetime.today().strftime('%Y-%m-%dT%H:%M:%S'))],
+            tag.user_property: [author]
+        },
+        "user": {}
     }
 
     for prop in tag.properties_list:
-        context_dict[prop.uuid] = f'https://git.catma.de/{tag.file_direction}/{prop.uuid}'
+        context_dict[prop.uuid] = f'{tag_url}/{prop.uuid}'
         if prop.name in property_annotations:
-            property_dict[prop.name] = property_annotations[prop.name]
+            property_dict['user'][prop.uuid] = [property_annotations[prop.name]]
         else:
-            property_dict[prop.name] = []
-
+            property_dict['user'][prop.uuid] = []
 
     context_dict["tag"] = "https://app.catma.de/catma//tag"
     context_dict["tagset"] = "https://app.catma.de/catma//tagset"
@@ -46,25 +73,18 @@ def write_annotation_json(
         "body": {
             "@context": context_dict,
             "properties": property_dict,
-            "tag": tag_url,
-            "tagset": f"https://git.catma.de/{project_uuid}/tagsets/{tagset_uuid}",
+            "tag": tag_url.replace('/propertydefs.json', ''),
+            "tagset": f"https://git.catma.de/{project_uuid}/tagsets/{tagset.uuid}",
             "type": "Dataset"
         },
-        "id": annotation_file,
+        "id": annotation_url,
         "target": {
-            "items": [{
-                "selector": {
-                    "end": end_point,
-                    "start": start_point,
-                    "type": "TextPositionSelector"
-                },
-                "source": f"D_{str(uuid.uuid1()).upper()}",
-            }],
+            "items": get_target_list(start_points, end_points, text.uuid),
             "type": "List"
         },
         "type": "Annotation"
-        }
+    }
 
     # write new annotation json file
-    with open(annotation_file, 'w') as json_output:
+    with open(annotation_direction, 'w') as json_output:
         json_output.write(json.dumps(json_dict))

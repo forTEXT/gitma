@@ -14,6 +14,8 @@ Each annotation collection is also represented as pandas data frame: AnnotationC
 from catma_gitlab.catma_gitlab_functions import *
 from catma_gitlab.read_annotation import *
 from catma_gitlab.catma_gitlab_vizualize import plot_scatter_bar
+import catma_gitlab.read_tag as rt
+import catma_gitlab.write_annotation as wa
 import os
 import json
 import pandas as pd
@@ -35,8 +37,7 @@ class Tag:
         Class which represents a CATMA Tag.
         :param: direction of a CATMA tag json file.
         """
-        self.file_direction = json_file_direction
-
+        self.file_direction = json_file_direction.replace('\\', '/')
         with open(json_file_direction) as json_input:
             self.json = json.load(json_input)
 
@@ -55,6 +56,9 @@ class Tag:
 
         self.child_tags = []
         self.parent = None
+
+        self.time_property = rt.get_time_uuid(self.json)
+        self.user_property = rt.get_user_properties(self.json)
 
     def get_parent_tag(self, tagset_dict: dict):
         self.parent = tagset_dict[self.parent_id] if self.parent_id in tagset_dict else None
@@ -93,14 +97,16 @@ class Tagset:
         :param catma_id: UUID of the tagset which corresponds with the folder name in the "tagsets" direction.
 
         """
-        tagset_direction = root_direction + '/tagsets/' + catma_id
-        with open(tagset_direction + '/header.json') as header_input:
+        self.uuid = catma_id
+
+        self.tagset_direction = root_direction + '/tagsets/' + catma_id
+        with open(self.tagset_direction + '/header.json') as header_input:
             header = json.load(header_input)
         self.name = header['name']
 
         self.tag_list = []
         self.tag_dict = {}
-        for dirpath, dirnames, filenames in os.walk(tagset_direction):  # walks through tagsets direction
+        for dirpath, dirnames, filenames in os.walk(self.tagset_direction):  # walks through tagsets direction
             for file in filenames:
                 if file == 'propertydefs.json':             # if a subdirection is a Tag json file
                     new_tag = Tag(dirpath + '/' + file)     # create a Tag Class object
@@ -135,9 +141,9 @@ class Text:
         """
         Class which represents a CATMA document.
         """
+        self.uuid = catma_id
         with open(root_direction + '/documents/' + catma_id + '/header.json') as text_header_input:
             text_header = json.load(text_header_input)
-
         self.title = text_header['gitContentInfoSet']['title']
         self.author = text_header['gitContentInfoSet']['author']
 
@@ -239,9 +245,9 @@ class AnnotationCollection:
         :param root_direction:  direction of a CATMA gitlab root folder
         :param catma_id: uuid of the collection (folder)
         """
-        self.id = catma_id
+        self.uuid = catma_id
 
-        with open(root_direction + '/collections/' + self.id + '/header.json') as header_json:
+        with open(root_direction + '/collections/' + self.uuid + '/header.json') as header_json:
             self.header = json.load(header_json)
 
         self.name = self.header['name']
@@ -253,9 +259,9 @@ class AnnotationCollection:
 
         self.annotations = [
             Annotation(
-                direction=root_direction + '/collections/' + self.id + '/annotations/' + annotation,
+                direction=root_direction + '/collections/' + self.uuid + '/annotations/' + annotation,
                 plain_text=self.text.plain_text
-            ) for annotation in os.listdir(root_direction + '/collections/' + self.id + '/annotations/')
+            ) for annotation in os.listdir(root_direction + '/collections/' + self.uuid + '/annotations/')
         ]
         self.annotations = sorted(self.annotations, key=lambda a: a.start_point)
         self.tags = [an.tag for an in self.annotations]
@@ -289,13 +295,6 @@ class AnnotationCollection:
             or annotation.tag.parent.name == tag_name
         ]
 
-    def collocations(self, collocation_span=50):
-        return get_tag_collocations(self, collocation_span=collocation_span)
-
-    def create_collocation_gephi(self, collocation_span=50):
-        df = self.collocations(collocation_span=collocation_span)
-        get_collocation_network(df, 'default_gephi_file')
-
     def annotate_properties(self, tag: str, prop: str, value: list):
         for an in self.annotations:
             an.set_property_values(tag=tag, prop=prop, value=value)
@@ -322,11 +321,12 @@ class CatmaProject:
         :param filter_intrinsic_markup: if False intrinsic markup is not filtered out, default=True
         """
         cwd = os.getcwd()                       # get the current direction to return after loaded the project
-        os.chdir(project_direction)
+        self.project_direction = project_direction
+        os.chdir(self.project_direction)
+        self.uuid = root_direction
 
+        # Load Tagsets
         tagsets_direction = root_direction + '/tagsets/'
-        collections_direction = root_direction + '/collections/'
-
         self.tagsets = [
             Tagset(
                 root_direction=root_direction,
@@ -335,6 +335,18 @@ class CatmaProject:
         ]
         self.tagset_dict = {tagset.name: tagset for tagset in self.tagsets}
 
+        # Load Texts
+        texts_direction = root_direction + '/documents/'
+        self.texts = [
+            Text(
+                root_direction=root_direction,
+                catma_id=direction
+            ) for direction in os.listdir(texts_direction)
+        ]
+        self.text_dict = {text.title: text for text in self.texts}
+
+        # Load Annotation Collections
+        collections_direction = root_direction + '/collections/'
         self.annotation_collections = [
             AnnotationCollection(
                 root_direction=root_direction,
@@ -353,9 +365,21 @@ class CatmaProject:
 
         os.chdir(cwd)
 
-    def get_annotation_by_tag(self, tag_name):
-        for an_co in self.annotation_collections:
-            return an_co.get_annotation_by_tag(tag_name)
+    def write_annotation(
+            self, annotation_collection_name: str, tagset_name: str, text_title: str, tag_name: str,
+            start_points: list, end_points: list, property_annotations: dict, author: str):
+        os.chdir(self.project_direction)
+        wa.write_annotation_json(
+            project_uuid=self.uuid,
+            annotation_collection=self.ac_dict[annotation_collection_name],
+            tagset=self.tagset_dict[tagset_name],
+            text=self.text_dict[text_title],
+            tag=wa.find_tag_by_name(self.tagset_dict[tagset_name], tag_name),
+            start_points=start_points,
+            end_points=end_points,
+            property_annotations=property_annotations,
+            author=author
+        )
 
     def iaa(self, ac1: str, ac2: str, tag_filter=None, filter_both_ac=False, level='tag'):
         """
@@ -374,15 +398,15 @@ class CatmaProject:
         import matplotlib.pyplot as plt
 
         fig, ax = plt.subplots(
-            nrows=len(project.annotation_collections),
-            figsize=[8, 15]
+            nrows=len(self.annotation_collections),
+            figsize=[6, 10]
         )
 
-        for index, ac in enumerate(project.annotation_collections):
+        for index, ac in enumerate(self.annotation_collections):
             x_values = ac.df['date']
             y_values = range(len(ac.df))
-            ax[index].scatter(x_values, y_values, alpha=0.3)
-            ax[index].set_title(repr(ac))
+            ax[index].scatter(x_values, y_values, alpha=0.3, label=ac.name)
+            ax[index].legend()
 
         fig.tight_layout()
         plt.show()
@@ -391,9 +415,7 @@ class CatmaProject:
 if __name__ == '__main__':
     project_direction = ''
     project_uuid = ''
-
     project = CatmaProject(
         project_direction=project_direction,
         root_direction=project_uuid,
         filter_intrinsic_markup=False)
-

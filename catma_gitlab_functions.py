@@ -67,42 +67,6 @@ def duplicate_rows(df, property_col):
     return df_new
 
 
-def get_tag_collocations(ac, collocation_span: int):
-    tag_names = [t.name for t in ac.tags]
-    collocation_dict = {tag: {t: 0 for t in tag_names if t != tag} for tag in tag_names}
-    for index, row in ac.df.iterrows():
-        max_sp = row['start_point'] + collocation_span
-        min_sp = row['start_point'] - collocation_span
-        col_df = ac.df[(min_sp < ac.df['start_point']) & (ac.df['start_point'] < max_sp)]
-        for tag in col_df['tag']:
-            if tag in collocation_dict[row['tag']]:
-                collocation_dict[row['tag']][tag] += 1
-
-    return pd.DataFrame(collocation_dict)
-
-
-def get_collocation_network(collocation_df: pd.DataFrame, gexf_file: str):
-    """
-    Returns Gephi file for tag collocation data frame created by get_tag_collocation.
-    """
-    import networkx as nx
-
-    nodes = [
-        (c, {'size': collocation_df[c].sum()}) for c in collocation_df.index
-    ]
-
-    edges = []
-    for index, row in collocation_df.iterrows():
-        for col in list(collocation_df):
-            if index != col:
-                edges.append((index, col, row[col]))
-
-    G = nx.Graph()
-    G.add_nodes_from(nodes)
-    G.add_weighted_edges_from(edges)
-    nx.write_gexf(G, f'../{gexf_file}.gexf')
-
-
 def test_intrinsic(project_uuid: str, direction: str, test_positive=True):
     """
     This Function tests if a Catma Annotation Collection is intrinsic markup.
