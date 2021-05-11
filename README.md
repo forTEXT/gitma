@@ -10,7 +10,7 @@ The package makes use of CATMAs git access: https://catma.de/documentation/git-a
 
 ### Import
 
-    from catma_gitlab.catma_gitlab_classes import CatmaProject
+    from catma_gitlab.project_class import CatmaProject
     
 ### Load Project
     

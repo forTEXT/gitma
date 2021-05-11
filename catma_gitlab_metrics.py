@@ -1,11 +1,12 @@
 import numpy as np
 import pandas as pd
-from catma_gitlab.catma_gitlab_classes import Annotation, AnnotationCollection
+from catma_gitlab.annotation_class import Annotation
+from catma_gitlab.annotation_collection_class import AnnotationCollection
 
 
 def filter_ac_by_tag(ac1: AnnotationCollection, ac2: AnnotationCollection, tag_filter=None, filter_both_ac=True):
     """
-    Returns list of filtered annotreations.
+    Returns list of filtered annotations.
     """
     if tag_filter:
         ac1_annotations = [an for an in ac1.annotations if an.tag.name in tag_filter]

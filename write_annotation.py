@@ -1,9 +1,9 @@
 import json
 from datetime import datetime
-from catma_gitlab.catma_gitlab_classes import Tag, Tagset, Text, AnnotationCollection
+#import catma_gitlab.catma_gitlab_classes as cgc import Tag, Tagset, Text, AnnotationCollection
 
 
-def find_tag_by_name(tagset: Tagset, tag_name: str) -> Tag:
+def find_tag_by_name(tagset, tag_name: str):
     tag = [tag for tag in tagset.tag_list if tag.name == tag_name][0]
     return tag
 
@@ -33,12 +33,12 @@ def get_target_list(start_points: list, end_points: list, text_uuid) -> list:
 
 def write_annotation_json(
         project_uuid: str,
-        annotation_collection: AnnotationCollection,
-        tagset: Tagset,
-        text: Text,
+        annotation_collection,
+        tagset,
+        text,
         start_points: list,
         end_points: list,
-        tag: Tag,
+        tag,
         property_annotations: dict,
         author: str):
 
