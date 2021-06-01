@@ -1,5 +1,6 @@
 /.git
 **/__pycache__
+*.egg-info
 catma_gitlab_import_functions.py
 catma_stat_func.py
 narrativity_score.py
