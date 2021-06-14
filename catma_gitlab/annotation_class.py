@@ -1,6 +1,8 @@
 import json
+from typing import List
 from datetime import datetime
 from catma_gitlab.tag_class import Tag
+from catma_gitlab.selector_class import Selector
 
 
 def get_start_point(annotation_dict):
@@ -40,8 +42,18 @@ def get_annotated_text(json_data, plain_text):
     Reads in annotation json as a dictionary and yield all text segments from plaintext within
     json_data['target'][items]
     """
+    return (selector.covered_text for selector in build_selectors(json_data, plain_text))
+
+
+def build_selectors(json_data, plain_text):
+    """
+    Yields `Segment`s covered by the annotation described in in `json_data`.
+
+    :param json_data: Raw json data describing the `Annotation`
+    :param plain_text: Plain text of the document targeted by the `Annotation` in `json_data`.
+    """
     for item in json_data['target']['items']:
-        yield plain_text[item['selector']['start']: item['selector']['end']]
+        yield Selector(item['selector']['start'], item['selector']['end'], plain_text)
 
 
 class Annotation:
@@ -62,6 +74,7 @@ class Annotation:
         self.text = ' '.join(list(get_annotated_text(self.data, plain_text)))
         self.pretext = plain_text[self.start_point - context: self.start_point]
         self.posttext = plain_text[self.end_point: self.end_point + context]
+        self.selectors: List[Selector] = list(build_selectors(self.data, plain_text))
 
         tag_direction = get_tag_direction(self.data)
         self.tag = Tag(tag_direction)

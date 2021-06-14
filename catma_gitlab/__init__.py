@@ -5,3 +5,4 @@ from .project_class import CatmaProject
 from .property_class import Property
 from .text_class import Text
 from .annotation_collection_class import AnnotationCollection
+from .selector_class import Selector
