@@ -71,13 +71,15 @@ class CatmaProject:
             if test_empty_ac(                   # test if any annotation exist in annotation collectio
                 root_direction,
                 direction
-            ) and not test_intrinsic(           # test whether intrinsic markup is to be loaded
+                # test whether intrinsic markup is to be loaded
+            ) and not test_intrinsic(
                 root_direction,
                 direction,
                 filter_intrinsic_markup
             )
         ]
-        self.ac_dict = {an_co.name: an_co for an_co in self.annotation_collections}
+        self.ac_dict = {
+            an_co.name: an_co for an_co in self.annotation_collections}
 
         os.chdir(cwd)
 
@@ -122,7 +124,7 @@ class CatmaProject:
 
 
 if __name__ == '__main__':
-    project_direction = '../catma_annotationen_backup'
+    project_direction = '../../catma_backup2'
     project_uuid = 'CATMA_DD5E9DF1-0F5C-4FBD-B333-D507976CA3C7_EvENT_root'
     project = CatmaProject(
         project_direction=project_direction,

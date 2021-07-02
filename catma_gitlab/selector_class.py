@@ -2,10 +2,12 @@
 References to spans of text, used by annotations.
 """
 
+
 class Selector():
     """
     A `Selector` represent one of potentially multiple spans targeted by an `Annotation`.
     """
+
     def __init__(self, start: int, end: int, text: str):
         self.start = start
         self.end = end

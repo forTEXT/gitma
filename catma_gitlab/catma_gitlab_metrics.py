@@ -23,11 +23,24 @@ def filter_ac_by_tag(ac1: AnnotationCollection, ac2: AnnotationCollection, tag_f
 
 def get_same_text(annotation_list1, annotation_list2):
     """
-    All text parts only annotate by one coder gets excluded.
+    All text parts only annotate by one coder get excluded.
     """
     an1 = [an for an in annotation_list1 if an.start_point <= annotation_list2[-1].start_point]
     an2 = [an for an in annotation_list2 if an.start_point <= annotation_list1[-1].end_point]
     return an1, an2
+
+
+def test_max_overlap(silver_annotation: Annotation, second_annotator_annotations: list) -> Annotation:
+    """
+    Searches for best matching annotation.
+    :param silver_annotation: 1 annotation out of first AnnotationCollection
+    :param second_annotator_annotations: List of all annotations matching text span of silver_annotation.
+    """
+    start_span = [abs(an.start_point - silver_annotation.start_point) for an in second_annotator_annotations]
+    end_span = [abs(an.end_point - silver_annotation.end_point) for an in second_annotator_annotations]
+
+    sum_span = [an + end_span[index] for index, an in enumerate(start_span)]
+    return second_annotator_annotations[sum_span.index(min(sum_span))]
 
 
 def test_overlap(an1: Annotation, an2: Annotation):
@@ -104,12 +117,21 @@ def get_annotation_pairs(
     pair_list = []
     missing_an2_annotations = 0
     for an1 in ac1_annotations:
+
+        # collect all overlapping annotations
         overlapping_annotations = [an2 for an2 in ac2_annotations if test_overlap(an1, an2)]
-        if len(overlapping_annotations) < 1:                        # test if any matching annotation in an2 was found
+
+        if len(overlapping_annotations) < 1:        # test if any matching annotations in an2 was found
             missing_an2_annotations += 1
             pair_list.append((an1, EmptyAnnotation(start_point=an1.start_point, end_point=an1.end_point)))
         else:
-            pair_list.append((an1, overlapping_annotations[0]))     # pairs first overlapping annotation
+            best_matching_annotation = test_max_overlap(
+                silver_annotation=an1,
+                second_annotator_annotations=overlapping_annotations
+            )
+            pair_list.append(
+                (an1, best_matching_annotation)     # pairs first overlapping annotation
+            )
 
     string_difference = np.mean(
         [get_overlap_percentage(an_pair) for an_pair in pair_list if an_pair[1].tag.name != '#None#']
