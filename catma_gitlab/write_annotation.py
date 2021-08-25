@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-#import catma_gitlab.catma_gitlab_classes as cgc import Tag, Tagset, Text, AnnotationCollection
+# import catma_gitlab.catma_gitlab_classes as cgc import Tag, Tagset, Text, AnnotationCollection
 
 
 def find_tag_by_name(tagset, tag_name: str):
@@ -42,7 +42,8 @@ def write_annotation_json(
         property_annotations: dict,
         author: str):
 
-    annotation_url, annotation_direction = annotation_id(project_uuid, annotation_collection.uuid)
+    annotation_url, annotation_direction = annotation_id(
+        project_uuid, annotation_collection.uuid)
     tag_direction = tag.file_direction
     tag_url = "https://git.catma.de/" + tag_direction
 
@@ -61,7 +62,8 @@ def write_annotation_json(
     for prop in tag.properties_list:
         context_dict[prop.uuid] = f'{tag_url}/{prop.uuid}'
         if prop.name in property_annotations:
-            property_dict['user'][prop.uuid] = [property_annotations[prop.name]]
+            property_dict['user'][prop.uuid] = [
+                property_annotations[prop.name]]
         else:
             property_dict['user'][prop.uuid] = []
 

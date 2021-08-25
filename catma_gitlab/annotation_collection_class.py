@@ -70,29 +70,35 @@ class AnnotationCollection:
         self.name = self.header['name']
 
         self.plain_text_id = self.header['sourceDocumentId']
-        self.text = Text(root_direction=root_direction, catma_id=self.plain_text_id)
+        self.text = Text(root_direction=root_direction,
+                         catma_id=self.plain_text_id)
+        self.text_version = self.header['sourceDocumentVersion']
 
-        print(f"Loaded Annotation Collection '{self.name}' for {self.text.title}")
+        print(
+            f"Loaded Annotation Collection '{self.name}' for {self.text.title}")
 
-        self.annotations = [
-            Annotation(
-                direction=root_direction + '/collections/' + self.uuid + '/annotations/' + annotation,
-                plain_text=self.text.plain_text
-            ) for annotation in os.listdir(root_direction + '/collections/' + self.uuid + '/annotations/')
-        ]
-        self.annotations = sorted(self.annotations, key=lambda a: a.start_point)
-        self.tags = [an.tag for an in self.annotations]
+        if os.path.isdir(root_direction + '/collections/' + self.uuid + '/annotations/'):
+            self.annotations = [
+                Annotation(
+                    direction=root_direction + '/collections/' +
+                    self.uuid + '/annotations/' + annotation,
+                    plain_text=self.text.plain_text
+                ) for annotation in os.listdir(root_direction + '/collections/' + self.uuid + '/annotations/')
+            ]
+            self.annotations = sorted(
+                self.annotations, key=lambda a: a.start_point)
+            self.tags = [an.tag for an in self.annotations]
 
-        # create pandas data frame for annotation collection
-        self.df = pd.DataFrame(
-            [
-                (self.text.title, self.name, a.tag.name, a.properties, a.pretext,
-                 a.text, a.posttext, a.start_point, a.end_point, a.date)
-                for a in self.annotations
-            ], columns=['document', 'annotation collection', 'tag', 'properties', 'pretext',
-                        'annotation', 'posttext', 'start_point', 'end_point', 'date']
-        )
-        self.df = split_property_dict_to_column(self.df)
+            # create pandas data frame for annotation collection
+            self.df = pd.DataFrame(
+                [
+                    (self.text.title, self.name, a.tag.name, a.properties, a.pretext,
+                     a.text, a.posttext, a.start_point, a.end_point, a.date)
+                    for a in self.annotations
+                ], columns=['document', 'annotation collection', 'tag', 'properties', 'pretext',
+                            'annotation', 'posttext', 'start_point', 'end_point', 'date']
+            )
+            self.df = split_property_dict_to_column(self.df)
 
     def __repr__(self):
         return self.name
@@ -102,7 +108,8 @@ class AnnotationCollection:
 
     def property_stats(self):
         return pd.DataFrame(
-            {col: duplicate_rows(self.df, col)[col].value_counts() for col in self.df.columns if 'prop:' in col}
+            {col: duplicate_rows(self.df, col)[col].value_counts(
+            ) for col in self.df.columns if 'prop:' in col}
         ).T
 
     def get_annotation_by_tag(self, tag_name: str):
@@ -118,11 +125,13 @@ class AnnotationCollection:
 
     def rename_property_value(self, tag: str, prop: str, old_value: str, new_value: str):
         for an in self.annotations:
-            an.modify_property_value(tag=tag, prop=prop, old_value=old_value, new_value=new_value)
+            an.modify_property_value(
+                tag=tag, prop=prop, old_value=old_value, new_value=new_value)
 
     def delete_properties(self, tag: str, prop: str):
         for an in self.annotations:
             an.delete_property(tag=tag, prop=prop)
 
     def plotly_plot(self, y_axis='tag', prop=None, color_prop=None):
-        plot_scatter_bar(self.df, y_axis=y_axis, prop=prop, color_prop=color_prop)
+        plot_scatter_bar(self.df, y_axis=y_axis,
+                         prop=prop, color_prop=color_prop)

@@ -1,10 +1,18 @@
 from catma_gitlab.project_class import CatmaProject
 
-project_direction = '../../catma_backup2'
-project_uuid = 'CATMA_DD5E9DF1-0F5C-4FBD-B333-D507976CA3C7_EvENT_root'
+project_direction = 'catma_gitlab/demo_project/'
+project_uuid = 'CATMA_13BFDD7D-0F8F-40A5-ACB1-3B058F67BBF0_test_corpus_root'
 project = CatmaProject(
     project_direction=project_direction,
     root_direction=project_uuid,
     filter_intrinsic_markup=False)
 
-project.plot_progression(ac_filter=['Effi_Briest_MW', 'Effi_Briest_GS'])
+
+project.create_gold_annotations(
+    ac_1_name='ac_1',
+    ac_2_name='ac_2',
+    gold_ac_name='gold_annotation',
+    excluded_tags=[],
+    min_overlap=0.95,
+    property_values='matching'
+)
