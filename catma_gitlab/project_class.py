@@ -1,6 +1,7 @@
-import pprint
+import subprocess
 import os
 import json
+import gitlab
 from typing import List, Union
 from catma_gitlab.text_class import Text
 from catma_gitlab.tagset_class import Tagset
@@ -9,6 +10,39 @@ from catma_gitlab.annotation_collection_class import AnnotationCollection
 from catma_gitlab.write_annotation import write_annotation_json, find_tag_by_name
 from catma_gitlab.catma_gitlab_vizualize import plot_annotation_progression
 from catma_gitlab.catma_gitlab_metrics import test_overlap, test_max_overlap, get_overlap_percentage
+
+
+def load_gitlab_project(private_gitlab_token: str, project_name: str) -> str:
+    """Downloads a CATMA Project with git
+
+    Args:
+        private_gitlab_token (str): GitLab Access Token.
+        project_name (str): The CATMA Project name
+
+    Raises:
+        Exception: If no CATMA Project with the given name could be found.
+
+    Returns:
+        str: The CATMA Project UUID
+    """
+    gl = gitlab.Gitlab(
+        url='https://git.catma.de/',
+        private_token=private_gitlab_token
+    )
+
+    try:
+        project_gitlab_id = gl.projects.list(search=project_name)[0].id
+    except IndexError:
+        raise Exception("Couldn't find the given CATMA Project!")
+
+    project_uuid = gl.projects.get(id=project_gitlab_id).name
+    project_url = f"https://git.catma.de/{project_uuid[:-5]}/{project_uuid}.git"
+
+    # clone the project in current direction
+    subprocess.call(
+        ['git', 'clone', '--recurse-submodules', project_url])
+
+    return project_uuid
 
 
 def test_intrinsic(project_uuid: str, direction: str, test_positive=True) -> bool:
@@ -89,49 +123,74 @@ def compare_annotations(
 
 
 class CatmaProject:
-    def __init__(self, project_direction, root_direction, filter_intrinsic_markup=True):
-        """Class which represents a CATMA project including the texts, the annotation collections and the tagsets using
-        the classes Text, AnnotationCollection and Tagset.
+    def __init__(
+        self,
+        project_direction: str = '.',
+        project_uuid: str = None,
+        filter_intrinsic_markup: bool = True,
+        load_from_gitlab: bool = False,
+        private_gitlab_token: str = None,
+        project_name: str = None
+    ):
+        """This Project represents a CATMA Project including all Documents, Tagsets
+        and Annotation Collections.
+        You can eather load the Project from a local git clone or you load it directly
+        from GitLab after generating a private_gitlab_token in the CATMA GUI.
 
         Args:
-            project_direction ([type]): direction where the project is located
-            root_direction ([type]): UUID of a CATMA project
-            filter_intrinsic_markup (bool, optional): if False intrinsic markup is not filtered out, default=True. Defaults to True.
+            project_direction (str, optional): [description]. Defaults to '.'.
+            project_uuid (str, optional): [description]. Defaults to None.
+            filter_intrinsic_markup (bool, optional): [description]. Defaults to True.
+            load_from_gitlab (bool, optional): [description]. Defaults to False.
+            private_gitlab_token (str, optional): [description]. Defaults to None.
+            project_name (str, optional): [description]. Defaults to None.
+
+        Raises:
+            Exception: [description]
         """
-        cwd = os.getcwd()                       # get the current direction to return after loaded the project
+        # Clone CATMA Project
+        if load_from_gitlab:
+            self.uuid = load_gitlab_project(
+                private_gitlab_token=private_gitlab_token,
+                project_name=project_name
+            )
+        else:
+            self.uuid = project_uuid
+
+        # get the current direction to return after loaded the project
+        cwd = os.getcwd()
         self.project_direction = project_direction
         os.chdir(self.project_direction)
-        self.uuid = root_direction
 
         # Load Tagsets
-        tagsets_direction = root_direction + '/tagsets/'
+        tagsets_direction = project_uuid + '/tagsets/'
         self.tagsets = [
             Tagset(
-                root_direction=root_direction,
+                project_uuid=project_uuid,
                 catma_id=direction
             ) for direction in os.listdir(tagsets_direction)
         ]
         self.tagset_dict = {tagset.name: tagset for tagset in self.tagsets}
 
         # Load Texts
-        texts_direction = root_direction + '/documents/'
+        texts_direction = project_uuid + '/documents/'
         self.texts = [
             Text(
-                root_direction=root_direction,
+                project_uuid=project_uuid,
                 catma_id=direction
             ) for direction in os.listdir(texts_direction)
         ]
         self.text_dict = {text.title: text for text in self.texts}
 
         # Load Annotation Collections
-        collections_direction = root_direction + '/collections/'
+        collections_direction = project_uuid + '/collections/'
         self.annotation_collections = [
             AnnotationCollection(
-                root_direction=root_direction,
+                project_uuid=project_uuid,
                 catma_id=direction
             ) for direction in os.listdir(collections_direction)
             if not test_intrinsic(
-                root_direction,
+                project_uuid,
                 direction,
                 filter_intrinsic_markup
             )
@@ -201,6 +260,11 @@ class CatmaProject:
                 an.copy(
                     annotation_collection=gold_uuid,
                     compare_annotation=compare_annotation)
+
+        # os.chdir(f'collections/{gold_uuid}')
+        # subprocess.call(['git', 'add', '.'])
+        # subprocess.call(['git', 'commit', '-m', 'new gold annotations'])
+        # subprocess.call(['git', 'push', 'origin' 'HEAD:master'])
 
         print(
             f"""

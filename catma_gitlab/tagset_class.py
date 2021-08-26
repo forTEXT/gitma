@@ -4,28 +4,32 @@ from catma_gitlab.tag_class import Tag
 
 
 class Tagset:
-    def __init__(self, root_direction: str, catma_id: str):
+    def __init__(self, project_uuid: str, catma_id: str):
         """
         Class which represents a CATMA Tagset.
-        :param root_direction: direction of a CATMA gitlab root folder
+        :param project_uuid: direction of a CATMA gitlab root folder
         :param catma_id: UUID of the tagset which corresponds with the folder name in the "tagsets" direction.
 
         """
         self.uuid = catma_id
 
-        self.tagset_direction = root_direction + '/tagsets/' + catma_id
+        self.tagset_direction = project_uuid + '/tagsets/' + catma_id
         with open(self.tagset_direction + '/header.json') as header_input:
             header = json.load(header_input)
         self.name = header['name']
 
         self.tag_list = []
         self.tag_dict = {}
-        for dirpath, dirnames, filenames in os.walk(self.tagset_direction):  # walks through tagsets direction
+        # walks through tagsets direction
+        for dirpath, dirnames, filenames in os.walk(self.tagset_direction):
             for file in filenames:
                 if file == 'propertydefs.json':             # if a subdirection is a Tag json file
-                    new_tag = Tag(dirpath + '/' + file)     # create a Tag Class object
-                    self.tag_list.append(new_tag)           # and store it in a list
-                    self.tag_dict[new_tag.id] = new_tag     # and store it in a dict
+                    # create a Tag Class object
+                    new_tag = Tag(dirpath + '/' + file)
+                    # and store it in a list
+                    self.tag_list.append(new_tag)
+                    # and store it in a dict
+                    self.tag_dict[new_tag.id] = new_tag
 
         for tag in self.tag_list:
             tag.get_parent_tag(self.tag_dict)
@@ -47,4 +51,5 @@ class Tagset:
         tags_to_edit = [tag for tag in self.tag_list if tag.name in tag_names]
         print(tags_to_edit)
         for tag in tags_to_edit:
-            tag.rename_possible_property_value(prop=prop, old_value=old_value, new_value=new_value)
+            tag.rename_possible_property_value(
+                prop=prop, old_value=old_value, new_value=new_value)

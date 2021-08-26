@@ -56,34 +56,34 @@ def duplicate_rows(ac_df, property_col):
 
 
 class AnnotationCollection:
-    def __init__(self, root_direction: str, catma_id: str):
+    def __init__(self, project_uuid: str, catma_id: str):
         """
         Class which represents a CATMA annotation collection.
-        :param root_direction:  direction of a CATMA gitlab root folder
+        :param project_uuid:  direction of a CATMA gitlab root folder
         :param catma_id: uuid of the collection (folder)
         """
         self.uuid = catma_id
 
-        with open(root_direction + '/collections/' + self.uuid + '/header.json') as header_json:
+        with open(project_uuid + '/collections/' + self.uuid + '/header.json') as header_json:
             self.header = json.load(header_json)
 
         self.name = self.header['name']
 
         self.plain_text_id = self.header['sourceDocumentId']
-        self.text = Text(root_direction=root_direction,
+        self.text = Text(project_uuid=project_uuid,
                          catma_id=self.plain_text_id)
         self.text_version = self.header['sourceDocumentVersion']
 
         print(
             f"Loaded Annotation Collection '{self.name}' for {self.text.title}")
 
-        if os.path.isdir(root_direction + '/collections/' + self.uuid + '/annotations/'):
+        if os.path.isdir(project_uuid + '/collections/' + self.uuid + '/annotations/'):
             self.annotations = [
                 Annotation(
-                    direction=root_direction + '/collections/' +
+                    direction=project_uuid + '/collections/' +
                     self.uuid + '/annotations/' + annotation,
                     plain_text=self.text.plain_text
-                ) for annotation in os.listdir(root_direction + '/collections/' + self.uuid + '/annotations/')
+                ) for annotation in os.listdir(project_uuid + '/collections/' + self.uuid + '/annotations/')
             ]
             self.annotations = sorted(
                 self.annotations, key=lambda a: a.start_point)
