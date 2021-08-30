@@ -12,12 +12,13 @@ from catma_gitlab.catma_gitlab_vizualize import plot_annotation_progression
 from catma_gitlab.catma_gitlab_metrics import test_overlap, test_max_overlap, get_overlap_percentage
 
 
-def load_gitlab_project(private_gitlab_token: str, project_name: str) -> str:
+def load_gitlab_project(private_gitlab_token: str, project_name: str, project_dir: str) -> str:
     """Downloads a CATMA Project with git
 
     Args:
         private_gitlab_token (str): GitLab Access Token.
-        project_name (str): The CATMA Project name
+        project_name (str): The CATMA Project name.
+        project_dir (str): Where to locate the CATMA Project.
 
     Raises:
         Exception: If no CATMA Project with the given name could be found.
@@ -54,7 +55,7 @@ def test_intrinsic(project_uuid: str, direction: str, test_positive=True) -> boo
         test_positive (bool, optional): what should be returned if it is intrinsic markup. Defaults to True.
 
     Returns:
-        bool:
+        bool: if its annotation collection is intrinsic markup returns parameter test_positive
     """
     with open(f'{project_uuid}/collections/{direction}/header.json', 'r') as header_input:
         header_dict = json.load(header_input)
@@ -196,7 +197,7 @@ class CatmaProject:
             )
         ]
         self.ac_dict = {
-            an_co.name: an_co for an_co in self.annotation_collections}
+            ac.name: ac for ac in self.annotation_collections}
 
         os.chdir(cwd)
 
