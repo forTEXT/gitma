@@ -248,19 +248,20 @@ class CatmaProject:
             ]
 
             # get best matching annotation and compare tag
-            an2 = compare_annotations(
-                an1=an,
-                al2=overlapping_annotations,
-                min_overlap=min_overlap,
-                same_tag=same_tag
-            )
+            if len(an2) > 0:    # test if any annotation from ac2 matches the annotation from ac1
+                an2 = compare_annotations(
+                    an1=an,
+                    al2=overlapping_annotations,
+                    min_overlap=min_overlap,
+                    same_tag=same_tag
+                )
 
-            compare_annotation = an2 if property_values == 'matching' else None
-            if an2:
-                copied_annotations += 1
-                an.copy(
-                    annotation_collection=gold_uuid,
-                    compare_annotation=compare_annotation)
+                compare_annotation = an2 if property_values == 'matching' else None
+                if an2:
+                    copied_annotations += 1
+                    an.copy(
+                        annotation_collection=gold_uuid,
+                        compare_annotation=compare_annotation)
 
         # os.chdir(f'collections/{gold_uuid}')
         # subprocess.call(['git', 'add', '.'])
