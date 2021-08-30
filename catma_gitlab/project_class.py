@@ -233,6 +233,10 @@ class CatmaProject:
 
         if not os.path.isdir(f'collections/{gold_uuid}/annotations/'):
             os.mkdir(f'collections/{gold_uuid}/annotations/')
+        else:
+            for f in os.listdir(f'collections/{gold_uuid}/annotations/'):
+                # removes all files in gold annotation collection to prevent double gold annotations
+                os.remove(f'collections/{gold_uuid}/annotations/{f}')
 
         al1 = [an for an in ac1.annotations if an not in excluded_tags]
         al2 = [an for an in ac2.annotations if an not in excluded_tags]
@@ -247,8 +251,8 @@ class CatmaProject:
                 )
             ]
 
-            # get best matching annotation and compare tag
-            if len(an2) > 0:    # test if any annotation from ac2 matches the annotation from ac1
+            # test if any annotation from ac2 matches the annotation from ac1
+            if len(overlapping_annotations) > 0:
                 an2 = compare_annotations(
                     an1=an,
                     al2=overlapping_annotations,
@@ -256,9 +260,12 @@ class CatmaProject:
                     same_tag=same_tag
                 )
 
+                # get best matching annotation and compare tag
                 compare_annotation = an2 if property_values == 'matching' else None
                 if an2:
                     copied_annotations += 1
+
+                    # copy annotation
                     an.copy(
                         annotation_collection=gold_uuid,
                         compare_annotation=compare_annotation)
