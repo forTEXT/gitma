@@ -100,6 +100,8 @@ class AnnotationCollection:
             )
             self.df = split_property_dict_to_column(self.df)
 
+            print(f"\t-> with {len(self.annotations)} Annotations.")
+
     def __repr__(self):
         return self.name
 

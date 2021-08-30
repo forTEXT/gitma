@@ -95,7 +95,7 @@ def get_overlap_percentage(an_pair) -> float:
     return diff_percentage
 
 
-def get_confusion_matrix(pair_list):
+def get_confusion_matrix(pair_list) -> pd.DataFrame:
     tags = set([p[0].tag.name for p in pair_list] +
                [p[1].tag.name for p in pair_list])
     tag_dict = {tag: {t: 0 for t in tags} for tag in tags}
@@ -165,11 +165,11 @@ def get_annotation_pairs(
     print(f"""
         Finished search for overlapping annotations.
         Could match {len(pair_list)} items.
-        Average overlap is {string_difference} %.
+        Average overlap is {round(string_difference, 2)} %.
         Couldn't match {missing_an2_annotations} annotation(s) in first annotation collection.
         
         Confusion Matrix:
-        {get_confusion_matrix(pair_list)}
+        {get_confusion_matrix(pair_list).to_markdown()}
         """)
 
     return pair_list
@@ -207,3 +207,5 @@ def get_iaa(ac1: AnnotationCollection, ac2: AnnotationCollection,
         Cohen's Kappa: {annotation_task.kappa()}
         Krippendorf Alpha: {annotation_task.alpha()}
         """)
+
+    return get_confusion_matrix(pair_list=annotation_pairs)
