@@ -224,7 +224,7 @@ class CatmaProject:
                 Default to 'matching'. Further options: 'none'.
         """
         cwd = os.getcwd()
-        os.chdir(f'{self.project_direction}/{self.uuid}/')
+        os.chdir(f'{self.project_direction}{self.uuid}/')
 
         ac1 = self.ac_dict[ac_1_name]
         ac2 = self.ac_dict[ac_2_name]
