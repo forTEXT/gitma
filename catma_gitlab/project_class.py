@@ -2,6 +2,7 @@ import subprocess
 import os
 import json
 import gitlab
+import pandas as pd
 from typing import List, Union
 from catma_gitlab.text_class import Text
 from catma_gitlab.tagset_class import Tagset
@@ -139,12 +140,12 @@ class CatmaProject:
         from GitLab after generating a private_gitlab_token in the CATMA GUI.
 
         Args:
-            project_direction (str, optional): [description]. Defaults to '.'.
-            project_uuid (str, optional): [description]. Defaults to None.
-            filter_intrinsic_markup (bool, optional): [description]. Defaults to True.
-            load_from_gitlab (bool, optional): [description]. Defaults to False.
-            private_gitlab_token (str, optional): [description]. Defaults to None.
-            project_name (str, optional): [description]. Defaults to None.
+            project_direction (str, optional): The direction where your CATMA Project(s) are located. Defaults to '.'.
+            project_uuid (str, optional): The Project UUID. Defaults to None.
+            filter_intrinsic_markup (bool, optional): Whether intrinsic markup will be loaded. Defaults to True.
+            load_from_gitlab (bool, optional): Whether the CATMA Project shall be loaded dircetly from the CATMA GitLab. Defaults to False.
+            private_gitlab_token (str, optional): The private CATMA GitLab Token. Defaults to None.
+            project_name (str, optional): The CATMA Project name. Defaults to None.
 
         Raises:
             Exception: [description]
@@ -235,7 +236,7 @@ class CatmaProject:
             os.mkdir(f'collections/{gold_uuid}/annotations/')
         else:
             for f in os.listdir(f'collections/{gold_uuid}/annotations/'):
-                # removes all files in gold annotation collection to prevent double gold annotations
+                # removes all files in gold annotation collection to prevent double gold annotations:
                 os.remove(f'collections/{gold_uuid}/annotations/{f}')
 
         al1 = [an for an in ac1.annotations if an not in excluded_tags]
@@ -321,3 +322,23 @@ class CatmaProject:
 
     def plot_progression(self, ac_filter: list = None):
         plot_annotation_progression(self, ac_filter=ac_filter)
+
+    def stats(self) -> pd.DataFrame:
+        """Shows some CATMA Project stats.
+
+        Returns:
+            pd.DataFrame: DataFrame with projects stats sorted by the Annotation Collection names.
+        """
+        stats_dict = {
+            ac.name: {
+                'annotations': len(ac.annotations),
+                'authors': set([an.author for an in ac.annotations]),
+                'tags': set([an.tag.name for an in ac.annotations]),
+                'first_annotation': min([an.date for an in ac.annotations]),
+                'last_annotation': max([an.date for an in ac.annotations]),
+                'uuid': ac.uuid,
+            } for ac in self.annotation_collections
+            if len(ac.annotations) > 0
+        }
+
+        return pd.DataFrame(stats_dict).T.sort_index()

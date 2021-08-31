@@ -1,4 +1,5 @@
 import json
+import os
 import uuid
 from typing import List
 from datetime import datetime
@@ -219,3 +220,6 @@ class Annotation:
         new_direction = f'collections/{annotation_collection}/annotations/{new_uuid}.json'
         with open(new_direction, 'w') as json_output:
             json_output.write(json.dumps(new_annotation_data))
+
+    def remove(self):
+        os.remove(self.direction)

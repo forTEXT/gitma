@@ -99,8 +99,10 @@ class AnnotationCollection:
                             'annotation', 'posttext', 'start_point', 'end_point', 'date']
             )
             self.df = split_property_dict_to_column(self.df)
+        else:
+            self.annotations = []
 
-            print(f"\t-> with {len(self.annotations)} Annotations.")
+        print(f"\t-> with {len(self.annotations)} Annotations.")
 
     def __repr__(self):
         return self.name
