@@ -29,7 +29,7 @@ To install locally for development use: `pip install -e .`
 
     project = CatmaProject(
         load_from_gitlab=True,
-        private_gitlab_token=your_gitlab_token  # accessible over the CATMA GUI
+        private_gitlab_token=your_gitlab_token,  # accessible over the CATMA GUI
         project_name=your_catma_project_name
     )
 

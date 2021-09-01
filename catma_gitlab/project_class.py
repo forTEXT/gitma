@@ -3,7 +3,7 @@ import os
 import json
 import gitlab
 import pandas as pd
-from typing import List, Union
+from typing import Dict, List, Tuple, Union
 from catma_gitlab.text_class import Text
 from catma_gitlab.tagset_class import Tagset
 from catma_gitlab.annotation_class import Annotation, get_annotation_segments
@@ -13,8 +13,8 @@ from catma_gitlab.catma_gitlab_vizualize import plot_annotation_progression
 from catma_gitlab.catma_gitlab_metrics import test_overlap, test_max_overlap, get_overlap_percentage
 
 
-def load_gitlab_project(private_gitlab_token: str, project_name: str, project_dir: str) -> str:
-    """Downloads a CATMA Project with git
+def load_gitlab_project(private_gitlab_token: str, project_name: str) -> str:
+    """Downloads a CATMA Project with git.
 
     Args:
         private_gitlab_token (str): GitLab Access Token.
@@ -41,7 +41,7 @@ def load_gitlab_project(private_gitlab_token: str, project_name: str, project_di
     project_url = f"https://git.catma.de/{project_uuid[:-5]}/{project_uuid}.git"
 
     # clone the project in current direction
-    subprocess.call(
+    subprocess.run(
         ['git', 'clone', '--recurse-submodules', project_url])
 
     return project_uuid
@@ -65,23 +65,76 @@ def test_intrinsic(project_uuid: str, direction: str, test_positive=True) -> boo
         return test_positive
 
 
-def write_ac_header(
-        direction: str,
-        author: str,
-        doc_id: str,
-        doc_version: str,
-        ac_name: str = None):
-    header_str = {
-        "author": author,
-        "description": "",
-        "name": ac_name,
-        "publisher": None,
-        "sourceDocumentId": doc_id,
-        "sourceDocumentVersion": doc_version
-    }
+def load_tagsets(project_uuid: str) -> Tuple[List[Tagset], Dict[str, Tagset]]:
+    """Generates List and Dict of Tagsets.
 
-    with open(direction, 'w') as json_output:
-        json_output.write(json.dumps(header_str))
+    Args:
+        project_uuid (str): CATMA Project UUID
+
+    Returns:
+        List[Tagset]: List and Dict of Tagsets
+    """
+    tagsets_direction = project_uuid + '/tagsets/'
+    tagsets = [
+        Tagset(
+            project_uuid=project_uuid,
+            catma_id=direction
+        ) for direction in os.listdir(tagsets_direction)
+    ]
+    tagset_dict = {tagset.name: tagset for tagset in tagsets}
+
+    return tagsets, tagset_dict
+
+
+def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
+    """Generates List and Dict of CATMA Texts.
+
+    Args:
+        project_uuid (str): CATMA Project UUID
+
+    Returns:
+        Tuple[List[Text], Dict[Text]]: List and Dict of CATMA Texts
+    """
+    texts_direction = project_uuid + '/documents/'
+    texts = [
+        Text(
+            project_uuid=project_uuid,
+            catma_id=direction
+        ) for direction in os.listdir(texts_direction)
+    ]
+
+    texts_dict = {text.title: text for text in texts}
+    return texts, texts_dict
+
+
+def load_annotations(
+        project_uuid: str,
+        filter_intrinsic_markup: bool = False) -> Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]:
+    """Generates List and Dict of CATMA Annotation Collections.
+
+    Args:
+        project_uuid (str): CATMA Project UUID
+        filter_intrinsic_markup (bool): If intrinsic markup shall be loaded
+
+    Returns:
+        Tuple[List[AnnotationCollection], Dict[AnnotationCollection]]: List and Dict of Annotaiton Collections
+    """
+    collections_direction = project_uuid + '/collections/'
+    annotation_collections = [
+        AnnotationCollection(
+            project_uuid=project_uuid,
+            catma_id=direction
+        ) for direction in os.listdir(collections_direction)
+        if not test_intrinsic(
+            project_uuid,
+            direction,
+            filter_intrinsic_markup
+        )
+    ]
+    ac_dict = {
+        ac.name: ac for ac in annotation_collections}
+
+    return annotation_collections, ac_dict
 
 
 def compare_annotations(
@@ -127,7 +180,7 @@ def compare_annotations(
 class CatmaProject:
     def __init__(
         self,
-        project_direction: str = '.',
+        project_direction: str = './',
         project_uuid: str = None,
         filter_intrinsic_markup: bool = True,
         load_from_gitlab: bool = False,
@@ -165,40 +218,14 @@ class CatmaProject:
         os.chdir(self.project_direction)
 
         # Load Tagsets
-        tagsets_direction = project_uuid + '/tagsets/'
-        self.tagsets = [
-            Tagset(
-                project_uuid=project_uuid,
-                catma_id=direction
-            ) for direction in os.listdir(tagsets_direction)
-        ]
-        self.tagset_dict = {tagset.name: tagset for tagset in self.tagsets}
+        self.tagsets, self.tagset_dict = load_tagsets(project_uuid=self.uuid)
 
         # Load Texts
-        texts_direction = project_uuid + '/documents/'
-        self.texts = [
-            Text(
-                project_uuid=project_uuid,
-                catma_id=direction
-            ) for direction in os.listdir(texts_direction)
-        ]
-        self.text_dict = {text.title: text for text in self.texts}
+        self.texts, self.text_dict = load_texts(project_uuid=self.uuid)
 
         # Load Annotation Collections
-        collections_direction = project_uuid + '/collections/'
-        self.annotation_collections = [
-            AnnotationCollection(
-                project_uuid=project_uuid,
-                catma_id=direction
-            ) for direction in os.listdir(collections_direction)
-            if not test_intrinsic(
-                project_uuid,
-                direction,
-                filter_intrinsic_markup
-            )
-        ]
-        self.ac_dict = {
-            ac.name: ac for ac in self.annotation_collections}
+        self.annotation_collections, self.ac_dict = load_annotations(
+            project_uuid=self.uuid, filter_intrinsic_markup=filter_intrinsic_markup)
 
         os.chdir(cwd)
 
@@ -271,17 +298,18 @@ class CatmaProject:
                         annotation_collection=gold_uuid,
                         compare_annotation=compare_annotation)
 
-        # os.chdir(f'collections/{gold_uuid}')
-        # subprocess.call(['git', 'add', '.'])
-        # subprocess.call(['git', 'commit', '-m', 'new gold annotations'])
-        # subprocess.call(['git', 'push', 'origin' 'HEAD:master'])
+        # upload gold annotations via git
+        os.chdir(f'collections/{gold_uuid}')
+        subprocess.run(['git', 'add', '.'])
+        subprocess.run(['git', 'commit', '-m', 'new gold annotations'])
+        subprocess.run(['git', 'push', 'origin', 'HEAD:master'])
 
         print(
             f"""
             Found {len(al1)} annotations in Annotation Collection: '{ac_1_name}'.
             Found {len(al2)} annotations in Annotation Collection: '{ac_2_name}'.
             -------------
-            Wrote {copied_annotations} gold annotations in Annotation Collection '{gold_ac_name}'.
+            Wrote {copied_annotations} gold annotations in Annotation Collection '{gold_ac_name}' and pushed the new annotations to CATMA GitLab.
             """
         )
         os.chdir(cwd)
@@ -342,3 +370,29 @@ class CatmaProject:
         }
 
         return pd.DataFrame(stats_dict).T.sort_index()
+
+    def update(self) -> None:
+        """Updates local git folder and reloads CatmaProject
+        """
+        cwd = os.getcwd()
+        os.chdir(f'{self.project_direction}{self.uuid}/')
+
+        subprocess.run(['git', 'pull'])
+        subprocess.run(['git', 'submodule', 'update',
+                       '--recursive', '--remote'])
+
+        os.chdir('../')
+        # Load Tagsets
+        self.tagsets, self.tagset_dict = load_tagsets(project_uuid=self.uuid)
+
+        # Load Texts
+        self.texts, self.text_dict = load_texts(project_uuid=self.uuid)
+
+        # Load Annotation Collections
+        self.annotation_collections, self.ac_dict = load_annotations(
+            project_uuid=self.uuid)
+
+        print('Updated the CATMA Project. See the overview:\n')
+        print(self.stats())
+
+        os.chdir(cwd)
