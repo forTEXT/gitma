@@ -5,7 +5,7 @@ Classes for CATMA Projects, Annotation Collections and Tagsets.
 The package makes use of CATMAs git access: https://catma.de/documentation/git-access/
 
 ## Installation
-Install using `pip install git+https://github.com/michaelvauth/catma_gitlab`
+Install using `pip install git+https://github.com/forTEXT/catma_gitlab`
 
 To install locally for development use: `pip install -e .`
 
