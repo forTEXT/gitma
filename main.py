@@ -1,3 +1,4 @@
+from pygit2 import clone_repository, UserPass, RemoteCallbacks
 from catma_gitlab.project_class import CatmaProject
 
 

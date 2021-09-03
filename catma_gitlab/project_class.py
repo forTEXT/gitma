@@ -217,15 +217,32 @@ class CatmaProject:
         self.project_direction = project_direction
         os.chdir(self.project_direction)
 
-        # Load Tagsets
-        self.tagsets, self.tagset_dict = load_tagsets(project_uuid=self.uuid)
+        try:
+            # Load Tagsets
+            self.tagsets, self.tagset_dict = load_tagsets(
+                project_uuid=self.uuid)
 
-        # Load Texts
-        self.texts, self.text_dict = load_texts(project_uuid=self.uuid)
+            # Load Texts
+            self.texts, self.text_dict = load_texts(project_uuid=self.uuid)
 
-        # Load Annotation Collections
-        self.annotation_collections, self.ac_dict = load_annotations(
-            project_uuid=self.uuid, filter_intrinsic_markup=filter_intrinsic_markup)
+            # Load Annotation Collections
+            self.annotation_collections, self.ac_dict = load_annotations(
+                project_uuid=self.uuid, filter_intrinsic_markup=filter_intrinsic_markup)
+
+        except FileNotFoundError:
+            if load_from_gitlab:
+                print(
+                    """Couldn't find your project!
+                    Probably the clone didn't work.
+                    Make sure that the project name and your access token are correct.
+                    """
+                )
+            else:
+                print(
+                    """Couldn't find your project!
+                    Probably the project direction or uuid were not correct.
+                    """
+                )
 
         os.chdir(cwd)
 
@@ -237,7 +254,8 @@ class CatmaProject:
             excluded_tags: list,
             min_overlap: float = 1.0,
             same_tag: bool = True,
-            property_values: str = 'matching'):
+            property_values: str = 'matching',
+            push_to_gitlab=False):
         """Searches for matching annotations in 2 AnnotationCollections and copies all matches in a third AnnotationCollection.
         By default only matching Property Values get copied.
 
@@ -298,11 +316,12 @@ class CatmaProject:
                         annotation_collection=gold_uuid,
                         compare_annotation=compare_annotation)
 
-        # upload gold annotations via git
-        os.chdir(f'collections/{gold_uuid}')
-        subprocess.run(['git', 'add', '.'])
-        subprocess.run(['git', 'commit', '-m', 'new gold annotations'])
-        subprocess.run(['git', 'push', 'origin', 'HEAD:master'])
+        if push_to_gitlab:
+            # upload gold annotations via git
+            os.chdir(f'collections/{gold_uuid}')
+            subprocess.run(['git', 'add', '.'])
+            subprocess.run(['git', 'commit', '-m', 'new gold annotations'])
+            subprocess.run(['git', 'push', 'origin', 'HEAD:master'])
 
         print(
             f"""
@@ -393,6 +412,5 @@ class CatmaProject:
             project_uuid=self.uuid)
 
         print('Updated the CATMA Project. See the overview:\n')
-        print(self.stats())
 
         os.chdir(cwd)
