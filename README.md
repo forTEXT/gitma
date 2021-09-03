@@ -13,14 +13,14 @@ To install locally for development use: `pip install -e .`
 
 ### Import
 
-    from catma_gitlab.project_class import CatmaProject
+    from catma_gitlab.project import CatmaProject
     
 ### Load local Project
     
-    project_direction = your_project_direction  # where your CATMA projects are located 
+    project_directory = your_project_directory  # where your CATMA projects are located 
     project_uuid = your_project_uuid            # your CATMA project git clone folder 
     project = CatmaProject(
-        project_direction=project_direction,
+        project_directory=project_directory,
         project_uuid=project_uuid,
         filter_intrinsic_markup=False
     )

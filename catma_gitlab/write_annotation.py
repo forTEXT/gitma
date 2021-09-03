@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-# import catma_gitlab.catma_gitlab_classes as cgc import Tag, Tagset, Text, AnnotationCollection
+# import catma_gitlab.catma_gitlabes as cgc import Tag, Tagset, Text, AnnotationCollection
 
 
 def find_tag_by_name(tagset, tag_name: str):
@@ -12,8 +12,8 @@ def annotation_id(p_uuid, ac_uuid):
     import uuid
     uuid = str(uuid.uuid1()).upper()
     url = f'https://git.catma.de/{p_uuid}/collections/{ac_uuid}/annotations/CATMA_{uuid}.json'
-    direction = f'{p_uuid}/collections/{ac_uuid}/annotations/CATMA_{uuid}.json'
-    return url, direction
+    directory = f'{p_uuid}/collections/{ac_uuid}/annotations/CATMA_{uuid}.json'
+    return url, directory
 
 
 def get_target_list(start_points: list, end_points: list, text_uuid) -> list:
@@ -42,10 +42,10 @@ def write_annotation_json(
         property_annotations: dict,
         author: str):
 
-    annotation_url, annotation_direction = annotation_id(
+    annotation_url, annotation_directory = annotation_id(
         project_uuid, annotation_collection.uuid)
-    tag_direction = tag.file_direction
-    tag_url = "https://git.catma.de/" + tag_direction
+    tag_directory = tag.file_directory
+    tag_url = "https://git.catma.de/" + tag_directory
 
     context_dict = {
         tag.time_property: f'{tag_url}/{tag.time_property}',
@@ -88,5 +88,5 @@ def write_annotation_json(
     }
 
     # write new annotation json file
-    with open(annotation_direction, 'w') as json_output:
+    with open(annotation_directory, 'w') as json_output:
         json_output.write(json.dumps(json_dict))
