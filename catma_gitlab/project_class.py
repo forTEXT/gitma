@@ -232,14 +232,16 @@ class CatmaProject:
         except FileNotFoundError:
             if load_from_gitlab:
                 print(
-                    """Couldn't find your project!
-                    Probably the clone didn't work.
+                    """
+                    Couldn't find your project!
+                    Probably cloning the project didn't work.
                     Make sure that the project name and your access token are correct.
                     """
                 )
             else:
                 print(
-                    """Couldn't find your project!
+                    """
+                    Couldn't find your project!
                     Probably the project direction or uuid were not correct.
                     """
                 )
