@@ -16,6 +16,7 @@ print(my_local_project.stats())
 """
 
 from re import search
+from typing import Dict
 import gitlab
 from catma_gitlab.project import CatmaProject
 
@@ -34,21 +35,30 @@ class Catma:
             private_token=gitlab_access_token
         )
 
-        self.project_list = [
+        self.project_name_list = [
             p.name[43:-5] for p in gl.projects.list(search='_root')]
-        self.project_dict = {
+        self.project_uuid_dict = {
             p.name[43:-5]: p.name for p in gl.projects.list(search='_root')
         }
 
+        self.project_dict = {}
+
     def load_project_from_gitlab(self, project_name: str) -> CatmaProject:
-        return CatmaProject(
+        self.project_dict[project_name] = CatmaProject(
             load_from_gitlab=True,
             gitlab_access_token=self.gitlab_acces_token,
             project_name=project_name
         )
 
-    def load_local_project(self, project_directory: str, project_name: str) -> CatmaProject:
-        return CatmaProject(
+    def load_local_project(
+            self,
+            project_directory: str,
+            project_name: str,
+            included_acs: list = None,
+            excluded_acs: list = None) -> CatmaProject:
+        self.project_dict[project_name] = CatmaProject(
             project_directory=project_directory,
-            project_uuid=self.project_dict[project_name]
+            project_uuid=self.project_uuid_dict[project_name],
+            included_acs=included_acs,
+            excluded_acs=excluded_acs
         )

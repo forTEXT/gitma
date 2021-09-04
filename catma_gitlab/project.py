@@ -14,7 +14,7 @@ from catma_gitlab.metrics import test_overlap, test_max_overlap, get_overlap_per
 
 
 def load_gitlab_project(gitlab_access_token: str, project_name: str) -> str:
-    """Downloads a CATMA Project with git.
+    """Downloads a CATMA Project using git.
 
     Args:
         gitlab_access_token (str): GitLab Access Token.
@@ -47,7 +47,7 @@ def load_gitlab_project(gitlab_access_token: str, project_name: str) -> str:
     return project_uuid
 
 
-def test_intrinsic(project_uuid: str, directory: str, test_positive=True) -> bool:
+def get_ac_name(project_uuid: str, directory: str) -> str:
     """Tests if a Catma Annotation Collection is intrinsic markup.
 
     Args:
@@ -61,8 +61,54 @@ def test_intrinsic(project_uuid: str, directory: str, test_positive=True) -> boo
     with open(f'{project_uuid}/collections/{directory}/header.json', 'r') as header_input:
         header_dict = json.load(header_input)
 
-    if header_dict['name'] == 'Intrinsic Markup':
-        return test_positive
+    return header_dict['name']
+
+
+def load_annotation_collections(
+        project_uuid: str,
+        included_acs: list = None,
+        excluded_acs: list = None) -> Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]:
+    """Generates List and Dict of CATMA Annotation Collections.
+
+    Args:
+        project_uuid (str): CATMA Project UUID
+        included_acs (list): All listed Annotation Collections get loaded.
+        excluded_acs (list): All listed Annotations Collections don't get loaded.
+            If neither icluded nor excluded Annotation Collections are defined, all Annotation Collections get loaded.
+
+    Returns:
+        Tuple[List[AnnotationCollection], Dict[AnnotationCollection]]: List and Dict of Annotaiton Collections
+    """
+    collections_directory = project_uuid + '/collections/'
+
+    if included_acs:
+        annotation_collections = [
+            AnnotationCollection(
+                project_uuid=project_uuid,
+                catma_id=directory
+            ) for directory in os.listdir(collections_directory)
+            if get_ac_name(project_uuid, directory) in included_acs
+        ]
+    elif excluded_acs:
+        annotation_collections = [
+            AnnotationCollection(
+                project_uuid=project_uuid,
+                catma_id=directory
+            ) for directory in os.listdir(collections_directory)
+            if get_ac_name(project_uuid, directory) not in excluded_acs
+        ]
+    else:
+        annotation_collections = [
+            AnnotationCollection(
+                project_uuid=project_uuid,
+                catma_id=directory
+            ) for directory in os.listdir(collections_directory)
+        ]
+
+    ac_dict = {
+        ac.name: ac for ac in annotation_collections}
+
+    return annotation_collections, ac_dict
 
 
 def load_tagsets(project_uuid: str) -> Tuple[List[Tagset], Dict[str, Tagset]]:
@@ -105,36 +151,6 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
 
     texts_dict = {text.title: text for text in texts}
     return texts, texts_dict
-
-
-def load_annotations(
-        project_uuid: str,
-        filter_intrinsic_markup: bool = False) -> Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]:
-    """Generates List and Dict of CATMA Annotation Collections.
-
-    Args:
-        project_uuid (str): CATMA Project UUID
-        filter_intrinsic_markup (bool): If intrinsic markup shall be loaded
-
-    Returns:
-        Tuple[List[AnnotationCollection], Dict[AnnotationCollection]]: List and Dict of Annotaiton Collections
-    """
-    collections_directory = project_uuid + '/collections/'
-    annotation_collections = [
-        AnnotationCollection(
-            project_uuid=project_uuid,
-            catma_id=directory
-        ) for directory in os.listdir(collections_directory)
-        if not test_intrinsic(
-            project_uuid,
-            directory,
-            filter_intrinsic_markup
-        )
-    ]
-    ac_dict = {
-        ac.name: ac for ac in annotation_collections}
-
-    return annotation_collections, ac_dict
 
 
 def compare_annotations(
@@ -182,7 +198,8 @@ class CatmaProject:
         self,
         project_directory: str = './',
         project_uuid: str = None,
-        filter_intrinsic_markup: bool = True,
+        included_acs: list = None,
+        excluded_acs: list = None,
         load_from_gitlab: bool = False,
         gitlab_access_token: str = None,
         project_name: str = None
@@ -195,13 +212,15 @@ class CatmaProject:
         Args:
             project_directory (str, optional): The directory where your CATMA Project(s) are located. Defaults to '.'.
             project_uuid (str, optional): The Project UUID. Defaults to None.
-            filter_intrinsic_markup (bool, optional): Whether intrinsic markup will be loaded. Defaults to True.
+            included_acs (list, optional): All Annotation Collections that should get loaded. If neither included nor excluded
+                Annotation Collections are defined, all Annotation Collections get loaded. Default to None.
+            excluded_acs (list, optional): All Annotation Collections that should not get loaded. Default to None.
             load_from_gitlab (bool, optional): Whether the CATMA Project shall be loaded dircetly from the CATMA GitLab. Defaults to False.
             gitlab_access_token (str, optional): The private CATMA GitLab Token. Defaults to None.
             project_name (str, optional): The CATMA Project name. Defaults to None.
 
         Raises:
-            Exception: [description]
+            Exception: If the local or remote CATMA Project were not found.
         """
         # Clone CATMA Project
         if load_from_gitlab:
@@ -219,6 +238,7 @@ class CatmaProject:
 
         try:
             # Load Tagsets
+            # test if any tagsets exists
             if os.path.isdir(project_uuid + '/tagsets/'):
                 self.tagsets, self.tagset_dict = load_tagsets(
                     project_uuid=self.uuid)
@@ -229,23 +249,26 @@ class CatmaProject:
             self.texts, self.text_dict = load_texts(project_uuid=self.uuid)
 
             # Load Annotation Collections
-            self.annotation_collections, self.ac_dict = load_annotations(
-                project_uuid=self.uuid, filter_intrinsic_markup=filter_intrinsic_markup)
+            self.annotation_collections, self.ac_dict = load_annotation_collections(
+                project_uuid=self.uuid,
+                included_acs=included_acs,
+                excluded_acs=excluded_acs
+            )
 
         except FileNotFoundError:
             if load_from_gitlab:
                 raise Exception(
                     """
-                    Couldn't find your project!
-                    Probably cloning the project didn't work.
-                    Make sure that the project name and your access token are correct.
+Couldn't find your project!
+Probably cloning the project didn't work.
+Make sure that the project name and your access token are correct.
                     """
                 )
             else:
                 raise Exception(
                     """
-                    Couldn't find your project!
-                    Probably the project directory or uuid were not correct.
+Couldn't find your project!
+Probably the project directory or uuid were not correct.
                     """
                 )
 
