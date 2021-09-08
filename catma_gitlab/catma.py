@@ -1,5 +1,5 @@
 """
-Module that defines the Catma class.
+Module that defines the Catma class including all Projects.
 
 
 Usage Example:
@@ -10,12 +10,11 @@ print(my_catma.project_list)
 project_direction = ''
 my_local_project = my_catma.load_local_project(
     project_directory=project_direction,
-    project_name='EvENT'
+    project_name=''
 )
 print(my_local_project.stats())
 """
 
-from re import search
 from typing import Dict
 import gitlab
 from catma_gitlab.project import CatmaProject
@@ -23,12 +22,12 @@ from catma_gitlab.project import CatmaProject
 
 class Catma:
     def __init__(self, gitlab_access_token: str) -> None:
-        """Class which represent all Projects of 1 CATMA User.
+        """Class which represents all Projects of 1 CATMA User.
 
         Args:
             gitlab_access_token (str): Token for gitlab access.
         """
-        self.gitlab_acces_token = gitlab_access_token
+        self.gitlab_access_token = gitlab_access_token
 
         gl = gitlab.Gitlab(
             url='https://git.catma.de/',
@@ -43,19 +42,38 @@ class Catma:
 
         self.project_dict = {}
 
-    def load_project_from_gitlab(self, project_name: str) -> CatmaProject:
+    def load_project_from_gitlab(self, project_name: str) -> None:
+        """Load a CATMA Project from GitLab.
+
+        Args:
+            project_name (str): The CATMA Project name.
+        """
         self.project_dict[project_name] = CatmaProject(
             load_from_gitlab=True,
-            gitlab_access_token=self.gitlab_acces_token,
+            gitlab_access_token=self.gitlab_access_token,
             project_name=project_name
         )
+
+    def load_all_projects_from_gitlab(self) -> None:
+        """Loads all CATMA project from GitLab in current directory.
+        """
+        for project_name in self.project_name_list:
+            self.load_project_from_gitlab(project_name=project_name)
 
     def load_local_project(
             self,
             project_directory: str,
             project_name: str,
             included_acs: list = None,
-            excluded_acs: list = None) -> CatmaProject:
+            excluded_acs: list = None) -> None:
+        """Loads a local CATMA Project and stores it in the project_dict.
+
+        Args:
+            project_directory (str): Directory where the CATMA Project is located.
+            project_name (str): The CATMA Project name.
+            included_acs (list, optional): Annotation Collections to load. Defaults to None.
+            excluded_acs (list, optional): Annotation Collections not to load. Defaults to None.
+        """
         self.project_dict[project_name] = CatmaProject(
             project_directory=project_directory,
             project_uuid=self.project_uuid_dict[project_name],

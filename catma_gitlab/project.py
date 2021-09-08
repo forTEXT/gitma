@@ -48,7 +48,7 @@ def load_gitlab_project(gitlab_access_token: str, project_name: str) -> str:
 
 
 def get_ac_name(project_uuid: str, directory: str) -> str:
-    """Tests if a Catma Annotation Collection is intrinsic markup.
+    """Gives Annotation Collection name.
 
     Args:
         project_uuid (str): CATMA gitlab root project uuids
@@ -56,7 +56,7 @@ def get_ac_name(project_uuid: str, directory: str) -> str:
         test_positive (bool, optional): what should be returned if it is intrinsic markup. Defaults to True.
 
     Returns:
-        bool: if its annotation collection is intrinsic markup returns parameter test_positive
+        str: CATMA Annotation Collection
     """
     with open(f'{project_uuid}/collections/{directory}/header.json', 'r') as header_input:
         header_dict = json.load(header_input)
@@ -77,7 +77,7 @@ def load_annotation_collections(
             If neither icluded nor excluded Annotation Collections are defined, all Annotation Collections get loaded.
 
     Returns:
-        Tuple[List[AnnotationCollection], Dict[AnnotationCollection]]: List and Dict of Annotaiton Collections
+        Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]: List and Dict of Annotation Collections
     """
     collections_directory = project_uuid + '/collections/'
 
@@ -386,7 +386,7 @@ Probably the project directory or uuid were not correct.
         """
         Computes Cohen's Kappa and Krippendorf's Alpha for 2 Annotation Collections.
         """
-        from catma_gitlab.catma_gitlab_metrics import get_iaa
+        from catma_gitlab.metrics import get_iaa
         get_iaa(
             ac1=self.ac_dict[ac1],
             ac2=self.ac_dict[ac2],

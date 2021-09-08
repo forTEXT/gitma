@@ -15,7 +15,7 @@ project = CatmaProject(
 print(project.stats())
 
 
-# use the Catma class, see all your project, and load some annotation collections from 1 project
+# use the Catma class, see all your projects and load some annotation collections from 1 project
 
 my_catma = Catma(gitlab_access_token='')
 print(my_catma.project_name_list)
@@ -26,4 +26,4 @@ my_catma.load_local_project(
     included_acs=[]
 )
 
-print(my_catma.project_dict['EvENT'].stats())
+print(my_catma.project_dict[''].stats())
