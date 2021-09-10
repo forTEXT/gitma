@@ -163,13 +163,13 @@ def get_annotation_pairs(
     ) * 100
 
     print(f"""
-        Finished search for overlapping annotations.
-        Could match {len(pair_list)} items.
-        Average overlap is {round(string_difference, 2)} %.
-        Couldn't match {missing_an2_annotations} annotation(s) in first annotation collection.
-        
-        Confusion Matrix:
-        {get_confusion_matrix(pair_list).to_markdown()}
+Finished search for overlapping annotations.
+Could match {len(pair_list)} items.
+Average overlap is {round(string_difference, 2)} %.
+Couldn't match {missing_an2_annotations} annotation(s) in first annotation collection.
+
+Confusion Matrix:
+{get_confusion_matrix(pair_list).to_markdown()}
         """)
 
     return pair_list
