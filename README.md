@@ -13,9 +13,22 @@ To install locally for development use: `pip install -e .`
 
 ### Import
 
-    from catma_gitlab.project import CatmaProject
-    
-### Load local Project
+    from catma_gitlab.project import Catma, CatmaProject
+
+### Load your CATMA Profile
+For loading your projects you can use the Catma class.
+That may be useful if you want to load multiple CATMA projects or just list your Project Names.
+
+    my_catma = Catma(gitlab_access_token='')    # accessible in the CATMA UI
+    print(my_catma.project_name_list)
+
+    my_catma.load_local_project(
+        project_directory='',
+        project_name='',
+        included_acs=[]             # Annotation Collections to be loaded
+    )
+
+### Load a local Project
     
     project_directory = your_project_directory  # where your CATMA projects are located 
     project_uuid = your_project_uuid            # your CATMA project git clone folder 
@@ -25,7 +38,7 @@ To install locally for development use: `pip install -e .`
         filter_intrinsic_markup=False
     )
 
-### Load Project from CATMA GitLab
+### Load a Project from CATMA GitLab
 
     project = CatmaProject(
         load_from_gitlab=True,
