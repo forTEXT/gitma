@@ -3,7 +3,6 @@ import os
 import pandas as pd
 from catma_gitlab.text import Text
 from catma_gitlab.annotation import Annotation
-from catma_gitlab.vizualize import plot_scatter_bar
 
 
 def split_property_dict_to_column(ac_df):
@@ -107,6 +106,8 @@ class AnnotationCollection:
     def __repr__(self):
         return self.name
 
+    from catma_gitlab._vizualize import plot_scatter_bar
+
     def tag_stats(self):
         return self.df.tag.value_counts()
 
@@ -135,7 +136,3 @@ class AnnotationCollection:
     def delete_properties(self, tag: str, prop: str):
         for an in self.annotations:
             an.delete_property(tag=tag, prop=prop)
-
-    def plotly_plot(self, y_axis='tag', prop=None, color_prop=None):
-        plot_scatter_bar(self.df, y_axis=y_axis,
-                         prop=prop, color_prop=color_prop)

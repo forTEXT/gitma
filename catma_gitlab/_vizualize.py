@@ -1,16 +1,15 @@
-from pandas import DataFrame
 
 
-def plot_scatter_bar(ac_df: DataFrame, y_axis='tag', prop=None, color_prop=None):
+def plot_scatter_bar(ac, y_axis='tag', prop=None, color_prop=None):
     """
-    :param ac_df: AnnotationCollection.df
+    :param ac: Catma AnnotationCollection
     :param y_axis: DataFrame column that will be mapped on y axis; default='tag'
     :param prop: CATMA Tagset Property name
     :param color_prop: can be used to define color coding in plot
     """
     import plotly.express as px
 
-    plot_df = ac_df
+    plot_df = ac.df.copy()
 
     split_by_y = y_axis if not prop else f'prop:{prop}'
     color = 'tag' if not color_prop else f'prop:{color_prop}'

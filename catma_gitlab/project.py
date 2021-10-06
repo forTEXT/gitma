@@ -7,8 +7,6 @@ from typing import Dict, List, Tuple
 from catma_gitlab.text import Text
 from catma_gitlab.tagset import Tagset
 from catma_gitlab.annotation_collection import AnnotationCollection
-from catma_gitlab.write_annotation import write_annotation_json, find_tag_by_name
-from catma_gitlab.vizualize import plot_annotation_progression
 
 
 def load_gitlab_project(gitlab_access_token: str, project_name: str) -> str:
@@ -196,7 +194,7 @@ class CatmaProject:
 
         try:
             # Load Tagsets
-            # test if any tagsets exists
+            # test if any Tagsets exists
             if os.path.isdir(project_uuid + '/tagsets/'):
                 self.tagsets, self.tagset_dict = load_tagsets(
                     project_uuid=self.uuid)
@@ -234,42 +232,11 @@ Probably the project directory or uuid were not correct.
 
     from catma_gitlab._gold_annotation import create_gold_annotations
 
-    def write_annotation(
-            self, annotation_collection_name: str, tagset_name: str, text_title: str, tag_name: str,
-            start_points: list, end_points: list, property_annotations: dict, author: str):
+    from catma_gitlab._write_annotation import write_annotation_json
 
-        cwd = os.getcwd()
-        os.chdir(self.project_directory)
+    from catma_gitlab._vizualize import plot_annotation_progression
 
-        write_annotation_json(
-            project_uuid=self.uuid,
-            annotation_collection=self.ac_dict[annotation_collection_name],
-            tagset=self.tagset_dict[tagset_name],
-            text=self.text_dict[text_title],
-            tag=find_tag_by_name(self.tagset_dict[tagset_name], tag_name),
-            start_points=start_points,
-            end_points=end_points,
-            property_annotations=property_annotations,
-            author=author
-        )
-
-        os.chdir(cwd)
-
-    def iaa(self, ac1: str, ac2: str, tag_filter=None, filter_both_ac=False, level='tag'):
-        """
-        Computes Cohen's Kappa and Krippendorf's Alpha for 2 Annotation Collections.
-        """
-        from catma_gitlab.metrics import get_iaa
-        get_iaa(
-            ac1=self.ac_dict[ac1],
-            ac2=self.ac_dict[ac2],
-            tag_filter=tag_filter,
-            filter_both_ac=filter_both_ac,
-            level=level
-        )
-
-    def plot_progression(self, ac_filter: list = None):
-        plot_annotation_progression(self, ac_filter=ac_filter)
+    from catma_gitlab._metrics import get_iaa
 
     def stats(self) -> pd.DataFrame:
         """Shows some CATMA Project stats.

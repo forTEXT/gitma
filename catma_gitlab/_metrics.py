@@ -188,9 +188,25 @@ def get_iaa_data(annotation_pairs: list, level='tag'):
                 yield an_index, index, an.properties[level]
 
 
-def get_iaa(ac1: AnnotationCollection, ac2: AnnotationCollection,
-            tag_filter=None, filter_both_ac=False,
-            level='tag', distance='binary'):
+def get_iaa(
+        project,
+        ac1_name: str,
+        ac2_name: str,
+        tag_filter: list = None,
+        filter_both_ac: bool = False,
+        level: str = 'tag',
+        distance: str = 'binary'):
+    """Computes Inter Annotator Agreement for 2 Annotation Collections.
+
+    Args:
+        project (CatmaProject): CatmaProject object
+        ac1_name (str): AnnotationCollection name to be compared
+        ac2_name (str): AnnotationCollection name to be compared with
+        tag_filter (list, optional): Which Tags should be included. If None all are included. Default to None.
+        level (str, optional): Whether the Annotation Tag or a specified Property should be compared.
+        distance (str, optional): The IAA distance function. Either 'binary' or 'interval'. See https://www.nltk.org/api/nltk.metrics.html. Default to 'binary'.
+    """
+
     from nltk.metrics.agreement import AnnotationTask as AnTa
     from nltk.metrics import interval_distance, binary_distance
 
@@ -198,6 +214,9 @@ def get_iaa(ac1: AnnotationCollection, ac2: AnnotationCollection,
         distance_function = interval_distance
     else:
         distance_function = binary_distance
+
+    ac1 = project.ac_dict[ac1_name]
+    ac2 = project.ac_dict[ac2_name]
 
     annotation_pairs = get_annotation_pairs(
         ac1, ac2, tag_filter=tag_filter, filter_both_ac=filter_both_ac)

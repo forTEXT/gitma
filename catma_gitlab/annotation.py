@@ -78,6 +78,29 @@ def get_annotation_segments(json_data: dict) -> bool:
     return len(filtered_start_points)
 
 
+def get_selector_items(start_points: list, end_points: list, source_document_uuid: str) -> list:
+    """Creates list of selectors for annotation JSON file.
+    Gets used when generating gold annotations.
+
+    Args:
+        start_points (list): Annotation Start Points
+        end_points (list): Annotation End Points
+        source_document_uuid (str): Document UUID in CATMA Project.
+    Returns:
+        list: List of selectors.
+    """
+    return [
+        {
+            "selector": {
+                "end": end_points[index],
+                "start": start_point,
+                "type": "TextPositionSelector"
+            },
+            "source": source_document_uuid
+        } for start_point, index in enumerate(start_points)
+    ]
+
+
 class Annotation:
     def __init__(self, directory: str, plain_text: str, context=20):
         """
@@ -176,7 +199,9 @@ class Annotation:
     def copy(
             self,
             annotation_collection: str,
-            compare_annotation=None) -> None:
+            compare_annotation=None,
+            new_start_points: list = None,
+            new_end_points: list = None) -> None:
         """Copies the Annotation into another Annotation Collection by creating a new Annotation UUID.
 
         Args:

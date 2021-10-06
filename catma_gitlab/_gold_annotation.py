@@ -2,7 +2,7 @@ import os
 import subprocess
 from typing import List, Union
 from catma_gitlab.annotation import Annotation, get_annotation_segments
-from catma_gitlab.metrics import test_overlap, test_max_overlap, get_overlap_percentage
+from catma_gitlab._metrics import test_overlap, test_max_overlap, get_overlap_percentage
 
 
 def compare_annotations(
@@ -46,7 +46,7 @@ def compare_annotations(
 
 
 def create_gold_annotations(
-        self,
+        project,
         ac_1_name: str,
         ac_2_name: str,
         gold_ac_name: str,
@@ -129,6 +129,6 @@ def create_gold_annotations(
             Found {len(al2)} annotations in Annotation Collection: '{ac_2_name}'.
             -------------
             Wrote {copied_annotations} gold annotations in Annotation Collection '{gold_ac_name}'.
-            """
+        """
     )
     os.chdir(cwd)
