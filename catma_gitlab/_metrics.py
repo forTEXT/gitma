@@ -4,7 +4,11 @@ from catma_gitlab.annotation import Annotation
 from catma_gitlab.annotation_collection import AnnotationCollection
 
 
-def filter_ac_by_tag(ac1: AnnotationCollection, ac2: AnnotationCollection, tag_filter=None, filter_both_ac=True):
+def filter_ac_by_tag(
+        ac1: AnnotationCollection,
+        ac2: AnnotationCollection,
+        tag_filter=None,
+        filter_both_ac=True):
     """
     Returns list of filtered annotations.
     """
@@ -122,7 +126,7 @@ def get_annotation_pairs(
         ac1: AnnotationCollection,
         ac2: AnnotationCollection,
         tag_filter=None,
-        filter_both_ac=False):
+        filter_both_ac=False) -> list:
     """
     Returns list of all overlapping annotations in two annotation collections.
     tag_filter can be defined as list of tag names if not all annotations are included.
@@ -136,6 +140,7 @@ def get_annotation_pairs(
 
     pair_list = []
     missing_an2_annotations = 0
+
     for an1 in ac1_annotations:
 
         # collect all overlapping annotations
@@ -145,8 +150,14 @@ def get_annotation_pairs(
         # test if any matching annotations in an2 was found
         if len(overlapping_annotations) < 1:
             missing_an2_annotations += 1
-            pair_list.append((an1, EmptyAnnotation(
-                start_point=an1.start_point, end_point=an1.end_point)))
+            pair_list.append(
+                (
+                    an1,
+                    EmptyAnnotation(
+                        start_point=an1.start_point,
+                        end_point=an1.end_point)
+                )
+            )
         else:
             best_matching_annotation = test_max_overlap(
                 silver_annotation=an1,
@@ -163,13 +174,13 @@ def get_annotation_pairs(
     ) * 100
 
     print(f"""
-Finished search for overlapping annotations.
-Could match {len(pair_list)} items.
-Average overlap is {round(string_difference, 2)} %.
-Couldn't match {missing_an2_annotations} annotation(s) in first annotation collection.
+    Finished search for overlapping annotations.
+    Could match {len(pair_list)} items.
+    Average overlap is {round(string_difference, 2)} %.
+    Couldn't match {missing_an2_annotations} annotation(s) in first annotation collection.
 
-Confusion Matrix:
-{get_confusion_matrix(pair_list).to_markdown()}
+    Confusion Matrix:
+    {get_confusion_matrix(pair_list).to_markdown()}
         """)
 
     return pair_list
@@ -179,6 +190,24 @@ def get_iaa_data(annotation_pairs: list, level='tag'):
     """
     Yields 3-tuples (Coder, Item, Label) for nltk.AnnotationTask data input.
     If level is not "tag" it has to be a property name, which exists in all annotations.
+    an_list = [
+
+    (Annotation(), Annotation()),
+    (Annotation(), Annotation()),
+    (Annotation(), Annotation()),
+    (Annotation(), Annotation())
+    ]
+
+    --- to ---
+
+    aTask_data = [
+        (1, 1, 'non_event'),
+        (2, 1, 'non_event'),
+        (1, 2, 'non_event'),
+        (2, 2, 'non_event'),
+        (3, 3, 'non_event'),
+        (3, 3, 'stative_event'),
+    ]
     """
     for index, pair in enumerate(annotation_pairs):
         for an_index, an in enumerate(pair):
@@ -207,7 +236,7 @@ def get_iaa(
         distance (str, optional): The IAA distance function. Either 'binary' or 'interval'. See https://www.nltk.org/api/nltk.metrics.html. Default to 'binary'.
     """
 
-    from nltk.metrics.agreement import AnnotationTask as AnTa
+    from nltk.metrics.agreement import AnnotationTask
     from nltk.metrics import interval_distance, binary_distance
 
     if distance == 'inteval':
@@ -220,9 +249,13 @@ def get_iaa(
 
     annotation_pairs = get_annotation_pairs(
         ac1, ac2, tag_filter=tag_filter, filter_both_ac=filter_both_ac)
+
     data = list(get_iaa_data(annotation_pairs, level=level))
-    annotation_task = AnTa(data=data, distance=distance_function)
+
+    annotation_task = AnnotationTask(data=data, distance=distance_function)
+
     print(f"""
+        Scott's pi: {annotation_task.pi()}
         Cohen's Kappa: {annotation_task.kappa()}
         Krippendorf Alpha: {annotation_task.alpha()}
         """)

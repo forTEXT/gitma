@@ -215,16 +215,16 @@ class CatmaProject:
             if load_from_gitlab:
                 raise Exception(
                     """
-Couldn't find your project!
-Probably cloning the project didn't work.
-Make sure that the project name and your access token are correct.
+        Couldn't find your project!
+        Probably cloning the project didn't work.
+        Make sure that the project name and your access token are correct.
                     """
                 )
             else:
                 raise Exception(
                     """
-Couldn't find your project!
-Probably the project directory or uuid were not correct.
+        Couldn't find your project!
+        Probably the project directory or uuid were not correct.
                     """
                 )
 
