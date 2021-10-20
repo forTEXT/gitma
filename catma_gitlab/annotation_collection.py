@@ -5,6 +5,14 @@ from catma_gitlab.text import Text
 from catma_gitlab.annotation import Annotation
 
 
+def load_annotations():
+    pass
+
+
+def ac_to_dataframe():
+    pass
+
+
 def split_property_dict_to_column(ac_df):
     """
     Creates Pandas DataFrame columns for each property in annotation collection.
@@ -100,6 +108,8 @@ class AnnotationCollection:
             self.df = split_property_dict_to_column(self.df)
         else:
             self.annotations = []
+            self.df = pd.DataFrame(columns=['document', 'annotation collection', 'tag', 'properties', 'pretext',
+                                            'annotation', 'posttext', 'start_point', 'end_point', 'date'])
 
         print(f"\t-> with {len(self.annotations)} Annotations.")
 
@@ -107,6 +117,8 @@ class AnnotationCollection:
         return self.name
 
     from catma_gitlab._vizualize import plot_scatter_bar
+
+    from catma_gitlab._export_annotations import to_stanford_tsv
 
     def tag_stats(self):
         return self.df.tag.value_counts()

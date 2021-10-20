@@ -39,24 +39,27 @@ def plot_scatter_bar(ac, y_axis='tag', prop=None, color_prop=None):
 def plot_annotation_progression(project, ac_filter: list = None):
     import matplotlib.pyplot as plt
 
+    acs = project.annotation_collections
     if ac_filter:
-        filtered_ac = [
-            ac for ac in project.annotation_collections if ac.name in ac_filter]
+        acs = [
+            ac for ac in acs
+            if ac.name in ac_filter
+        ]
     else:
-        filtered_ac = project.annotation_collections
+        acs = project.annotation_collections
 
     fig, ax = plt.subplots(
-        nrows=len(filtered_ac),
+        nrows=len(acs),
         figsize=[6, 10]
     )
 
-    for index, ac in enumerate(filtered_ac):
+    for index, ac in enumerate(acs):
         x_values = ac.df['date']
         y_values = range(len(ac.df))
         ax[index].scatter(x_values, y_values, alpha=0.3, label=ac.name)
         ax[index].legend()
         ax[index].set_ylabel('Annotations')
 
-    ax[len(filtered_ac) - 1].set_xlabel('Date')
+    ax[len(acs) - 1].set_xlabel('Date')
     fig.tight_layout()
     plt.show()

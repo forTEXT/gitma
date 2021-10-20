@@ -63,7 +63,8 @@ def get_ac_name(project_uuid: str, directory: str) -> str:
 def load_annotation_collections(
         project_uuid: str,
         included_acs: list = None,
-        excluded_acs: list = None) -> Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]:
+        excluded_acs: list = None,
+        ac_filter_keyword: str = None) -> Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]:
     """Generates List and Dict of CATMA Annotation Collections.
 
     Args:
@@ -92,6 +93,14 @@ def load_annotation_collections(
                 catma_id=directory
             ) for directory in os.listdir(collections_directory)
             if get_ac_name(project_uuid, directory) not in excluded_acs
+        ]
+    elif ac_filter_keyword:
+        annotation_collections = [
+            AnnotationCollection(
+                project_uuid=project_uuid,
+                catma_id=directory
+            ) for directory in os.listdir(collections_directory)
+            if ac_filter_keyword in get_ac_name(project_uuid, directory)
         ]
     else:
         annotation_collections = [
@@ -156,6 +165,7 @@ class CatmaProject:
         project_uuid: str = None,
         included_acs: list = None,
         excluded_acs: list = None,
+        ac_filter_keyword: str = None,
         load_from_gitlab: bool = False,
         gitlab_access_token: str = None,
         project_name: str = None
@@ -195,7 +205,7 @@ class CatmaProject:
         try:
             # Load Tagsets
             # test if any Tagsets exists
-            if os.path.isdir(project_uuid + '/tagsets/'):
+            if os.path.isdir(self.uuid + '/tagsets/'):
                 self.tagsets, self.tagset_dict = load_tagsets(
                     project_uuid=self.uuid)
             else:
@@ -208,23 +218,24 @@ class CatmaProject:
             self.annotation_collections, self.ac_dict = load_annotation_collections(
                 project_uuid=self.uuid,
                 included_acs=included_acs,
-                excluded_acs=excluded_acs
+                excluded_acs=excluded_acs,
+                ac_filter_keyword=ac_filter_keyword
             )
 
         except FileNotFoundError:
             if load_from_gitlab:
                 raise Exception(
                     """
-        Couldn't find your project!
-        Probably cloning the project didn't work.
-        Make sure that the project name and your access token are correct.
+                        Couldn't find your project!
+                        Probably cloning the project didn't work.
+                        Make sure that the project name and your access token are correct.
                     """
                 )
             else:
                 raise Exception(
                     """
-        Couldn't find your project!
-        Probably the project directory or uuid were not correct.
+                        Couldn't find your project!
+                        Probably the project directory or uuid were not correct.
                     """
                 )
 
