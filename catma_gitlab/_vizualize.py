@@ -1,6 +1,6 @@
 
 
-def plot_scatter_bar(ac, y_axis='tag', prop=None, color_prop=None):
+def plot_annotation_overview(ac, y_axis='tag', prop=None, color_prop=None):
     """
     :param ac: Catma AnnotationCollection
     :param y_axis: DataFrame column that will be mapped on y axis; default='tag'

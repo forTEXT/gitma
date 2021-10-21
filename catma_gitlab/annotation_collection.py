@@ -116,7 +116,7 @@ class AnnotationCollection:
     def __repr__(self):
         return self.name
 
-    from catma_gitlab._vizualize import plot_scatter_bar
+    from catma_gitlab._vizualize import plot_annotation_overview
 
     from catma_gitlab._export_annotations import to_stanford_tsv
 
