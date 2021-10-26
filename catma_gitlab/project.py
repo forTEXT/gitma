@@ -3,6 +3,7 @@ import os
 import json
 import gitlab
 import pandas as pd
+from textwrap import dedent
 from typing import Dict, List, Tuple
 from catma_gitlab.text import Text
 from catma_gitlab.tagset import Tagset
@@ -186,7 +187,8 @@ class CatmaProject:
             project_name (str, optional): The CATMA Project name. Defaults to None.
 
         Raises:
-            Exception: If the local or remote CATMA Project were not found.
+            Exception: If the CATMA Project were not found in the CATMA GitLab.
+            FileNotFoundError: If the local or remote CATMA Project were not found.
         """
         # Clone CATMA Project
         if load_from_gitlab:
@@ -224,30 +226,32 @@ class CatmaProject:
 
         except FileNotFoundError:
             if load_from_gitlab:
-                raise Exception(
+                raise Exception(dedent(
                     """
-                        Couldn't find your project!
-                        Probably cloning the project didn't work.
-                        Make sure that the project name and your access token are correct.
+                    Couldn't find your project!
+                    Probably cloning the project didn't work.
+                    Make sure that the project name and your access token are correct.
                     """
-                )
+                ))
             else:
-                raise Exception(
+                raise FileNotFoundError(dedent(
                     """
-                        Couldn't find your project!
-                        Probably the project directory or uuid were not correct.
+                    Couldn't find your project!
+                    Probably the project directory or uuid were not correct.
                     """
-                )
+                ))
 
         os.chdir(cwd)
 
-    from catma_gitlab._gold_annotation import create_gold_annotations
+    from ._gold_annotation import create_gold_annotations
 
-    from catma_gitlab._write_annotation import write_annotation_json
+    from ._write_annotation import write_annotation_json
 
-    from catma_gitlab._vizualize import plot_annotation_progression
+    from ._vizualize import plot_annotation_progression
 
-    from catma_gitlab._metrics import get_iaa
+    from ._metrics import get_iaa
+
+    from ._gamma import gamma_agreement
 
     def stats(self) -> pd.DataFrame:
         """Shows some CATMA Project stats.

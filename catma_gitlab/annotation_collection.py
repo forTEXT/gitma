@@ -82,43 +82,52 @@ class AnnotationCollection:
         self.text_version = self.header['sourceDocumentVersion']
 
         print(
-            f"Loaded Annotation Collection '{self.name}' for {self.text.title}")
+            f"Loading Annotation Collection '{self.name}' for {self.text.title}")
+
+        df_columns = [
+            'document', 'annotation collection', 'annotator',
+            'tag', 'properties', 'pretext', 'annotation',
+            'posttext', 'start_point', 'end_point', 'date'
+        ]
 
         if os.path.isdir(project_uuid + '/collections/' + self.uuid + '/annotations/'):
-            self.annotations = [
+            self.annotations = sorted([
                 Annotation(
                     directory=project_uuid + '/collections/' +
                     self.uuid + '/annotations/' + annotation,
                     plain_text=self.text.plain_text
                 ) for annotation in os.listdir(project_uuid + '/collections/' + self.uuid + '/annotations/')
-            ]
-            self.annotations = sorted(
-                self.annotations, key=lambda a: a.start_point)
+            ])
+
             self.tags = [an.tag for an in self.annotations]
 
             # create pandas data frame for annotation collection
             self.df = pd.DataFrame(
                 [
-                    (self.text.title, self.name, a.tag.name, a.properties, a.pretext,
+                    (self.text.title, self.name, a.author, a.tag.name, a.properties, a.pretext,
                      a.text, a.posttext, a.start_point, a.end_point, a.date)
                     for a in self.annotations
-                ], columns=['document', 'annotation collection', 'tag', 'properties', 'pretext',
-                            'annotation', 'posttext', 'start_point', 'end_point', 'date']
+                ], columns=df_columns
             )
             self.df = split_property_dict_to_column(self.df)
         else:
             self.annotations = []
-            self.df = pd.DataFrame(columns=['document', 'annotation collection', 'tag', 'properties', 'pretext',
-                                            'annotation', 'posttext', 'start_point', 'end_point', 'date'])
+            self.df = pd.DataFrame(columns=df_columns)
 
         print(f"\t-> with {len(self.annotations)} Annotations.")
 
     def __repr__(self):
-        return self.name
+        return f"AnnotationCollection(Name: {self.name}, Document: {self.text.title}, Length: {len(self)})"
+
+    def __len__(self):
+        return len(self.annotations)
 
     from catma_gitlab._vizualize import plot_annotation_overview
 
     from catma_gitlab._export_annotations import to_stanford_tsv
+
+    def to_pygamma_table(self):
+        return self.df[['annotator', 'tag', 'start_point', 'end_point']]
 
     def tag_stats(self):
         return self.df.tag.value_counts()

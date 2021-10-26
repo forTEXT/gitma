@@ -135,8 +135,14 @@ class Annotation:
     def __len__(self) -> int:
         return self.end_point - self.start_point
 
-    def __bool__(self) -> True:
+    def __lt__(self, other):
+        return self.start_point < other.start_point
+
+    def __bool__(self) -> bool:
         return True
+
+    def __repr__(self):
+        return f"Annotation(Author: {self.author}, Tag: {self.tag.name}, Start: {self.start_point})"
 
     def modify_property_value(self, tag: str, prop: str, old_value: str, new_value: str):
         """

@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import textwrap
 from catma_gitlab.annotation import Annotation
 from catma_gitlab.annotation_collection import AnnotationCollection
 
@@ -173,15 +174,17 @@ def get_annotation_pairs(
             an_pair) for an_pair in pair_list if an_pair[1].tag.name != '#None#']
     ) * 100
 
-    print(f"""
-    Finished search for overlapping annotations.
-    Could match {len(pair_list)} items.
-    Average overlap is {round(string_difference, 2)} %.
-    Couldn't match {missing_an2_annotations} annotation(s) in first annotation collection.
+    print(textwrap.dedent(
+        f"""
+        Finished search for overlapping annotations.
+        Could match {len(pair_list)} items.
+        Average overlap is {round(string_difference, 2)} %.
+        Couldn't match {missing_an2_annotations} annotation(s) in first annotation collection.
 
-    Confusion Matrix:
-    {get_confusion_matrix(pair_list).to_markdown()}
-        """)
+        Confusion Matrix:
+        {get_confusion_matrix(pair_list).to_markdown()}
+        """
+    ))
 
     return pair_list
 
@@ -254,10 +257,12 @@ def get_iaa(
 
     annotation_task = AnnotationTask(data=data, distance=distance_function)
 
-    print(f"""
+    print(textwrap.dedent(
+        f"""
         Scott's pi: {annotation_task.pi()}
         Cohen's Kappa: {annotation_task.kappa()}
         Krippendorf Alpha: {annotation_task.alpha()}
-        """)
+        """
+    ))
 
     return get_confusion_matrix(pair_list=annotation_pairs)

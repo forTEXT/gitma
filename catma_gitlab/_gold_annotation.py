@@ -1,5 +1,6 @@
 import os
 import subprocess
+import textwrap
 from typing import List, Union
 from catma_gitlab.annotation import Annotation, get_annotation_segments
 from catma_gitlab._metrics import test_overlap, test_max_overlap, get_overlap_percentage
@@ -70,12 +71,12 @@ def create_gold_annotations(
         push_to_gitlab (bool, optional): Whether the gold annotations shall be uploaded to the CATMA GitLab. Default to False.
     """
     cwd = os.getcwd()
-    os.chdir(f'{self.project_directory}{self.uuid}/')
+    os.chdir(f'{project.project_directory}{project.uuid}/')
 
-    ac1 = self.ac_dict[ac_1_name]
-    ac2 = self.ac_dict[ac_2_name]
+    ac1 = project.ac_dict[ac_1_name]
+    ac2 = project.ac_dict[ac_2_name]
 
-    gold_uuid = self.ac_dict[gold_ac_name].uuid
+    gold_uuid = project.ac_dict[gold_ac_name].uuid
 
     if not os.path.isdir(f'collections/{gold_uuid}/annotations/'):
         os.mkdir(f'collections/{gold_uuid}/annotations/')
@@ -123,12 +124,12 @@ def create_gold_annotations(
         subprocess.run(['git', 'commit', '-m', 'new gold annotations'])
         subprocess.run(['git', 'push', 'origin', 'HEAD:master'])
 
-    print(
+    print(textwrap.dedent(
         f"""
             Found {len(al1)} annotations in Annotation Collection: '{ac_1_name}'.
             Found {len(al2)} annotations in Annotation Collection: '{ac_2_name}'.
             -------------
             Wrote {copied_annotations} gold annotations in Annotation Collection '{gold_ac_name}'.
         """
-    )
+    ))
     os.chdir(cwd)
