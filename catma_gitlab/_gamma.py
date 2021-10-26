@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-from pandas.core.reshape.concat import concat
 from pygamma_agreement import Continuum, CombinedCategoricalDissimilarity
 
 
