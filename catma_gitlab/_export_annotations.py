@@ -61,6 +61,8 @@ def to_stanford_tsv(
             See https://spacy.io/api/tokenizer for further informations. Defaults to None.
     """
 
+    from spacy.tokenizer import Tokenizer
+
     filtered_ac_df = ac.df[ac.df.tag.isin(tags)].copy()
 
     if len(filtered_ac_df) < 1:
