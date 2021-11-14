@@ -1,0 +1,49 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "body": {
+    "@context": {
+      "CATMA_272022A5-D729-4658-830A-B5B1F161CA67": "https://git.catma.de/test_corpus_root/tagsets/T_BA479AEC-D3C3-4CAA-95E0-83ECD239B164/CATMA_E4BB23A3-3975-47D9-9157-A0F53DBDCFFF/propertydefs.json/CATMA_272022A5-D729-4658-830A-B5B1F161CA67",
+      "CATMA_306D8D21-0CA3-48A1-AAFA-74DB6CD32F49": "https://git.catma.de/test_corpus_root/tagsets/T_BA479AEC-D3C3-4CAA-95E0-83ECD239B164/CATMA_E4BB23A3-3975-47D9-9157-A0F53DBDCFFF/propertydefs.json/CATMA_306D8D21-0CA3-48A1-AAFA-74DB6CD32F49",
+      "CATMA_54A5F93F-5333-3F0D-92F7-7BD5930DB9E6": "https://git.catma.de/test_corpus_root/tagsets/T_BA479AEC-D3C3-4CAA-95E0-83ECD239B164/CATMA_E4BB23A3-3975-47D9-9157-A0F53DBDCFFF/propertydefs.json/CATMA_54A5F93F-5333-3F0D-92F7-7BD5930DB9E6",
+      "CATMA_AB27F1D4-303A-3622-BB2C-72C310D0C1BF": "https://git.catma.de/test_corpus_root/tagsets/T_BA479AEC-D3C3-4CAA-95E0-83ECD239B164/CATMA_E4BB23A3-3975-47D9-9157-A0F53DBDCFFF/propertydefs.json/CATMA_AB27F1D4-303A-3622-BB2C-72C310D0C1BF",
+      "tag": "https://app.catma.de/catma//tag",
+      "tagset": "https://app.catma.de/catma//tagset"
+    },
+    "properties": {
+      "system": {
+        "CATMA_54A5F93F-5333-3F0D-92F7-7BD5930DB9E6": [
+          "2021-08-19T13:45:10.216+0200"
+        ],
+        "CATMA_AB27F1D4-303A-3622-BB2C-72C310D0C1BF": [
+          "MVauth"
+        ]
+      },
+      "user": {
+        "CATMA_272022A5-D729-4658-830A-B5B1F161CA67": [
+          "no"
+        ],
+        "CATMA_306D8D21-0CA3-48A1-AAFA-74DB6CD32F49": [
+          "no"
+        ]
+      }
+    },
+    "tag": "https://git.catma.de/test_corpus_root/tagsets/T_BA479AEC-D3C3-4CAA-95E0-83ECD239B164/CATMA_E4BB23A3-3975-47D9-9157-A0F53DBDCFFF",
+    "tagset": "https://git.catma.de/test_corpus_root/tagsets/T_BA479AEC-D3C3-4CAA-95E0-83ECD239B164",
+    "type": "Dataset"
+  },
+  "id": "https://git.catma.de/test_corpus_root/collections/C_8AB3C081-E606-40B5-98D9-A51CBFE29E6D/annotations/CATMA_A398C419-562A-49FC-9114-EC632C8A7FE5.json",
+  "target": {
+    "items": [
+      {
+        "selector": {
+          "end": 122,
+          "start": 67,
+          "type": "TextPositionSelector"
+        },
+        "source": "D_3724C31B-D93B-47D8-8A3C-1863DE091FB6"
+      }
+    ],
+    "type": "List"
+  },
+  "type": "Annotation"
+}

@@ -1,0 +1,69 @@
+{
+  "name": "change_of_state",
+  "parentUuid": "CATMA_D28B4098-B209-4A00-872A-7543DBABCECB",
+  "systemPropertyDefinitions": {
+    "CATMA_1F7F0FBF-4E2B-4E9C-8665-888E36A5DA73": {
+      "name": "catma_markupauthor",
+      "possibleValueList": [
+        "MVauth"
+      ],
+      "uuid": "CATMA_1F7F0FBF-4E2B-4E9C-8665-888E36A5DA73"
+    },
+    "CATMA_54A5F93F-5333-3F0D-92F7-7BD5930DB9E6": {
+      "name": "catma_markuptimestamp",
+      "possibleValueList": [],
+      "uuid": "CATMA_54A5F93F-5333-3F0D-92F7-7BD5930DB9E6"
+    },
+    "CATMA_A309D8FB-C5B8-33C9-A1B1-8CF7A5548C6A": {
+      "name": "catma_displaycolor",
+      "possibleValueList": [
+        "-8519810"
+      ],
+      "uuid": "CATMA_A309D8FB-C5B8-33C9-A1B1-8CF7A5548C6A"
+    }
+  },
+  "tagsetDefinitionUuid": "T_BA479AEC-D3C3-4CAA-95E0-83ECD239B164",
+  "userDefinedPropertyDefinitions": {
+    "CATMA_54C73616-434B-4B16-986A-2D5D8A4B7815": {
+      "name": "persistent",
+      "possibleValueList": [
+        "yes",
+        "no"
+      ],
+      "uuid": "CATMA_54C73616-434B-4B16-986A-2D5D8A4B7815"
+    },
+    "CATMA_88A8BAA3-401C-43B2-818C-1DB21DEE92C2": {
+      "name": "mental",
+      "possibleValueList": [
+        "yes",
+        "no"
+      ],
+      "uuid": "CATMA_88A8BAA3-401C-43B2-818C-1DB21DEE92C2"
+    },
+    "CATMA_C8CEC07D-90AD-41DD-8683-47825EE43E5B": {
+      "name": "unpredictable",
+      "possibleValueList": [
+        "yes",
+        "no"
+      ],
+      "uuid": "CATMA_C8CEC07D-90AD-41DD-8683-47825EE43E5B"
+    },
+    "CATMA_D0D089F3-C803-40E6-AA6B-D81E0FB0EE03": {
+      "name": "intentional",
+      "possibleValueList": [
+        "yes",
+        "no"
+      ],
+      "uuid": "CATMA_D0D089F3-C803-40E6-AA6B-D81E0FB0EE03"
+    },
+    "CATMA_FDA694DD-C797-4A77-BC0B-C43404BC9227": {
+      "name": "irreversible",
+      "possibleValueList": [
+        "yes",
+        "no"
+      ],
+      "uuid": "CATMA_FDA694DD-C797-4A77-BC0B-C43404BC9227"
+    }
+  },
+  "uuid": "CATMA_710B4F28-E827-476D-8E32-B8F7287307E3"
+}

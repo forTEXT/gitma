@@ -1,0 +1,22 @@
+{
+  "gitContentInfoSet": {
+    "author": null,
+    "description": null,
+    "publisher": null,
+    "title": "Kafka Franz Das Urteil"
+  },
+  "gitIndexInfoSet": {
+    "locale": "de",
+    "unseparableCharacterSequences": [],
+    "userDefinedSeparatingCharacters": []
+  },
+  "gitTechInfoSet": {
+    "charset": "UTF-8",
+    "checksum": 2025564824,
+    "fileName": "Kafka_Franz_Das_Urteil.txt",
+    "fileOSType": "UNIX",
+    "fileType": "TEXT",
+    "mimeType": "text/plain",
+    "uri": "file:/var/lib/jetty/temp/D_3724C31B-D93B-47D8-8A3C-1863DE091FB6"
+  }
+}

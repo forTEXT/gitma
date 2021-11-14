@@ -1,0 +1,57 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "body": {
+    "@context": {
+      "CATMA_2C847CB0-F49B-4334-B1CF-F4AF0F7FE999": "https://git.catma.de/test_corpus_root/tagsets/T_BA479AEC-D3C3-4CAA-95E0-83ECD239B164/CATMA_D28B4098-B209-4A00-872A-7543DBABCECB/CATMA_9F68020E-29BA-48D7-916D-C19DD4D446A5/propertydefs.json/CATMA_2C847CB0-F49B-4334-B1CF-F4AF0F7FE999",
+      "CATMA_54A5F93F-5333-3F0D-92F7-7BD5930DB9E6": "https://git.catma.de/test_corpus_root/tagsets/T_BA479AEC-D3C3-4CAA-95E0-83ECD239B164/CATMA_D28B4098-B209-4A00-872A-7543DBABCECB/CATMA_9F68020E-29BA-48D7-916D-C19DD4D446A5/propertydefs.json/CATMA_54A5F93F-5333-3F0D-92F7-7BD5930DB9E6",
+      "CATMA_589FB926-9D21-4066-A80F-E596B7ED89DD": "https://git.catma.de/test_corpus_root/tagsets/T_BA479AEC-D3C3-4CAA-95E0-83ECD239B164/CATMA_D28B4098-B209-4A00-872A-7543DBABCECB/CATMA_9F68020E-29BA-48D7-916D-C19DD4D446A5/propertydefs.json/CATMA_589FB926-9D21-4066-A80F-E596B7ED89DD",
+      "CATMA_AA54E47E-062E-476E-B964-7D7298989F27": "https://git.catma.de/test_corpus_root/tagsets/T_BA479AEC-D3C3-4CAA-95E0-83ECD239B164/CATMA_D28B4098-B209-4A00-872A-7543DBABCECB/CATMA_9F68020E-29BA-48D7-916D-C19DD4D446A5/propertydefs.json/CATMA_AA54E47E-062E-476E-B964-7D7298989F27",
+      "CATMA_AB27F1D4-303A-3622-BB2C-72C310D0C1BF": "https://git.catma.de/test_corpus_root/tagsets/T_BA479AEC-D3C3-4CAA-95E0-83ECD239B164/CATMA_D28B4098-B209-4A00-872A-7543DBABCECB/CATMA_9F68020E-29BA-48D7-916D-C19DD4D446A5/propertydefs.json/CATMA_AB27F1D4-303A-3622-BB2C-72C310D0C1BF",
+      "CATMA_BF78966C-1450-4996-94FE-52B7BF71E4F2": "https://git.catma.de/test_corpus_root/tagsets/T_BA479AEC-D3C3-4CAA-95E0-83ECD239B164/CATMA_D28B4098-B209-4A00-872A-7543DBABCECB/CATMA_9F68020E-29BA-48D7-916D-C19DD4D446A5/propertydefs.json/CATMA_BF78966C-1450-4996-94FE-52B7BF71E4F2",
+      "tag": "https://app.catma.de/catma//tag",
+      "tagset": "https://app.catma.de/catma//tagset"
+    },
+    "properties": {
+      "system": {
+        "CATMA_54A5F93F-5333-3F0D-92F7-7BD5930DB9E6": [
+          "2021-08-19T13:47:32.004+0200"
+        ],
+        "CATMA_AB27F1D4-303A-3622-BB2C-72C310D0C1BF": [
+          "MVauth"
+        ]
+      },
+      "user": {
+        "CATMA_2C847CB0-F49B-4334-B1CF-F4AF0F7FE999": [
+          "no"
+        ],
+        "CATMA_589FB926-9D21-4066-A80F-E596B7ED89DD": [
+          "no"
+        ],
+        "CATMA_AA54E47E-062E-476E-B964-7D7298989F27": [
+          "no"
+        ],
+        "CATMA_BF78966C-1450-4996-94FE-52B7BF71E4F2": [
+          "yes"
+        ]
+      }
+    },
+    "tag": "https://git.catma.de/test_corpus_root/tagsets/T_BA479AEC-D3C3-4CAA-95E0-83ECD239B164/CATMA_D28B4098-B209-4A00-872A-7543DBABCECB/CATMA_9F68020E-29BA-48D7-916D-C19DD4D446A5",
+    "tagset": "https://git.catma.de/test_corpus_root/tagsets/T_BA479AEC-D3C3-4CAA-95E0-83ECD239B164",
+    "type": "Dataset"
+  },
+  "id": "https://git.catma.de/test_corpus_root/collections/C_8AB3C081-E606-40B5-98D9-A51CBFE29E6D/annotations/CATMA_0AC9AA6F-7384-4CF1-885F-75A257FF84F1.json",
+  "target": {
+    "items": [
+      {
+        "selector": {
+          "end": 487,
+          "start": 445,
+          "type": "TextPositionSelector"
+        },
+        "source": "D_3724C31B-D93B-47D8-8A3C-1863DE091FB6"
+      }
+    ],
+    "type": "List"
+  },
+  "type": "Annotation"
+}
