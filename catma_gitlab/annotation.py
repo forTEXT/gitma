@@ -102,15 +102,19 @@ def get_selector_items(start_points: list, end_points: list, source_document_uui
 
 
 class Annotation:
-    def __init__(self, directory: str, plain_text: str, context=20):
+    def __init__(self, directory: str, plain_text: str, context: int = 50):
         """
         Class which represents a CATMA annotation.
         :param directory: the annotations directory
         :param plain_text: annotated text as CATMA document
         """
         self.directory = directory
-        with open(directory, 'r', encoding='utf-8') as ip:  # load annotation json file as dict
-            self.data = json.load(ip)
+        try:
+            with open(directory, 'r', encoding='utf-8') as ip:  # load annotation json file as dict
+                self.data = json.load(ip)
+        except FileNotFoundError:
+            raise FileNotFoundError(
+                f'The annotation file in the directory {self.directory} could not be found. Make sure the Project clone did work properly.')
 
         self.date: str = get_date(self.data)
         self.author: str = get_author(self.data)

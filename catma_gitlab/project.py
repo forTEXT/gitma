@@ -3,14 +3,13 @@ import os
 import json
 import gitlab
 import pandas as pd
-from textwrap import dedent
 from typing import Dict, List, Tuple
 from catma_gitlab.text import Text
 from catma_gitlab.tagset import Tagset
 from catma_gitlab.annotation_collection import AnnotationCollection
 
 
-def load_gitlab_project(gitlab_access_token: str, project_name: str) -> str:
+def load_gitlab_project(gitlab_access_token: str, project_name: str, backup_directory: str = './') -> str:
     """Downloads a CATMA Project using git.
 
     Args:
@@ -24,6 +23,7 @@ def load_gitlab_project(gitlab_access_token: str, project_name: str) -> str:
     Returns:
         str: The CATMA Project UUID
     """
+
     gl = gitlab.Gitlab(
         url='https://git.catma.de/',
         private_token=gitlab_access_token
@@ -37,7 +37,10 @@ def load_gitlab_project(gitlab_access_token: str, project_name: str) -> str:
     project_uuid = gl.projects.get(id=project_gitlab_id).name
     project_url = f"https://git.catma.de/{project_uuid[:-5]}/{project_uuid}.git"
 
-    # clone the project in current directory
+    # clone the project in the defined directory
+    os.chdir(backup_directory)
+    subprocess.Popen(
+        f'git clone --recurse-submodules {project_url}', shell=True)
     subprocess.run(
         ['git', 'clone', '--recurse-submodules', project_url])
 
@@ -117,6 +120,13 @@ def load_annotation_collections(
     return annotation_collections, ac_dict
 
 
+def test_tageset_directory(
+        project_uuid: str,
+        tagset_uuid: str):
+    if os.path.isdir(f'{project_uuid}/tagsets/{tagset_uuid}/header.json'):
+        return True
+
+
 def load_tagsets(project_uuid: str) -> Tuple[List[Tagset], Dict[str, Tagset]]:
     """Generates List and Dict of Tagsets.
 
@@ -132,6 +142,8 @@ def load_tagsets(project_uuid: str) -> Tuple[List[Tagset], Dict[str, Tagset]]:
             project_uuid=project_uuid,
             catma_id=directory
         ) for directory in os.listdir(tagsets_directory)
+        # ignore empty tagsets
+        if test_tageset_directory(project_uuid, directory)
     ]
     tagset_dict = {tagset.name: tagset for tagset in tagsets}
 
@@ -161,16 +173,16 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
 
 class CatmaProject:
     def __init__(
-        self,
-        project_directory: str = './',
-        project_uuid: str = None,
-        included_acs: list = None,
-        excluded_acs: list = None,
-        ac_filter_keyword: str = None,
-        load_from_gitlab: bool = False,
-        gitlab_access_token: str = None,
-        project_name: str = None
-    ):
+            self,
+            project_directory: str = './',
+            project_uuid: str = None,
+            included_acs: list = None,
+            excluded_acs: list = None,
+            ac_filter_keyword: str = None,
+            load_from_gitlab: bool = False,
+            gitlab_access_token: str = None,
+            project_name: str = None,
+            backup_directory: str = './'):
         """This Project represents a CATMA Project including all Documents, Tagsets
         and Annotation Collections.
         You can eather load the Project from a local git clone or you load it directly
@@ -194,7 +206,8 @@ class CatmaProject:
         if load_from_gitlab:
             self.uuid = load_gitlab_project(
                 gitlab_access_token=gitlab_access_token,
-                project_name=project_name
+                project_name=project_name,
+                backup_directory=backup_directory
             )
         else:
             self.uuid = project_uuid
@@ -204,54 +217,39 @@ class CatmaProject:
         self.project_directory = project_directory
         os.chdir(self.project_directory)
 
-        try:
-            # Load Tagsets
-            # test if any Tagsets exists
-            if os.path.isdir(self.uuid + '/tagsets/'):
-                self.tagsets, self.tagset_dict = load_tagsets(
-                    project_uuid=self.uuid)
-            else:
-                self.tagsets, self.tagset_dict = None, None
+        # Load Tagsets
+        # test if any Tagsets exists
+        print('Loading Tagsets ...')
+        if os.path.isdir(self.uuid + '/tagsets/'):
+            self.tagsets, self.tagset_dict = load_tagsets(
+                project_uuid=self.uuid)
+        else:
+            self.tagsets, self.tagset_dict = None, None
 
-            # Load Texts
-            self.texts, self.text_dict = load_texts(project_uuid=self.uuid)
+        # Load Texts
+        print('Loading Documents ...')
+        self.texts, self.text_dict = load_texts(project_uuid=self.uuid)
 
-            # Load Annotation Collections
-            self.annotation_collections, self.ac_dict = load_annotation_collections(
-                project_uuid=self.uuid,
-                included_acs=included_acs,
-                excluded_acs=excluded_acs,
-                ac_filter_keyword=ac_filter_keyword
-            )
-
-        except FileNotFoundError:
-            if load_from_gitlab:
-                raise Exception(dedent(
-                    """
-                    Couldn't find your project!
-                    Probably cloning the project didn't work.
-                    Make sure that the project name and your access token are correct.
-                    """
-                ))
-            else:
-                raise FileNotFoundError(dedent(
-                    """
-                    Couldn't find your project!
-                    Probably the project directory or uuid were not correct.
-                    """
-                ))
+        # Load Annotation Collections
+        print('Loading Annotation Collections ...')
+        self.annotation_collections, self.ac_dict = load_annotation_collections(
+            project_uuid=self.uuid,
+            included_acs=included_acs,
+            excluded_acs=excluded_acs,
+            ac_filter_keyword=ac_filter_keyword
+        )
 
         os.chdir(cwd)
 
-    from ._gold_annotation import create_gold_annotations
+    from catma_gitlab._gold_annotation import create_gold_annotations
 
-    from ._write_annotation import write_annotation_json
+    from catma_gitlab._write_annotation import write_annotation_json
 
-    from ._vizualize import plot_annotation_progression
+    from catma_gitlab._vizualize import plot_annotation_progression
 
-    from ._metrics import get_iaa
+    from catma_gitlab._metrics import get_iaa
 
-    from ._gamma import gamma_agreement
+    from catma_gitlab._gamma import gamma_agreement
 
     def stats(self) -> pd.DataFrame:
         """Shows some CATMA Project stats.
@@ -297,3 +295,12 @@ class CatmaProject:
         print('Updated the CATMA Project')
 
         os.chdir(cwd)
+
+
+if __name__ == '__main__':
+
+    project = CatmaProject(
+        project_directory='catma_gitlab/test/demo_project/',
+        project_uuid='test_corpus_root'
+    )
+    print(project.stats())

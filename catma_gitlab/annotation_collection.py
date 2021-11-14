@@ -63,7 +63,7 @@ def duplicate_rows(ac_df, property_col):
 
 
 class AnnotationCollection:
-    def __init__(self, project_uuid: str, catma_id: str):
+    def __init__(self, project_uuid: str, catma_id: str, context: int = 50):
         """
         Class which represents a CATMA annotation collection.
         :param project_uuid:  directory of a CATMA gitlab root folder
@@ -71,8 +71,12 @@ class AnnotationCollection:
         """
         self.uuid = catma_id
 
-        with open(project_uuid + '/collections/' + self.uuid + '/header.json') as header_json:
-            self.header = json.load(header_json)
+        try:
+            with open(project_uuid + '/collections/' + self.uuid + '/header.json') as header_json:
+                self.header = json.load(header_json)
+        except FileNotFoundError:
+            raise FileNotFoundError(
+                f"The Annotation Collection with the ID {self.uuid} could't be found. Make sure the project clone did work properly!")
 
         self.name = self.header['name']
 
@@ -86,8 +90,8 @@ class AnnotationCollection:
 
         df_columns = [
             'document', 'annotation collection', 'annotator',
-            'tag', 'properties', 'pretext', 'annotation',
-            'posttext', 'start_point', 'end_point', 'date'
+            'tag', 'properties', 'left_context', 'annotation',
+            'right_context', 'start_point', 'end_point', 'date'
         ]
 
         if os.path.isdir(project_uuid + '/collections/' + self.uuid + '/annotations/'):
@@ -95,7 +99,8 @@ class AnnotationCollection:
                 Annotation(
                     directory=project_uuid + '/collections/' +
                     self.uuid + '/annotations/' + annotation,
-                    plain_text=self.text.plain_text
+                    plain_text=self.text.plain_text,
+                    context=context
                 ) for annotation in os.listdir(project_uuid + '/collections/' + self.uuid + '/annotations/')
             ])
 

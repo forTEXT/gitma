@@ -13,16 +13,22 @@ class Tagset:
         """
         self.uuid = catma_id
 
-        self.tagset_directory = project_uuid + '/tagsets/' + catma_id
-        with open(self.tagset_directory + '/header.json') as header_input:
-            header = json.load(header_input)
+        self.directory = project_uuid + '/tagsets/' + catma_id
+
+        try:
+            with open(self.directory + '/header.json') as header_input:
+                header = json.load(header_input)
+        except FileNotFoundError:
+            raise FileNotFoundError(
+                f'The Tagset file in the directory {self.directory} could not be found. Make sure the Project clone did work properly.')
+
         self.name = header['name']
 
         self.tag_list = []
         self.tag_dict = {}
 
         # walks through tagsets directory
-        for dirpath, dirnames, filenames in os.walk(self.tagset_directory):
+        for dirpath, dirnames, filenames in os.walk(self.directory):
             for file in filenames:
                 if file == 'propertydefs.json':             # if a subdirectory is a Tag json file
                     # create a Tag Class object

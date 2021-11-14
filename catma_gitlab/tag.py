@@ -1,3 +1,4 @@
+import os
 import json
 from catma_gitlab.property import Property
 
@@ -44,9 +45,14 @@ class Tag:
         Class which represents a CATMA Tag.
         :param: directory of a CATMA tag json file.
         """
-        self.file_directory = json_file_directory.replace('\\', '/')
-        with open(json_file_directory) as json_input:
-            self.json = json.load(json_input)
+        self.directory = json_file_directory.replace('\\', '/')
+        try:
+            with open(json_file_directory) as json_input:
+                self.json = json.load(json_input)
+        except FileNotFoundError:
+            raise FileNotFoundError(
+                f'The Tag file in this directory could not be found:\n{self.directory}\n\
+                    --> Make sure the CATMA Project clone did work properly.')
 
         self.name = self.json['name']
         self.id = self.json['uuid']
