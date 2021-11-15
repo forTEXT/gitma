@@ -1,15 +1,14 @@
 import pandas as pd
-from spacy.tokenizer import Tokenizer
+import spacy
 
 
-def get_spacy_df(text: str, language: str = 'german', tokenizer: Tokenizer = None) -> pd.DataFrame:
+def get_spacy_df(text: str, spacy_model: str) -> pd.DataFrame:
     """Generates a table with the token and their position in the given text by using `spacy`.
 
     Args:
         text (str): Any text.
         language (str, optional): The text's language. Defaults to 'german'.
-        tokenizer (Tokenizer, optional): A Spacy tokenizer. Should be used if the text is neither German nor English.
-            See https://spacy.io/api/tokenizer for further informations. Defaults to None.
+        spacy_model (str, optional): a spacy model as listed in https://spacy.io/usage/models. Default to 'de_core_news_sm'.
 
     Returns:
         pd.DataFrame: `pandas.DataFrame` with 3 columns:\n
@@ -17,24 +16,16 @@ def get_spacy_df(text: str, language: str = 'german', tokenizer: Tokenizer = Non
             - 'Token_Index': a text pointer for the start point of the token
             - 'Token': the token
     """
-    if tokenizer:
-        tokenizer = tokenizer
-    elif language == 'german':
-        from spacy.lang.de import German
-        nlp = German()
-        tokenizer = Tokenizer(nlp.vocab)
-    else:
-        from spacy.lang.en import English
-        nlp = English()
-        tokenizer = Tokenizer(nlp.vocab)
+    import spacy
+    nlp = spacy.load('de_core_news_sm')
+    doc = nlp(text)
 
     lemma_list = []
-    doc = tokenizer(text)
 
     for token in doc:
         if '\n' not in token.text:
             lemma_list.append((
-                token.id,    # Token ID
+                token.i,          # Token ID
                 token.idx,        # Start Pointer in Document
                 token.text,       # Token
             ))
@@ -47,8 +38,7 @@ def to_stanford_tsv(
         ac,
         tags: list,
         file_name: str = None,
-        language: str = 'german',
-        tokenizer: Tokenizer = None) -> None:
+        spacy_model: str = 'de_core_news_sm') -> None:
     """Takes a CATMA `AnnotationCollection` and writes a tsv-file which can be used to train a stanford NER model.
     Every token in the collection's text gets a tag if it lays in an annotated text segment. 
 
@@ -56,12 +46,8 @@ def to_stanford_tsv(
         ac (catma_gitlab.AnnotationCollection): `AnnotationCollection` object
         tags (list): List of tags, that should be considered.
         file_name (str, optional): name of the tsv-file. Defaults to None.
-        language (str, optional): the text's language. Defaults to 'german'.
-        tokenizer (Tokenizer, optional): A Spacy tokenizer. Should be used if the text is neither German nor English.
-            See https://spacy.io/api/tokenizer for further informations. Defaults to None.
+        spacy_model (str, optional): a spacy model as listed in https://spacy.io/usage/models. Default to 'de_core_news_sm'.
     """
-
-    from spacy.tokenizer import Tokenizer
 
     filtered_ac_df = ac.df[ac.df.tag.isin(tags)].copy()
 
@@ -70,7 +56,7 @@ def to_stanford_tsv(
             f"Couldn't find any annotations with given tags in AnnotationCollection {ac.name}")
     else:
         lemma_df = get_spacy_df(text=ac.text.plain_text,
-                                language=language, tokenizer=tokenizer)
+                                spacy_model=spacy_model)
         tsv_tags = []
         for _, row in lemma_df.iterrows():
             l_df = filtered_ac_df[
