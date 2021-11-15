@@ -76,7 +76,8 @@ class AnnotationCollection:
                 self.header = json.load(header_json)
         except FileNotFoundError:
             raise FileNotFoundError(
-                f"The Annotation Collection with the ID {self.uuid} could't be found. Make sure the project clone did work properly!")
+                f"The Annotation Collection in this directory could not be found:\n{self.directory}\n\
+                    --> Make sure the CATMA Project clone did work properly.")
 
         self.name = self.header['name']
 

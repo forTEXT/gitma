@@ -20,10 +20,10 @@ class Tagset:
                 header = json.load(header_input)
         except FileNotFoundError:
             raise FileNotFoundError(
-                f'The Tagset file in the directory {self.directory} could not be found. Make sure the Project clone did work properly.')
+                f'The Tagset in this directory could not be found:\n{self.directory}\n\
+                    --> Make sure the CATMA Project clone did work properly.')
 
         self.name = header['name']
-
         self.tag_list = []
         self.tag_dict = {}
 

@@ -114,7 +114,8 @@ class Annotation:
                 self.data = json.load(ip)
         except FileNotFoundError:
             raise FileNotFoundError(
-                f'The annotation file in the directory {self.directory} could not be found. Make sure the Project clone did work properly.')
+                f'The Annotation in this directory could not be found:\n{self.directory}\n\
+                    --> Make sure the CATMA Project clone did work properly.')
 
         self.date: str = get_date(self.data)
         self.author: str = get_author(self.data)

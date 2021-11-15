@@ -215,10 +215,14 @@ class CatmaProject:
         # get the current directory to return after loaded the project
         cwd = os.getcwd()
         self.project_directory = project_directory
-        os.chdir(self.project_directory)
+        try:
+            os.chdir(self.project_directory)
+        except FileNotFoundError:
+            raise FileNotFoundError(
+                f"The CATMA Project in this directory could not been found \n{self.project_directory}\n\
+                    -> Make sure the CATMA Project clone did work properly and that the project directory is correct")
 
         # Load Tagsets
-        # test if any Tagsets exists
         print('Loading Tagsets ...')
         if os.path.isdir(self.uuid + '/tagsets/'):
             self.tagsets, self.tagset_dict = load_tagsets(
