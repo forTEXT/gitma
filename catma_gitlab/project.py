@@ -197,7 +197,7 @@ class CatmaProject:
             load_from_gitlab (bool, optional): Whether the CATMA Project shall be loaded dircetly from the CATMA GitLab. Defaults to False.
             gitlab_access_token (str, optional): The private CATMA GitLab Token. Defaults to None.
             project_name (str, optional): The CATMA Project name. Defaults to None.
-
+            backup_directory (str, optional): The your Project clone should be located. Default to './'.
         Raises:
             Exception: If the CATMA Project were not found in the CATMA GitLab.
             FileNotFoundError: If the local or remote CATMA Project were not found.
@@ -209,6 +209,7 @@ class CatmaProject:
                 project_name=project_name,
                 backup_directory=backup_directory
             )
+            project_directory = backup_directory
         else:
             self.uuid = project_uuid
 

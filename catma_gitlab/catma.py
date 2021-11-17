@@ -42,7 +42,7 @@ class Catma:
 
         self.project_dict = {}
 
-    def load_project_from_gitlab(self, project_name: str) -> None:
+    def load_project_from_gitlab(self, project_name: str, backup_directory: str = './') -> None:
         """Load a CATMA Project from GitLab.
 
         Args:
@@ -51,7 +51,8 @@ class Catma:
         self.project_dict[project_name] = CatmaProject(
             load_from_gitlab=True,
             gitlab_access_token=self.gitlab_access_token,
-            project_name=project_name
+            project_name=project_name,
+            backup_directory=backup_directory
         )
 
     def load_all_projects_from_gitlab(self) -> None:
