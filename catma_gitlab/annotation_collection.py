@@ -38,7 +38,7 @@ def split_property_dict_to_column(ac_df):
     return ac_df.drop(columns='properties')
 
 
-def duplicate_rows(ac_df, property_col):
+def duplicate_rows(ac_df: pd.DataFrame, property_col: str) -> pd.DataFrame:
     """
     Duplicates rows in AnnotationCollection DataFrame if multiple property values exist in defined porperty column.
     """
@@ -99,10 +99,11 @@ class AnnotationCollection:
             self.annotations = sorted([
                 Annotation(
                     directory=project_uuid + '/collections/' +
-                    self.uuid + '/annotations/' + annotation,
+                    self.uuid + '/annotations/' + annotation_dir,
                     plain_text=self.text.plain_text,
                     context=context
-                ) for annotation in os.listdir(project_uuid + '/collections/' + self.uuid + '/annotations/')
+                ) for annotation_dir in os.listdir(project_uuid + '/collections/' + self.uuid + '/annotations/')
+                if annotation_dir.startswith('CATMA_')
             ])
 
             self.tags = [an.tag for an in self.annotations]
@@ -129,6 +130,8 @@ class AnnotationCollection:
         return len(self.annotations)
 
     from catma_gitlab._vizualize import plot_annotation_overview
+
+    from catma_gitlab._vizualize import plot_scaled_annotations
 
     from catma_gitlab._export_annotations import to_stanford_tsv
 

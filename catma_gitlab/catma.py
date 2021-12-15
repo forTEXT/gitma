@@ -81,3 +81,8 @@ class Catma:
             included_acs=included_acs,
             excluded_acs=excluded_acs
         )
+
+    def git_clone_command(self, project_name: str):
+        project_uuid = self.project_uuid_dict[project_name]
+        project_url = f"https://git.catma.de/{project_uuid[:-5]}/{project_uuid}.git"
+        return f'git clone --recurse-submodules {project_url}'

@@ -39,8 +39,6 @@ def load_gitlab_project(gitlab_access_token: str, project_name: str, backup_dire
 
     # clone the project in the defined directory
     os.chdir(backup_directory)
-    subprocess.Popen(
-        f'git clone --recurse-submodules {project_url}', shell=True)
     subprocess.run(
         ['git', 'clone', '--recurse-submodules', project_url])
 
@@ -112,6 +110,7 @@ def load_annotation_collections(
                 project_uuid=project_uuid,
                 catma_id=directory
             ) for directory in os.listdir(collections_directory)
+            if directory.startswith('C_')
         ]
 
     ac_dict = {
