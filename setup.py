@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="catma-gitlab",
-    version="1.1.1",
+    version="1.2.0",
     author="Michael Vauth",
     packages=setuptools.find_packages(),
     description="Load CATMA annotations from their git data",
