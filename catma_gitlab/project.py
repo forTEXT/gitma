@@ -255,6 +255,11 @@ class CatmaProject:
 
     from catma_gitlab._gamma import gamma_agreement
 
+    def all_annotations(self):
+        for ac in self.annotation_collections:
+            for an in ac.annotations:
+                yield an
+
     def stats(self) -> pd.DataFrame:
         """Shows some CATMA Project stats.
 

@@ -101,6 +101,19 @@ def get_selector_items(start_points: list, end_points: list, source_document_uui
     ]
 
 
+def search_for_startpoints(selector_list: List[Selector]) -> list:
+    start_points = [selector.start for selector in selector_list]
+    end_points = [selector.end for selector in selector_list]
+
+    # filter redundant start points
+    start_points = [
+        start_point for start_point in start_points if start_point not in end_points]
+    end_points = [
+        end_point for end_point in end_points if end_point not in start_points]
+
+    return zip(start_points, end_points)
+
+
 class Annotation:
     def __init__(self, directory: str, plain_text: str, context: int = 50):
         """

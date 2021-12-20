@@ -5,14 +5,6 @@ from catma_gitlab.text import Text
 from catma_gitlab.annotation import Annotation
 
 
-def load_annotations():
-    pass
-
-
-def ac_to_dataframe():
-    pass
-
-
 def split_property_dict_to_column(ac_df):
     """
     Creates Pandas DataFrame columns for each property in annotation collection.
@@ -128,6 +120,10 @@ class AnnotationCollection:
 
     def __len__(self):
         return len(self.annotations)
+
+    def __iter__(self):
+        for an in self.annotations:
+            yield an
 
     from catma_gitlab._vizualize import plot_annotation_overview
 
