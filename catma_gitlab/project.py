@@ -38,10 +38,13 @@ def load_gitlab_project(gitlab_access_token: str, project_name: str, backup_dire
     project_url = f"https://git.catma.de/{project_uuid[:-5]}/{project_uuid}.git"
 
     # clone the project in the defined directory
+    cwd = os.getcwd()
     os.chdir(backup_directory)
-    subprocess.run(
-        ['git', 'clone', '--recurse-submodules', project_url])
-
+    popen = subprocess.Popen(
+        ['git', 'clone', '--recurse-submodules', project_url],
+        stdout=subprocess.PIPE,
+        universal_newlines=True
+    )
     return project_uuid
 
 
@@ -64,6 +67,7 @@ def get_ac_name(project_uuid: str, directory: str) -> str:
 
 def load_annotation_collections(
         project_uuid: str,
+        catma_project,
         included_acs: list = None,
         excluded_acs: list = None,
         ac_filter_keyword: str = None) -> Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]:
@@ -84,7 +88,8 @@ def load_annotation_collections(
         annotation_collections = [
             AnnotationCollection(
                 project_uuid=project_uuid,
-                catma_id=directory
+                catma_id=directory,
+                catma_project=catma_project
             ) for directory in os.listdir(collections_directory)
             if get_ac_name(project_uuid, directory) in included_acs
         ]
@@ -122,7 +127,8 @@ def load_annotation_collections(
 def test_tageset_directory(
         project_uuid: str,
         tagset_uuid: str):
-    if os.path.isdir(f'{project_uuid}/tagsets/{tagset_uuid}/header.json'):
+    tageset_dir = f'{project_uuid}/tagsets/{tagset_uuid}/header.json'
+    if os.path.isfile(tageset_dir):
         return True
 
 
@@ -144,7 +150,7 @@ def load_tagsets(project_uuid: str) -> Tuple[List[Tagset], Dict[str, Tagset]]:
         # ignore empty tagsets
         if test_tageset_directory(project_uuid, directory)
     ]
-    tagset_dict = {tagset.name: tagset for tagset in tagsets}
+    tagset_dict = {tagset.uuid: tagset for tagset in tagsets}
 
     return tagsets, tagset_dict
 
@@ -201,6 +207,7 @@ class CatmaProject:
             Exception: If the CATMA Project were not found in the CATMA GitLab.
             FileNotFoundError: If the local or remote CATMA Project were not found.
         """
+        cwd = os.getcwd()
         # Clone CATMA Project
         if load_from_gitlab:
             self.uuid = load_gitlab_project(
@@ -212,8 +219,8 @@ class CatmaProject:
         else:
             self.uuid = project_uuid
 
+        print(os.getcwd())
         # get the current directory to return after loaded the project
-        cwd = os.getcwd()
         self.project_directory = project_directory
         try:
             os.chdir(self.project_directory)
@@ -240,7 +247,8 @@ class CatmaProject:
             project_uuid=self.uuid,
             included_acs=included_acs,
             excluded_acs=excluded_acs,
-            ac_filter_keyword=ac_filter_keyword
+            ac_filter_keyword=ac_filter_keyword,
+            catma_project=self
         )
 
         os.chdir(cwd)

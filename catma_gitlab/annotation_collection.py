@@ -55,7 +55,7 @@ def duplicate_rows(ac_df: pd.DataFrame, property_col: str) -> pd.DataFrame:
 
 
 class AnnotationCollection:
-    def __init__(self, project_uuid: str, catma_id: str, context: int = 50):
+    def __init__(self, project_uuid: str, catma_id: str, catma_project, context: int = 50):
         """
         Class which represents a CATMA annotation collection.
         :param project_uuid:  directory of a CATMA gitlab root folder
@@ -90,9 +90,9 @@ class AnnotationCollection:
         if os.path.isdir(project_uuid + '/collections/' + self.uuid + '/annotations/'):
             self.annotations = sorted([
                 Annotation(
-                    directory=project_uuid + '/collections/' +
-                    self.uuid + '/annotations/' + annotation_dir,
+                    directory=f'{project_uuid}/collections/{self.uuid}/annotations/{annotation_dir}',
                     plain_text=self.text.plain_text,
+                    catma_project=catma_project,
                     context=context
                 ) for annotation_dir in os.listdir(project_uuid + '/collections/' + self.uuid + '/annotations/')
                 if annotation_dir.startswith('CATMA_')

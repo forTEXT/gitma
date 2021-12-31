@@ -28,7 +28,7 @@ class Tagset:
         self.tag_dict = {}
 
         # walks through tagsets directory
-        for dirpath, dirnames, filenames in os.walk(self.directory):
+        for dirpath, _, filenames in os.walk(self.directory):
             for file in filenames:
                 if file == 'propertydefs.json':             # if a subdirectory is a Tag json file
                     # create a Tag Class object

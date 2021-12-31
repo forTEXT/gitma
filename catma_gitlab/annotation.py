@@ -3,7 +3,6 @@ import os
 import uuid
 from typing import List
 from datetime import datetime
-from catma_gitlab.tag import Tag
 from catma_gitlab.selector import Selector
 
 
@@ -13,6 +12,14 @@ def get_start_point(annotation_dict):
 
 def get_end_point(annotation_dict):
     return annotation_dict['target']['items'][-1]['selector']['end']
+
+
+def get_tagset_uuid(annotation_dict):
+    return annotation_dict['body']['tagset'][-38:]
+
+
+def get_tag_uuid(annotation_dict: dict):
+    return annotation_dict['body']['tag'][-42:]
 
 
 def get_tag_directory(annotation_dict):
@@ -115,7 +122,7 @@ def search_for_startpoints(selector_list: List[Selector]) -> list:
 
 
 class Annotation:
-    def __init__(self, directory: str, plain_text: str, context: int = 50):
+    def __init__(self, directory: str, plain_text: str, catma_project, context: int = 50):
         """
         Class which represents a CATMA annotation.
         :param directory: the annotations directory
@@ -142,8 +149,9 @@ class Annotation:
         self.selectors: List[Selector] = list(
             build_selectors(self.data, plain_text))
 
-        tag_directory = get_tag_directory(self.data)
-        self.tag = Tag(tag_directory)
+        tagset_uuid = get_tagset_uuid(self.data)
+        tag_uuid = get_tag_uuid(self.data)
+        self.tag = catma_project.tagset_dict[tagset_uuid].tag_dict[tag_uuid]
 
         user_properties = get_user_properties(self.data)
         self.properties = {
