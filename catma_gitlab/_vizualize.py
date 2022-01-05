@@ -1,10 +1,30 @@
+import pandas as pd
 
-"""
-    :param ac: Catma AnnotationCollection
-    :param y_axis: DataFrame column that will be mapped on y axis; default='tag'
-    :param prop: CATMA Tagset Property name
-    :param color_prop: can be used to define color coding in plot
+
+def format_annotation_text(text: str) -> str:
+    """Format the text of an annotation for plotting.
+
+    Args:
+        text (str): annotation_string
+
+    Returns:
+        str: html formatted string
     """
+    while '  ' in text:
+        text = text.replace('  ', ' ')
+
+    text_list = text.split(' ')
+    output_string = "<I><br>"
+    max_iter = len(text_list) if len(text_list) <= 60 else 60
+    for item in range(0, max_iter, 10):
+        output_string += ' '.join(text_list[item: item + 10]) + '<br>'
+
+    if len(text_list) > 60:
+        output_string += '[...]'
+
+    output_string += "</I>"
+
+    return output_string
 
 
 def plot_annotation_overview(ac, y_axis: str = 'tag', prop: str = None, color_prop: str = None):
@@ -30,8 +50,9 @@ def plot_annotation_overview(ac, y_axis: str = 'tag', prop: str = None, color_pr
         plot_df[f'prop:{color_prop}'] = [
             str(item) for item in plot_df[f'prop:{color_prop}']]
 
+    plot_df['ANNOTATION'] = plot_df['annotation'].apply(format_annotation_text)
     prop_list = [item for item in plot_df.columns if 'prop:' in item]
-    hover_cols = ['annotation'] + prop_list
+    hover_cols = ['ANNOTATION'] + prop_list
 
     fig = px.scatter(
         plot_df,
@@ -39,7 +60,8 @@ def plot_annotation_overview(ac, y_axis: str = 'tag', prop: str = None, color_pr
         y=split_by_y,
         hover_data=hover_cols,
         color=color,
-        opacity=0.7
+        opacity=0.7,
+        marginal_x='histogram'
     )
 
     fig.show()
@@ -104,6 +126,32 @@ def plot_scaled_annotations(ac, tag_scale: dict = None, bin_size: int = 50, smoo
             x=list(range(0, len(ac.text.plain_text), bin_size)),
             y=bin_tag_values
         )
+    )
+
+    fig.show()
+
+
+def plot_interactive(catma_project: "CatmaProject") -> None:
+    import plotly.express as px
+
+    plot_df = pd.DataFrame()
+    for ac in catma_project.annotation_collections:
+        plot_df = plot_df.append(ac.df, ignore_index=True)
+
+    plot_df['ANNOTATION'] = plot_df['annotation'].apply(format_annotation_text)
+    prop_list = [item for item in plot_df.columns if 'prop:' in item]
+    hover_cols = ['ANNOTATION'] + prop_list
+
+    fig = px.scatter(
+        plot_df,
+        x='start_point',
+        y='tag',
+        hover_data=hover_cols,
+        color='annotator',
+        opacity=0.7,
+        marginal_x='histogram',
+        facet_row='annotation collection',
+        facet_col='document',
     )
 
     fig.show()
