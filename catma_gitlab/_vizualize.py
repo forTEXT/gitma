@@ -131,7 +131,7 @@ def plot_scaled_annotations(ac, tag_scale: dict = None, bin_size: int = 50, smoo
     fig.show()
 
 
-def plot_interactive(catma_project: "CatmaProject") -> None:
+def plot_interactive(catma_project: "CatmaProject", color_col: str = 'annotator') -> None:
     import plotly.express as px
 
     plot_df = pd.DataFrame()
@@ -147,10 +147,9 @@ def plot_interactive(catma_project: "CatmaProject") -> None:
         x='start_point',
         y='tag',
         hover_data=hover_cols,
-        color='annotator',
+        color=color_col,
         opacity=0.7,
         marginal_x='histogram',
-        facet_row='annotation collection',
         facet_col='document',
     )
 
