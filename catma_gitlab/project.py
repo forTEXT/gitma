@@ -40,11 +40,8 @@ def load_gitlab_project(gitlab_access_token: str, project_name: str, backup_dire
     # clone the project in the defined directory
     cwd = os.getcwd()
     os.chdir(backup_directory)
-    popen = subprocess.Popen(
-        ['git', 'clone', '--recurse-submodules', project_url],
-        stdout=subprocess.PIPE,
-        universal_newlines=True
-    )
+    subprocess.run(['git', 'clone', '--recurse-submodules', project_url])
+    os.chdir(cwd)
     return project_uuid
 
 
@@ -66,7 +63,6 @@ def get_ac_name(project_uuid: str, directory: str) -> str:
 
 
 def load_annotation_collections(
-        project_uuid: str,
         catma_project,
         included_acs: list = None,
         excluded_acs: list = None,
@@ -82,38 +78,37 @@ def load_annotation_collections(
     Returns:
         Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]: List and Dict of Annotation Collections
     """
-    collections_directory = project_uuid + '/collections/'
+    collections_directory = catma_project.uuid + '/collections/'
 
     if included_acs:
         annotation_collections = [
             AnnotationCollection(
-                project_uuid=project_uuid,
-                catma_id=directory,
-                catma_project=catma_project
+                catma_project=catma_project,
+                ac_uuid=directory
             ) for directory in os.listdir(collections_directory)
-            if get_ac_name(project_uuid, directory) in included_acs
+            if get_ac_name(catma_project.uuid, directory) in included_acs
         ]
     elif excluded_acs:
         annotation_collections = [
             AnnotationCollection(
-                project_uuid=project_uuid,
-                catma_id=directory
+                catma_project=catma_project,
+                ac_uuid=directory
             ) for directory in os.listdir(collections_directory)
-            if get_ac_name(project_uuid, directory) not in excluded_acs
+            if get_ac_name(catma_project.uuid, directory) not in excluded_acs
         ]
     elif ac_filter_keyword:
         annotation_collections = [
             AnnotationCollection(
-                project_uuid=project_uuid,
-                catma_id=directory
+                catma_project=catma_project,
+                ac_uuid=directory
             ) for directory in os.listdir(collections_directory)
-            if ac_filter_keyword in get_ac_name(project_uuid, directory)
+            if ac_filter_keyword in get_ac_name(catma_project.uuid, directory)
         ]
     else:
         annotation_collections = [
             AnnotationCollection(
-                project_uuid=project_uuid,
-                catma_id=directory
+                catma_project=catma_project,
+                ac_uuid=directory
             ) for directory in os.listdir(collections_directory)
             if directory.startswith('C_')
         ]
@@ -179,8 +174,8 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
 class CatmaProject:
     def __init__(
             self,
-            project_directory: str = './',
             project_uuid: str = None,
+            project_directory: str = './',
             included_acs: list = None,
             excluded_acs: list = None,
             ac_filter_keyword: str = None,
@@ -207,7 +202,9 @@ class CatmaProject:
             Exception: If the CATMA Project were not found in the CATMA GitLab.
             FileNotFoundError: If the local or remote CATMA Project were not found.
         """
+        # get the current directory to return after loaded the project
         cwd = os.getcwd()
+
         # Clone CATMA Project
         if load_from_gitlab:
             self.uuid = load_gitlab_project(
@@ -219,45 +216,53 @@ class CatmaProject:
         else:
             self.uuid = project_uuid
 
-        print(os.getcwd())
-        # get the current directory to return after loaded the project
         self.project_directory = project_directory
+
         try:
             os.chdir(self.project_directory)
         except FileNotFoundError:
             raise FileNotFoundError(
-                f"The CATMA Project in this directory could not been found \n{self.project_directory}\n\
+                f"The CATMA Project in this directory could not been found: \n{self.project_directory}\n\
                     -> Make sure the CATMA Project clone did work properly and that the project directory is correct")
 
-        # Load Tagsets
-        print('Loading Tagsets ...')
-        if os.path.isdir(self.uuid + '/tagsets/'):
-            self.tagsets, self.tagset_dict = load_tagsets(
-                project_uuid=self.uuid)
-        else:
-            self.tagsets, self.tagset_dict = None, None
+        try:
+            # Load Tagsets
+            print('Loading Tagsets ...')
+            if os.path.isdir(self.uuid + '/tagsets/'):
+                self.tagsets, self.tagset_dict = load_tagsets(
+                    project_uuid=self.uuid)
+                print(f'\t Found {len(self.tagsets)} Tagset(s).')
+            else:
+                self.tagsets, self.tagset_dict = None, None
+                print(f'\t Did not found any Tagsets.')
 
-        # Load Texts
-        print('Loading Documents ...')
-        self.texts, self.text_dict = load_texts(project_uuid=self.uuid)
+            # Load Texts
+            print('Loading Documents ...')
+            self.texts, self.text_dict = load_texts(project_uuid=self.uuid)
+            print(f'\t Found {len(self.texts)} Document(s).')
 
-        # Load Annotation Collections
-        print('Loading Annotation Collections ...')
-        self.annotation_collections, self.ac_dict = load_annotation_collections(
-            project_uuid=self.uuid,
-            included_acs=included_acs,
-            excluded_acs=excluded_acs,
-            ac_filter_keyword=ac_filter_keyword,
-            catma_project=self
-        )
-
-        os.chdir(cwd)
+            # Load Annotation Collections
+            print('Loading Annotation Collections ...')
+            self.annotation_collections, self.ac_dict = load_annotation_collections(
+                catma_project=self,
+                included_acs=included_acs,
+                excluded_acs=excluded_acs,
+                ac_filter_keyword=ac_filter_keyword,
+            )
+            os.chdir(cwd)
+        except FileNotFoundError:
+            os.chdir(cwd)
+            raise FileNotFoundError(
+                f"Some components of your CATMA project could not be loaded."
+            )
 
     from catma_gitlab._gold_annotation import create_gold_annotations
 
     from catma_gitlab._write_annotation import write_annotation_json
 
     from catma_gitlab._vizualize import plot_annotation_progression
+
+    from catma_gitlab._vizualize import plot_interactive
 
     from catma_gitlab._metrics import get_iaa
 
