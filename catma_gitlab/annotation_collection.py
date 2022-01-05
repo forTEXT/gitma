@@ -55,16 +55,21 @@ def duplicate_rows(ac_df: pd.DataFrame, property_col: str) -> pd.DataFrame:
 
 
 class AnnotationCollection:
-    def __init__(self, project_uuid: str, catma_id: str, catma_project, context: int = 50):
+    def __init__(self, ac_uuid: str, catma_project, context: int = 50):
+        """Class which represents a CATMA annotation collection.
+
+        Args:
+            ac_uuid (str): The annotation collection's UUID
+            catma_project (CatmaProject): The parent Catma Project
+            context (int, optional): The text span to be considered for the annotation context. Defaults to 50.
+
+        Raises:
+            FileNotFoundError: If the directory of the Annotation Collection header.json does not exists.
         """
-        Class which represents a CATMA annotation collection.
-        :param project_uuid:  directory of a CATMA gitlab root folder
-        :param catma_id: uuid of the collection (folder)
-        """
-        self.uuid = catma_id
+        self.uuid = ac_uuid
 
         try:
-            with open(project_uuid + '/collections/' + self.uuid + '/header.json') as header_json:
+            with open(catma_project.uuid + '/collections/' + self.uuid + '/header.json') as header_json:
                 self.header = json.load(header_json)
         except FileNotFoundError:
             raise FileNotFoundError(
@@ -74,12 +79,12 @@ class AnnotationCollection:
         self.name = self.header['name']
 
         self.plain_text_id = self.header['sourceDocumentId']
-        self.text = Text(project_uuid=project_uuid,
+        self.text = Text(project_uuid=catma_project.uuid,
                          catma_id=self.plain_text_id)
         self.text_version = self.header['sourceDocumentVersion']
 
         print(
-            f"Loading Annotation Collection '{self.name}' for {self.text.title}")
+            f"\t Loading Annotation Collection '{self.name}' for {self.text.title}")
 
         df_columns = [
             'document', 'annotation collection', 'annotator',
@@ -87,14 +92,14 @@ class AnnotationCollection:
             'right_context', 'start_point', 'end_point', 'date'
         ]
 
-        if os.path.isdir(project_uuid + '/collections/' + self.uuid + '/annotations/'):
+        if os.path.isdir(catma_project.uuid + '/collections/' + self.uuid + '/annotations/'):
             self.annotations = sorted([
                 Annotation(
-                    directory=f'{project_uuid}/collections/{self.uuid}/annotations/{annotation_dir}',
+                    directory=f'{catma_project.uuid}/collections/{self.uuid}/annotations/{annotation_dir}',
                     plain_text=self.text.plain_text,
                     catma_project=catma_project,
                     context=context
-                ) for annotation_dir in os.listdir(project_uuid + '/collections/' + self.uuid + '/annotations/')
+                ) for annotation_dir in os.listdir(catma_project.uuid + '/collections/' + self.uuid + '/annotations/')
                 if annotation_dir.startswith('CATMA_')
             ])
 

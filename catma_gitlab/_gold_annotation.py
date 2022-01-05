@@ -55,7 +55,7 @@ def create_gold_annotations(
         min_overlap: float = 1.0,
         same_tag: bool = True,
         property_values: str = 'matching',
-        push_to_gitlab=False):
+        push_to_gitlab=False) -> None:
     """Searches for matching annotations in 2 AnnotationCollections and copies all matches in a third AnnotationCollection.
     By default only matching Property Values get copied.
 
