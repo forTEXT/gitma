@@ -1,5 +1,7 @@
 import json
 import os
+from collections import Counter
+import string
 import pandas as pd
 from catma_gitlab.text import Text
 from catma_gitlab.annotation import Annotation
@@ -52,6 +54,45 @@ def duplicate_rows(ac_df: pd.DataFrame, property_col: str) -> pd.DataFrame:
 
     df_new = pd.DataFrame(list(duplicate_generator(ac_df)))
     return df_new
+
+
+def most_common_token(
+        annotation_col: pd.Series,
+        stopwords: list = None,
+        ranking: int = 10) -> dict:
+    """Counts Token for list of strings.
+
+    Args:
+        annotation_col (pd.Series): The columns name to be analyzed.
+        stopwords (list, optional): List of stopwords. Defaults to None.
+        ranking (int, optional): Number of most common token to include. Defaults to 10.
+
+    Returns:
+        dict: Dictionary storing the token freqeuncies.
+    """
+    token_list = []
+    for str_item in annotation_col:
+        removed_punctation = str_item.translate(
+            str.maketrans('', '', string.punctuation))
+        token_list.extend(removed_punctation.split(' '))
+
+    while '' in token_list:
+        token_list.remove('')
+
+    # remove stopwords
+    if stopwords:
+        token_list = [
+            token for token in token_list if token not in stopwords]
+
+    return dict(Counter(token_list).most_common(ranking))
+
+
+def get_text_span_per_tag(ac_df: pd.DataFrame) -> int:
+    return sum(ac_df['end_point'] - ac_df['start_point'])
+
+
+def get_text_span_mean_per_tag(ac_df: pd.DataFrame) -> int:
+    return sum(ac_df['end_point'] - ac_df['start_point']) / len(ac_df)
 
 
 class AnnotationCollection:
@@ -139,8 +180,44 @@ class AnnotationCollection:
     def to_pygamma_table(self):
         return self.df[['annotator', 'tag', 'start_point', 'end_point']]
 
-    def tag_stats(self):
-        return self.df.tag.value_counts()
+    def tag_stats(
+            self,
+            tag_col: str = 'tag',
+            stopwords: list = None,
+            ranking: int = 10) -> pd.DataFrame:
+        """Get data for Tags.
+
+        Args:
+            tag_col (str, optional): Whether the data for the tag a property or annotators gets computed. Defaults to 'tag'.
+            stopwords (list, optional): A list with stopword tokens. Defaults to None.
+            ranking (int, optional): The number of most frequent token to be included. Defaults to 10.
+
+        Returns:
+            pd.DataFrame: The data as pandas DataFrame.
+        """
+
+        if 'prop:' in tag_col:
+            analyze_df = duplicate_rows(self.df, property_col=tag_col)
+        else:
+            analyze_df = self.df
+
+        tag_data = {}
+        for tag in analyze_df[tag_col].unique():
+            filtered_df = analyze_df[analyze_df[tag_col] == tag]
+            tag_data[tag] = {
+                'annotations': len(filtered_df),
+                'text_span': get_text_span_per_tag(ac_df=filtered_df),
+                'text_span_mean': get_text_span_mean_per_tag(ac_df=filtered_df),
+            }
+            mct = most_common_token(
+                annotation_col=filtered_df['annotation'],
+                stopwords=stopwords,
+                ranking=ranking
+            )
+            for token_index, token in enumerate(mct):
+                tag_data[tag][f'token{token_index + 1}'] = f'{token}: {mct[token]}'
+
+        return pd.DataFrame(tag_data).T
 
     def property_stats(self):
         return pd.DataFrame(
