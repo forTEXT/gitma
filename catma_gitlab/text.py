@@ -17,3 +17,6 @@ class Text:
         with open(project_uuid + '/documents/' + catma_id +
                   '/' + catma_id + '.txt', 'r', encoding='utf-8') as document:
             self.plain_text = document.read()
+
+    def __repr__(self):
+        return f"Text(Name: {self.title}, Author: {self.author})"
