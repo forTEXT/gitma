@@ -1,4 +1,5 @@
 import pandas as pd
+from plotly.subplots import make_subplots
 
 
 def format_annotation_text(text: str) -> str:
@@ -135,12 +136,20 @@ def plot_interactive(catma_project: "CatmaProject", color_col: str = 'annotator'
     import plotly.express as px
 
     plot_df = pd.DataFrame()
+    text_counter = {text.title: 0 for text in catma_project.texts}
     for ac in catma_project.annotation_collections:
-        plot_df = plot_df.append(ac.df, ignore_index=True)
+        text_counter[ac.text.title] += 1
+        new_df = ac.df
+        new_df.loc[:, 'AnnotationCollectionID'] = [
+            text_counter[ac.text.title]] * len(ac.df)
+        plot_df = plot_df.append(new_df, ignore_index=True)
 
     plot_df['ANNOTATION'] = plot_df['annotation'].apply(format_annotation_text)
     prop_list = [item for item in plot_df.columns if 'prop:' in item]
     hover_cols = ['ANNOTATION'] + prop_list
+
+    width = len([item for item in text_counter if text_counter[item] > 0]) * 800
+    height = max([text_counter[item] for item in text_counter]) * 400
 
     fig = px.scatter(
         plot_df,
@@ -151,6 +160,9 @@ def plot_interactive(catma_project: "CatmaProject", color_col: str = 'annotator'
         opacity=0.7,
         marginal_x='histogram',
         facet_col='document',
+        facet_row='AnnotationCollectionID',
+        height=height,
+        width=width
     )
 
     fig.show()
