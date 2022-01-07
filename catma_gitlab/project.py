@@ -273,6 +273,19 @@ class CatmaProject:
             for an in ac.annotations:
                 yield an
 
+    def merge_annotations_per_document(self):
+        """Merges all Annotation Collections DataFrames belonging to the same document and extends the `self.ac_dict`.
+        """
+        for document in self.texts:
+            ac_name = f'{document.title}-all_annotations'
+            self.ac_dict[ac_name] = pd.DataFrame()
+            for ac in self.annotation_collections:
+                if ac.text.title == document.title:
+                    self.ac_dict[ac_name] = self.ac_dict[ac_name].append(
+                        ac.df, ignore_index=True)
+                    self.ac_dict[ac_name].sort_values(
+                        by=['start_point'], inplace=True)
+
     def stats(self) -> pd.DataFrame:
         """Shows some CATMA Project stats.
 
