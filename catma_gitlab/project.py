@@ -256,6 +256,12 @@ class CatmaProject:
                 f"Some components of your CATMA project could not be loaded."
             )
 
+    def __repr__(self):
+        documents = [text.title for text in self.texts]
+        tagsets = [tagset.name for tagset in self.tagsets]
+        acs = [ac.name for ac in self.annotation_collections]
+        return f"CatmaProject(\n\tName: {self.uuid[43:-5]},\n\tDocuments: {documents},\n\tTagsets: {tagsets},\n\tAnnotationCollections: {acs})"
+
     from catma_gitlab._gold_annotation import create_gold_annotations
 
     from catma_gitlab._write_annotation import write_annotation_json
