@@ -1,6 +1,6 @@
 import os
 import json
-from catma_gitlab.property import Property
+from gitma.property import Property
 
 
 def get_tag_name(tag_dict):

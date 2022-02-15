@@ -3,7 +3,7 @@ import os
 import uuid
 from typing import List
 from datetime import datetime
-from catma_gitlab.selector import Selector
+from gitma.selector import Selector
 
 
 def get_start_point(annotation_dict):

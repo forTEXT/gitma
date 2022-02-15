@@ -2,8 +2,8 @@ import os
 import subprocess
 import textwrap
 from typing import List, Union
-from catma_gitlab.annotation import Annotation, get_annotation_segments
-from catma_gitlab._metrics import test_overlap, test_max_overlap, get_overlap_percentage
+from gitma.annotation import Annotation, get_annotation_segments
+from gitma._metrics import test_overlap, test_max_overlap, get_overlap_percentage
 
 
 def compare_annotations(

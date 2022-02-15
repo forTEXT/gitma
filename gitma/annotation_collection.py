@@ -3,8 +3,8 @@ import os
 from collections import Counter
 import string
 import pandas as pd
-from catma_gitlab.text import Text
-from catma_gitlab.annotation import Annotation
+from gitma.text import Text
+from gitma.annotation import Annotation
 
 
 def split_property_dict_to_column(ac_df):
@@ -171,11 +171,11 @@ class AnnotationCollection:
         for an in self.annotations:
             yield an
 
-    from catma_gitlab._vizualize import plot_annotation_overview
+    from gitma._vizualize import plot_annotation_overview
 
-    from catma_gitlab._vizualize import plot_scaled_annotations
+    from gitma._vizualize import plot_scaled_annotations
 
-    from catma_gitlab._export_annotations import to_stanford_tsv
+    from gitma._export_annotations import to_stanford_tsv
 
     def to_pygamma_table(self):
         return self.df[['annotator', 'tag', 'start_point', 'end_point']]

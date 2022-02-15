@@ -17,7 +17,7 @@ print(my_local_project.stats())
 
 from typing import Dict
 import gitlab
-from catma_gitlab.project import CatmaProject
+from gitma.project import CatmaProject
 
 
 class Catma:

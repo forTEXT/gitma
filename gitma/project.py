@@ -4,9 +4,9 @@ import json
 import gitlab
 import pandas as pd
 from typing import Dict, List, Tuple
-from catma_gitlab.text import Text
-from catma_gitlab.tagset import Tagset
-from catma_gitlab.annotation_collection import AnnotationCollection
+from gitma.text import Text
+from gitma.tagset import Tagset
+from gitma.annotation_collection import AnnotationCollection
 
 
 def load_gitlab_project(gitlab_access_token: str, project_name: str, backup_directory: str = './') -> str:
@@ -262,17 +262,17 @@ class CatmaProject:
         acs = [ac.name for ac in self.annotation_collections]
         return f"CatmaProject(\n\tName: {self.uuid[43:-5]},\n\tDocuments: {documents},\n\tTagsets: {tagsets},\n\tAnnotationCollections: {acs})"
 
-    from catma_gitlab._gold_annotation import create_gold_annotations
+    from gitma._gold_annotation import create_gold_annotations
 
-    from catma_gitlab._write_annotation import write_annotation_json
+    from gitma._write_annotation import write_annotation_json
 
-    from catma_gitlab._vizualize import plot_annotation_progression
+    from gitma._vizualize import plot_annotation_progression
 
-    from catma_gitlab._vizualize import plot_interactive
+    from gitma._vizualize import plot_interactive
 
-    from catma_gitlab._metrics import get_iaa
+    from gitma._metrics import get_iaa
 
-    from catma_gitlab._gamma import gamma_agreement
+    from gitma._gamma import gamma_agreement
 
     def all_annotations(self):
         for ac in self.annotation_collections:
@@ -341,7 +341,7 @@ class CatmaProject:
 if __name__ == '__main__':
 
     project = CatmaProject(
-        project_directory='catma_gitlab/test/demo_project/',
+        project_directory='gitma/test/demo_project/',
         project_uuid='test_corpus_root'
     )
     print(project.stats())

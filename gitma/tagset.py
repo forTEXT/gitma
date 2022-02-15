@@ -1,6 +1,6 @@
 import json
 import os
-from catma_gitlab.tag import Tag
+from gitma.tag import Tag
 
 
 class Tagset:

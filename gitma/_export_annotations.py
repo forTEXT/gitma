@@ -43,7 +43,7 @@ def to_stanford_tsv(
     Every token in the collection's text gets a tag if it lays in an annotated text segment. 
 
     Args:
-        ac (catma_gitlab.AnnotationCollection): `AnnotationCollection` object
+        ac (gitma.AnnotationCollection): `AnnotationCollection` object
         tags (list): List of tags, that should be considered.
         file_name (str, optional): name of the tsv-file. Defaults to None.
         spacy_model (str, optional): a spacy model as listed in https://spacy.io/usage/models. Default to 'de_core_news_sm'.

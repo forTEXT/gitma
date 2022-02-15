@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 import textwrap
-from catma_gitlab.annotation import Annotation
-from catma_gitlab.annotation_collection import AnnotationCollection
+from gitma.annotation import Annotation
+from gitma.annotation_collection import AnnotationCollection
 
 
 def filter_ac_by_tag(

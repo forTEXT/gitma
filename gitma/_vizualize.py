@@ -32,7 +32,7 @@ def plot_annotation_overview(ac, y_axis: str = 'tag', prop: str = None, color_pr
     """Creates interactive [Plotly Scatter Plot](https://plotly.com/python/line-and-scatter/) to a explore a annotation collection.
 
     Args:
-        ac (AnnotationCollection): catma_gitlab.AnnotationCollection
+        ac (AnnotationCollection): gitma.AnnotationCollection
         y_axis (str, optional): The columns in AnnotationCollection DataFrame used for y axis. Defaults to 'tag'.
         prop (str, optional): A Property's name used in the AnnotationCollection. Defaults to None.
         color_prop (str, optional): A Property's name used in the AnnotationCollection . Defaults to None.

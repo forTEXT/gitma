@@ -1,7 +1,7 @@
 import json
 import os
 from datetime import datetime
-from catma_gitlab.tagset import Tagset
+from gitma.tagset import Tagset
 
 
 def find_tag_by_name(tagset: Tagset, tag_name: str):

@@ -1,5 +1,5 @@
-from catma_gitlab.project import CatmaProject
-from catma_gitlab.catma import Catma
+from gitma.project import CatmaProject
+from gitma.catma import Catma
 
 
 # load a complete project
