@@ -110,7 +110,7 @@ def load_annotation_collections(
                 catma_project=catma_project,
                 ac_uuid=directory
             ) for directory in os.listdir(collections_directory)
-            if directory.startswith('C_')
+            if directory.startswith('C_') or directory.startswith('CATMA_')
         ]
 
     ac_dict = {

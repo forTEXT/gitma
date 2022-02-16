@@ -1,5 +1,5 @@
 import pandas as pd
-from plotly.subplots import make_subplots
+import plotly.express as px
 
 
 def format_annotation_text(text: str) -> str:
@@ -132,9 +132,7 @@ def plot_scaled_annotations(ac, tag_scale: dict = None, bin_size: int = 50, smoo
     fig.show()
 
 
-def plot_interactive(catma_project: "CatmaProject", color_col: str = 'annotator') -> None:
-    import plotly.express as px
-
+def plot_interactive(catma_project: "CatmaProject", color_col: str = 'annotator') -> px.scatter:
     plot_df = pd.DataFrame()
     text_counter = {text.title: 0 for text in catma_project.texts}
     for ac in catma_project.annotation_collections:
@@ -165,4 +163,4 @@ def plot_interactive(catma_project: "CatmaProject", color_col: str = 'annotator'
         width=width
     )
 
-    fig.show()
+    return fig

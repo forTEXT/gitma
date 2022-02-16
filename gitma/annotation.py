@@ -6,23 +6,23 @@ from datetime import datetime
 from gitma.selector import Selector
 
 
-def get_start_point(annotation_dict):
+def get_start_point(annotation_dict: dict) -> int:
     return annotation_dict['target']['items'][0]['selector']['start']
 
 
-def get_end_point(annotation_dict):
+def get_end_point(annotation_dict) -> int:
     return annotation_dict['target']['items'][-1]['selector']['end']
 
 
-def get_tagset_uuid(annotation_dict):
-    return annotation_dict['body']['tagset'][-38:]
+def get_tagset_uuid(annotation_dict: dict) -> str:
+    return annotation_dict['body']['tagset'].split('/')[-1]
 
 
-def get_tag_uuid(annotation_dict: dict):
-    return annotation_dict['body']['tag'][-42:]
+def get_tag_uuid(annotation_dict: dict) -> str:
+    return annotation_dict['body']['tag'].split('/')[-1]
 
 
-def get_tag_directory(annotation_dict):
+def get_tag_directory(annotation_dict: dict) -> str:
     tag_url = annotation_dict['body']['tag']
     tag_directory = tag_url.replace(
         'https://git.catma.de/', '') + '/propertydefs.json'
