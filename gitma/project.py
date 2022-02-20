@@ -214,6 +214,10 @@ class CatmaProject:
             )
             project_directory = backup_directory
         else:
+            project_uuid = [
+                item for item in os.listdir(project_directory)
+                if project_name in item
+            ][0]
             self.uuid = project_uuid
 
         self.project_directory = project_directory
@@ -279,6 +283,11 @@ class CatmaProject:
             for an in ac.annotations:
                 yield an
 
+    def merge_annotations(self):
+        return pd.concat(
+            [ac.df for ac in self.annotation_collections]
+        )
+
     def merge_annotations_per_document(self):
         """Merges all Annotation Collections DataFrames belonging to the same document and extends the `self.ac_dict`.
         """
@@ -331,7 +340,9 @@ class CatmaProject:
 
         # Load Annotation Collections
         self.annotation_collections, self.ac_dict = load_annotation_collections(
-            project_uuid=self.uuid)
+            catma_project=self,
+            included_acs=list(self.ac_dict)
+        )
 
         print('Updated the CATMA Project')
 

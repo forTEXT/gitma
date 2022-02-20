@@ -171,7 +171,16 @@ class AnnotationCollection:
         for an in self.annotations:
             yield an
 
-    from gitma._vizualize import plot_annotation_overview
+    def duplicate_by_prop(self, prop: str):
+        try:
+            return duplicate_rows(ac_df=self.df, property_col=f'prop:{prop}')
+        except KeyError:
+            prop_cols = [item.replace('prop:', '')
+                         for item in self.df.columns if 'prop:' in item]
+            raise ValueError(
+                f"Given Property doesn't exist. Choose one of these: {prop_cols}")
+
+    from gitma._vizualize import plot_annotations
 
     from gitma._vizualize import plot_scaled_annotations
 

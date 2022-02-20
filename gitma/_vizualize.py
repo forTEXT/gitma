@@ -1,5 +1,40 @@
+from matplotlib.pyplot import legend, plot
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
+
+
+colors = [
+    '#093658', '#A64B21', '#A68500',
+    '#5A98A1', '#EDA99D', '#EDC56D',
+]
+
+
+def get_color_dict(annotation_df: pd.DataFrame, color_col: str, colors: list = colors):
+    color_dict = {
+        prop: colors[index] for index, prop
+        in enumerate(list(annotation_df[color_col].unique()))
+    }
+    return color_dict
+
+
+def update_figure(fig: go.Figure):
+    fig.update_layout(
+        template="plotly_white",
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1,
+            font=dict(
+                color="#5A98A1",
+                size=10
+            )
+        ),
+        legend_title_text=None,
+    )
+    return fig
 
 
 def format_annotation_text(text: str) -> str:
@@ -28,7 +63,7 @@ def format_annotation_text(text: str) -> str:
     return output_string
 
 
-def plot_annotation_overview(ac, y_axis: str = 'tag', prop: str = None, color_prop: str = None):
+def plot_annotations(ac, y_axis: str = 'tag', prop: str = None, color_prop: str = None):
     """Creates interactive [Plotly Scatter Plot](https://plotly.com/python/line-and-scatter/) to a explore a annotation collection.
 
     Args:
@@ -37,20 +72,15 @@ def plot_annotation_overview(ac, y_axis: str = 'tag', prop: str = None, color_pr
         prop (str, optional): A Property's name used in the AnnotationCollection. Defaults to None.
         color_prop (str, optional): A Property's name used in the AnnotationCollection . Defaults to None.
     """
-    import plotly.express as px
-
-    plot_df = ac.df.copy()
-
     split_by_y = y_axis if not prop else f'prop:{prop}'
     color = 'tag' if not color_prop else f'prop:{color_prop}'
 
     if prop:
-        plot_df[f'prop:{prop}'] = [str(item)
-                                   for item in plot_df[f'prop:{prop}']]
+        plot_df = ac.duplicate_by_prop(prop=prop)
     if color_prop:
-        plot_df[f'prop:{color_prop}'] = [
-            str(item) for item in plot_df[f'prop:{color_prop}']]
+        plot_df = ac.duplicate_by_prop(prop=color_prop)
 
+    plot_df['size'] = plot_df['end_point'] - plot_df['start_point']
     plot_df['ANNOTATION'] = plot_df['annotation'].apply(format_annotation_text)
     prop_list = [item for item in plot_df.columns if 'prop:' in item]
     hover_cols = ['ANNOTATION'] + prop_list
@@ -59,42 +89,43 @@ def plot_annotation_overview(ac, y_axis: str = 'tag', prop: str = None, color_pr
         plot_df,
         x='start_point',
         y=split_by_y,
+        size='size',
         hover_data=hover_cols,
         color=color,
+        color_discrete_map=get_color_dict(plot_df, color_col=color),
         opacity=0.7,
-        marginal_x='histogram'
+        marginal_x='histogram',
+        size_max=10
     )
+    fig.update_xaxes(matches=None)
+    fig = update_figure(fig)
 
-    fig.show()
+    return fig
 
 
-def plot_annotation_progression(project, ac_filter: list = None):
-    import matplotlib.pyplot as plt
-
-    acs = project.annotation_collections
-    if ac_filter:
-        acs = [
-            ac for ac in acs
-            if ac.name in ac_filter
-        ]
-    else:
-        acs = project.annotation_collections
-
-    fig, ax = plt.subplots(
-        nrows=len(acs),
-        figsize=[6, 10]
+def plot_annotation_progression(project):
+    plot_df = project.merge_annotations()
+    plot_df['ANNOTATION'] = plot_df['annotation'].apply(format_annotation_text)
+    fig = px.scatter(
+        plot_df,
+        x='start_point',
+        y='date',
+        color='annotator',
+        hover_data=['ANNOTATION'],
+        color_discrete_map=get_color_dict(plot_df, color_col='annotator'),
+        marginal_y='histogram',
+        facet_row='document',
+        height=len(plot_df.document.unique()) * 300
     )
-
-    for index, ac in enumerate(acs):
-        x_values = ac.df['date']
-        y_values = range(len(ac.df))
-        ax[index].scatter(x_values, y_values, alpha=0.3, label=ac.name)
-        ax[index].legend()
-        ax[index].set_ylabel('Annotations')
-
-    ax[len(acs) - 1].set_xlabel('Date')
-    fig.tight_layout()
-    plt.show()
+    fig.update_xaxes(matches=None, showticklabels=True, col=1)
+    fig.update_xaxes(matches=None, col=2)
+    fig.update_yaxes(matches=None, col=1)
+    fig.update_yaxes(matches=None, col=2)
+    fig = update_figure(fig)
+    fig.update_layout(
+        legend=dict(title='<b>Annotators:</b><br>')
+    )
+    return fig
 
 
 def plot_scaled_annotations(ac, tag_scale: dict = None, bin_size: int = 50, smoothing_window: int = 100):
@@ -155,6 +186,7 @@ def plot_interactive(catma_project: "CatmaProject", color_col: str = 'annotator'
         y='tag',
         hover_data=hover_cols,
         color=color_col,
+        color_discrete_map=get_color_dict(plot_df, color_col=color_col),
         opacity=0.7,
         marginal_x='histogram',
         facet_col='document',
@@ -162,5 +194,7 @@ def plot_interactive(catma_project: "CatmaProject", color_col: str = 'annotator'
         height=height,
         width=width
     )
+    fig.update_xaxes(matches=None)
+    fig = update_figure(fig)
 
     return fig
