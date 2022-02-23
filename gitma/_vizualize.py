@@ -77,10 +77,11 @@ def plot_annotations(ac, y_axis: str = 'tag', prop: str = None, color_prop: str 
     color = 'tag' if not color_prop else f'prop:{color_prop}'
 
     if prop:
-        plot_df = ac.duplicate_by_prop(prop=prop)
+        ac.df = ac.duplicate_by_prop(prop=prop)
     if color_prop:
-        plot_df = ac.duplicate_by_prop(prop=color_prop)
+        ac.df = ac.duplicate_by_prop(prop=color_prop)
 
+    plot_df = ac.df.copy()
     plot_df['size'] = plot_df['end_point'] - plot_df['start_point']
     plot_df['ANNOTATION'] = plot_df['annotation'].apply(format_annotation_text)
     prop_list = [item for item in plot_df.columns if 'prop:' in item]
