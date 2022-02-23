@@ -174,14 +174,13 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
 class CatmaProject:
     def __init__(
             self,
-            project_uuid: str = None,
+            project_name: str,
             project_directory: str = './',
             included_acs: list = None,
             excluded_acs: list = None,
             ac_filter_keyword: str = None,
             load_from_gitlab: bool = False,
             gitlab_access_token: str = None,
-            project_name: str = None,
             backup_directory: str = './'):
         """This Project represents a CATMA Project including all Documents, Tagsets
         and Annotation Collections.
@@ -205,8 +204,8 @@ class CatmaProject:
         # get the current directory to return after loaded the project
         cwd = os.getcwd()
 
-        # Clone CATMA Project
         if load_from_gitlab:
+            # Clone CATMA Project
             self.uuid = load_gitlab_project(
                 gitlab_access_token=gitlab_access_token,
                 project_name=project_name,
@@ -214,6 +213,7 @@ class CatmaProject:
             )
             project_directory = backup_directory
         else:
+            # Load local Catma Project
             project_uuid = [
                 item for item in os.listdir(project_directory)
                 if project_name in item

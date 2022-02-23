@@ -4,9 +4,10 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 
+# list of catma related colors
 colors = [
-    '#093658', '#A64B21', '#A68500',
-    '#5A98A1', '#EDA99D', '#EDC56D',
+    '#093658', '#A64B21', '#A68500', '#843AF2', '#F92F6A'
+    '#5A98A1', '#EDA99D', '#EDC56D', '#274E54'
 ]
 
 

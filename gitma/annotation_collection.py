@@ -37,7 +37,7 @@ def duplicate_rows(ac_df: pd.DataFrame, property_col: str) -> pd.DataFrame:
     Duplicates rows in AnnotationCollection DataFrame if multiple property values exist in defined porperty column.
     """
     def duplicate_generator(df):
-        for index, row in df.iterrows():
+        for _, row in df.iterrows():
             if len(row[property_col]) > 1:
                 for item in row[property_col]:
                     row_dict = dict(row)
