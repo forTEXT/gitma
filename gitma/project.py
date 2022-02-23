@@ -2,6 +2,7 @@ import subprocess
 import os
 import json
 import gitlab
+import pygit2
 import pandas as pd
 from typing import Dict, List, Tuple
 from gitma.text import Text
@@ -40,7 +41,22 @@ def load_gitlab_project(gitlab_access_token: str, project_name: str, backup_dire
     # clone the project in the defined directory
     cwd = os.getcwd()
     os.chdir(backup_directory)
-    subprocess.run(['git', 'clone', '--recurse-submodules', project_url])
+    # subprocess.run(['git', 'clone', '--recurse-submodules', project_url])
+    
+    def get_submodules(repo, creds):
+        submodules = repo.listall_submodules()
+        repo.init_submodules(submodules=submodules)
+        repo.update_submodules(submodules=submodules, callbacks=creds)
+        for submodule_path in submodules:
+            submodule = repo.lookup_submodule(submodule_path)
+            sub_repo = submodule.open()
+            get_submodules(sub_repo, creds)
+    
+    creds = pygit2.UserPass('none', gl.private_token)
+    callbacks = pygit2.RemoteCallbacks(credentials=creds)
+
+    repo = pygit2.clone_repository(project_url, project_uuid, bare=False, callbacks=callbacks)
+    get_submodules(repo, callbacks)
     os.chdir(cwd)
     return project_uuid
 
@@ -174,13 +190,14 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
 class CatmaProject:
     def __init__(
             self,
-            project_name: str,
+            project_uuid: str = None,
             project_directory: str = './',
             included_acs: list = None,
             excluded_acs: list = None,
             ac_filter_keyword: str = None,
             load_from_gitlab: bool = False,
             gitlab_access_token: str = None,
+            project_name: str = None,
             backup_directory: str = './'):
         """This Project represents a CATMA Project including all Documents, Tagsets
         and Annotation Collections.
@@ -204,8 +221,8 @@ class CatmaProject:
         # get the current directory to return after loaded the project
         cwd = os.getcwd()
 
+        # Clone CATMA Project
         if load_from_gitlab:
-            # Clone CATMA Project
             self.uuid = load_gitlab_project(
                 gitlab_access_token=gitlab_access_token,
                 project_name=project_name,
@@ -213,7 +230,6 @@ class CatmaProject:
             )
             project_directory = backup_directory
         else:
-            # Load local Catma Project
             project_uuid = [
                 item for item in os.listdir(project_directory)
                 if project_name in item
