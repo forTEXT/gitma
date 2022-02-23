@@ -39,25 +39,14 @@ def load_gitlab_project(gitlab_access_token: str, project_name: str, backup_dire
     project_url = f"https://git.catma.de/{project_uuid[:-5]}/{project_uuid}.git"
 
     # clone the project in the defined directory
-    cwd = os.getcwd()
-    os.chdir(backup_directory)
-    # subprocess.run(['git', 'clone', '--recurse-submodules', project_url])
     
-    def get_submodules(repo, creds):
-        submodules = repo.listall_submodules()
-        repo.init_submodules(submodules=submodules)
-        repo.update_submodules(submodules=submodules, callbacks=creds)
-        for submodule_path in submodules:
-            submodule = repo.lookup_submodule(submodule_path)
-            sub_repo = submodule.open()
-            get_submodules(sub_repo, creds)
-    
-    creds = pygit2.UserPass('none', gl.private_token)
+    creds = pygit2.UserPass('none', gitlab_access_token)
     callbacks = pygit2.RemoteCallbacks(credentials=creds)
-
     repo = pygit2.clone_repository(project_url, project_uuid, bare=False, callbacks=callbacks)
-    get_submodules(repo, callbacks)
-    os.chdir(cwd)
+    submodules = repo.listall_submodules()
+    repo.init_submodules(submodules=submodules)
+    repo.update_submodules(submodules=submodules, callbacks=callbacks)
+
     return project_uuid
 
 
