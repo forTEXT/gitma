@@ -36,21 +36,22 @@ def duplicate_rows(ac_df: pd.DataFrame, property_col: str) -> pd.DataFrame:
     """
     Duplicates rows in AnnotationCollection DataFrame if multiple property values exist in defined porperty column.
     """
+    if 'prop:' not in property_col:
+        property_col = f'prop:{property_col}'
+
     def duplicate_generator(df):
         for _, row in df.iterrows():
-            if len(row[property_col]) > 1:
+            if isinstance(row[property_col], list) and len(row[property_col]) > 0:
                 for item in row[property_col]:
                     row_dict = dict(row)
                     row_dict[property_col] = item
                     yield row_dict
+            elif isinstance(row[property_col], str) or isinstance(row[property_col], int) or isinstance(row[property_col], float):
+                yield dict(row_dict)
             else:
                 row_dict = dict(row)
-                if len(row[property_col]) > 0:
-                    row_dict[property_col] = row[property_col][0]
-                    yield dict(row_dict)
-                else:
-                    row_dict[property_col] = 'nan'
-                    yield dict(row_dict)
+                row_dict[property_col] = pd.NA
+                yield dict(row_dict)
 
     df_new = pd.DataFrame(list(duplicate_generator(ac_df)))
     return df_new
@@ -173,7 +174,7 @@ class AnnotationCollection:
 
     def duplicate_by_prop(self, prop: str):
         try:
-            return duplicate_rows(ac_df=self.df, property_col=f'prop:{prop}')
+            return duplicate_rows(ac_df=self.df, property_col=prop)
         except KeyError:
             prop_cols = [item.replace('prop:', '')
                          for item in self.df.columns if 'prop:' in item]
