@@ -1,4 +1,5 @@
-/.git
+.git
+.idea
 **/__pycache__
 *.egg-info
 own_work.py
