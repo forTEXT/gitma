@@ -24,7 +24,8 @@ def load_gitlab_project(gitlab_access_token: str, project_name: str, backup_dire
     Returns:
         str: The CATMA Project UUID
     """
-
+    # cwd = os.getcwd()
+    # os.chdir(backup_directory)
     gl = gitlab.Gitlab(
         url='https://git.catma.de/',
         private_token=gitlab_access_token
@@ -39,10 +40,14 @@ def load_gitlab_project(gitlab_access_token: str, project_name: str, backup_dire
     project_url = f"https://git.catma.de/{project_uuid[:-5]}/{project_uuid}.git"
 
     # clone the project in the defined directory
-    
     creds = pygit2.UserPass('none', gitlab_access_token)
     callbacks = pygit2.RemoteCallbacks(credentials=creds)
-    repo = pygit2.clone_repository(project_url, project_uuid, bare=False, callbacks=callbacks)
+    repo = pygit2.clone_repository(
+        url=project_url,
+        path=backup_directory + project_uuid,
+        bare=False,
+        callbacks=callbacks
+    )
     submodules = repo.listall_submodules()
     repo.init_submodules(submodules=submodules)
     repo.update_submodules(submodules=submodules, callbacks=callbacks)
@@ -179,29 +184,47 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
 class CatmaProject:
     def __init__(
             self,
-            project_uuid: str = None,
+            project_name: str,
             project_directory: str = './',
             included_acs: list = None,
             excluded_acs: list = None,
             ac_filter_keyword: str = None,
             load_from_gitlab: bool = False,
             gitlab_access_token: str = None,
-            project_name: str = None,
             backup_directory: str = './'):
+        """_summary_
+
+        Args:
+            project_name (str): _description_
+            project_directory (str, optional): _description_. Defaults to './'.
+            included_acs (list, optional): _description_. Defaults to None.
+            excluded_acs (list, optional): _description_. Defaults to None.
+            ac_filter_keyword (str, optional): _description_. Defaults to None.
+            load_from_gitlab (bool, optional): _description_. Defaults to False.
+            gitlab_access_token (str, optional): _description_. Defaults to None.
+            backup_directory (str, optional): _description_. Defaults to './'.
+
+        Raises:
+            FileNotFoundError: _description_
+            FileNotFoundError: _description_
+        """
+
+        x = 0
+
         """This Project represents a CATMA Project including all Documents, Tagsets
         and Annotation Collections.
         You can eather load the Project from a local git clone or you load it directly
         from GitLab after generating a gitlab_access_token in the CATMA GUI.
 
         Args:
-            project_directory (str, optional): The directory where your CATMA Project(s) are located. Defaults to '.'.
-            project_uuid (str, optional): The Project UUID. Defaults to None.
+            
+            project_name (str): The CATMA Project name. Defaults to None.
+            project_directory (str, optional): The directory where your CATMA Project(s) are located. Defaults to './'
             included_acs (list, optional): All Annotation Collections that should get loaded. If neither included nor excluded
                 Annotation Collections are defined, all Annotation Collections get loaded. Default to None.
             excluded_acs (list, optional): All Annotation Collections that should not get loaded. Default to None.
             load_from_gitlab (bool, optional): Whether the CATMA Project shall be loaded dircetly from the CATMA GitLab. Defaults to False.
             gitlab_access_token (str, optional): The private CATMA GitLab Token. Defaults to None.
-            project_name (str, optional): The CATMA Project name. Defaults to None.
             backup_directory (str, optional): The your Project clone should be located. Default to './'.
         Raises:
             Exception: If the CATMA Project were not found in the CATMA GitLab.
