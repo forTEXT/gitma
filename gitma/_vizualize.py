@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 colors = [
     '#093658', '#A64B21', '#A68500', '#843AF2', '#F92F6A'
     '#5A98A1', '#EDA99D', '#EDC56D', '#274E54'
-]
+] * 100
 
 
 def get_color_dict(annotation_df: pd.DataFrame, color_col: str, colors: list = colors):
@@ -165,14 +165,15 @@ def plot_scaled_annotations(ac, tag_scale: dict = None, bin_size: int = 50, smoo
     fig.show()
 
 
-def plot_interactive(catma_project: "CatmaProject", color_col: str = 'annotator') -> px.scatter:
+def plot_interactive(catma_project, color_col: str = 'annotator') -> px.scatter:
     plot_df = pd.DataFrame()
     text_counter = {text.title: 0 for text in catma_project.texts}
     for ac in catma_project.annotation_collections:
         text_counter[ac.text.title] += 1
         new_df = ac.df
-        new_df.loc[:, 'AnnotationCollectionID'] = [
-            text_counter[ac.text.title]] * len(ac.df)
+        new_df.loc[:, 'AC-ID'] = [
+            text_counter[ac.text.title]
+        ] * len(ac.df)
         plot_df = plot_df.append(new_df, ignore_index=True)
 
     plot_df['ANNOTATION'] = plot_df['annotation'].apply(format_annotation_text)
@@ -197,6 +198,46 @@ def plot_interactive(catma_project: "CatmaProject", color_col: str = 'annotator'
         width=width
     )
     fig.update_xaxes(matches=None)
+    fig = update_figure(fig)
+
+    return fig
+
+
+def compare_annotation_collections(catma_project, annotation_collections: list, color_col: str = 'tag') -> go.Figure:
+    color_dict = get_color_dict(
+        annotation_df=pd.concat(
+            [catma_project.ac_dict[ac].duplicate_by_prop(prop=color_col)
+             if 'prop:' in color_col else catma_project.ac_dict[ac].df
+             for ac in annotation_collections]
+        ),
+        color_col=color_col
+    )
+    fig = go.Figure()
+    used_tags = []
+    for ac in annotation_collections:
+        if 'prop:' in color_col:
+            plot_df = catma_project.ac_dict[ac].duplicate_by_prop(
+                prop=color_col.replace('prop:', '')
+            )
+        else:
+            plot_df = catma_project.ac_dict[ac].df
+        for _, row in plot_df.iterrows():
+            fig.add_trace(
+                go.Scatter(
+                    x=[row['start_point'], row['end_point']],
+                    y=[ac, ac],
+                    text=format_annotation_text(row['annotation']),
+                    mode='lines + markers',
+                    marker=dict(color=color_dict[row[color_col]]),
+                    name=row[color_col],
+                    legendgroup=row[color_col],
+                    showlegend=False if row[color_col] in used_tags else True
+                )
+            )
+            used_tags.append(row[color_col])
+    fig.update_layout(
+        title=f'Annotation Comparison by Text Span',
+        height=len(annotation_collections) * 120)
     fig = update_figure(fig)
 
     return fig
