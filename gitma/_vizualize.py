@@ -193,7 +193,7 @@ def plot_interactive(catma_project, color_col: str = 'annotator') -> px.scatter:
         opacity=0.7,
         marginal_x='histogram',
         facet_col='document',
-        facet_row='AnnotationCollectionID',
+        facet_row='AC-ID',
         height=height,
         width=width
     )
