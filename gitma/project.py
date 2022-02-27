@@ -343,8 +343,8 @@ class CatmaProject:
         stats_dict = {
             ac.name: {
                 'annotations': len(ac.annotations),
-                'authors': set([an.author for an in ac.annotations]),
-                'tags': set([an.tag.name for an in ac.annotations]),
+                'annotator': set([an.author for an in ac.annotations]),
+                'tag': set([an.tag.name for an in ac.annotations]),
                 'first_annotation': min([an.date for an in ac.annotations]),
                 'last_annotation': max([an.date for an in ac.annotations]),
                 'uuid': ac.uuid,
@@ -352,7 +352,10 @@ class CatmaProject:
             if len(ac.annotations) > 0
         }
 
-        return pd.DataFrame(stats_dict).T.sort_index()
+        df = pd.DataFrame(stats_dict).T.sort_index()
+        df.reset_index(level=0, inplace=True)
+        df.rename({'index': 'annotation collection'}, axis=1, inplace=True)
+        return df
 
     def update(self) -> None:
         """Updates local git folder and reloads CatmaProject

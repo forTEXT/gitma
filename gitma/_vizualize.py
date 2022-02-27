@@ -2,6 +2,8 @@ from matplotlib.pyplot import legend, plot
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+from gitma.annotation_collection import duplicate_rows
 
 
 # list of catma related colors
@@ -72,6 +74,9 @@ def plot_annotations(ac, y_axis: str = 'tag', prop: str = None, color_prop: str 
         y_axis (str, optional): The columns in AnnotationCollection DataFrame used for y axis. Defaults to 'tag'.
         prop (str, optional): A Property's name used in the AnnotationCollection. Defaults to None.
         color_prop (str, optional): A Property's name used in the AnnotationCollection . Defaults to None.
+
+    Returns:
+        go.Figure: Plotly scatter plot.
     """
     split_by_y = y_axis if not prop else f'prop:{prop}'
     color = 'tag' if not color_prop else f'prop:{color_prop}'
@@ -105,7 +110,15 @@ def plot_annotations(ac, y_axis: str = 'tag', prop: str = None, color_prop: str 
     return fig
 
 
-def plot_annotation_progression(project):
+def plot_annotation_progression(project) -> go.Figure:
+    """Plot the annotation progression for every annotator in a CATMA project.
+
+    Args:
+        project (CatmaProject): The plotted CATMA project.
+
+    Returns:
+        go.Figure: Plotly scatter plot.
+    """
     plot_df = project.merge_annotations()
     plot_df['ANNOTATION'] = plot_df['annotation'].apply(format_annotation_text)
     fig = px.scatter(
@@ -165,39 +178,51 @@ def plot_scaled_annotations(ac, tag_scale: dict = None, bin_size: int = 50, smoo
     fig.show()
 
 
-def plot_interactive(catma_project, color_col: str = 'annotator') -> px.scatter:
-    plot_df = pd.DataFrame()
-    text_counter = {text.title: 0 for text in catma_project.texts}
-    for ac in catma_project.annotation_collections:
-        text_counter[ac.text.title] += 1
-        new_df = ac.df
-        new_df.loc[:, 'AC-ID'] = [
-            text_counter[ac.text.title]
-        ] * len(ac.df)
-        plot_df = plot_df.append(new_df, ignore_index=True)
+def plot_interactive(catma_project, color_col: str = 'annotation collection') -> go.Figure:
+    """This function generates one Plotly scatter plot per annotated document in a CATMA project.
+    By default the colors represent the annotation collections.
+    By that they can't be deactivated with the interactive legend.
 
-    plot_df['ANNOTATION'] = plot_df['annotation'].apply(format_annotation_text)
-    prop_list = [item for item in plot_df.columns if 'prop:' in item]
-    hover_cols = ['ANNOTATION'] + prop_list
+    Args:
+        catma_project (CatmaProject): The plotted project.
+        color_col (str, optional): 'annotation collection', 'annotator', 'tag' or any 'property'. Defaults to 'annotation collection'.
 
-    width = len([item for item in text_counter if text_counter[item] > 0]) * 800
-    height = max([text_counter[item] for item in text_counter]) * 400
+    Returns:
+        go.Figure: Plotly scatter plot.
+    """
+    merged_acs = pd.concat(
+        ac.df for ac in catma_project.annotation_collections)
+    merged_acs.loc[:, 'size'] = merged_acs.end_point - merged_acs.start_point
+    merged_acs.loc[:, 'ANNOTATION'] = merged_acs.annotation.apply(
+        format_annotation_text)
+
+    if 'prop:' in color_col:
+        merged_acs = duplicate_rows(
+            ac_df=merged_acs,
+            property_col=color_col
+        )
 
     fig = px.scatter(
-        plot_df,
+        merged_acs,
         x='start_point',
         y='tag',
-        hover_data=hover_cols,
+        hover_data=['ANNOTATION'],
         color=color_col,
-        color_discrete_map=get_color_dict(plot_df, color_col=color_col),
-        opacity=0.7,
-        marginal_x='histogram',
-        facet_col='document',
-        facet_row='AC-ID',
-        height=height,
-        width=width
+        facet_row='document',
+        color_discrete_map=get_color_dict(merged_acs, color_col=color_col)
     )
-    fig.update_xaxes(matches=None)
+
+    fig.update_layout(
+        height=len(merged_acs.document.unique()) * 350,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        )
+    )
+    fig.update_xaxes(matches=None, showticklabels=True, col=1)
     fig = update_figure(fig)
 
     return fig
