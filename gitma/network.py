@@ -1,6 +1,7 @@
 import pandas as pd
 import networkx as nx
 import plotly.graph_objects as go
+from IPython.display import display
 from gitma.annotation_collection import AnnotationCollection as ac
 
 

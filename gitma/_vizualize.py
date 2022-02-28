@@ -35,7 +35,7 @@ def update_figure(fig: go.Figure):
                 size=10
             )
         ),
-        legend_title_text=None,
+        # legend_title_text=None,
     )
     return fig
 
@@ -66,24 +66,21 @@ def format_annotation_text(text: str) -> str:
     return output_string
 
 
-def plot_annotations(ac, y_axis: str = 'tag', prop: str = None, color_prop: str = None):
+def plot_annotations(ac, y_axis: str = 'tag', color_prop: str = 'tag'):
     """Creates interactive [Plotly Scatter Plot](https://plotly.com/python/line-and-scatter/) to a explore a annotation collection.
 
     Args:
         ac (AnnotationCollection): gitma.AnnotationCollection
         y_axis (str, optional): The columns in AnnotationCollection DataFrame used for y axis. Defaults to 'tag'.
-        prop (str, optional): A Property's name used in the AnnotationCollection. Defaults to None.
         color_prop (str, optional): A Property's name used in the AnnotationCollection . Defaults to None.
 
     Returns:
         go.Figure: Plotly scatter plot.
     """
-    split_by_y = y_axis if not prop else f'prop:{prop}'
-    color = 'tag' if not color_prop else f'prop:{color_prop}'
 
-    if prop:
-        ac.df = ac.duplicate_by_prop(prop=prop)
-    if color_prop:
+    if 'prop' in y_axis:
+        ac.df = ac.duplicate_by_prop(prop=y_axis)
+    if 'prop' in color_prop:
         ac.df = ac.duplicate_by_prop(prop=color_prop)
 
     plot_df = ac.df.copy()
@@ -95,11 +92,11 @@ def plot_annotations(ac, y_axis: str = 'tag', prop: str = None, color_prop: str 
     fig = px.scatter(
         plot_df,
         x='start_point',
-        y=split_by_y,
+        y=y_axis,
         size='size',
         hover_data=hover_cols,
-        color=color,
-        color_discrete_map=get_color_dict(plot_df, color_col=color),
+        color=color_prop,
+        color_discrete_map=get_color_dict(plot_df, color_col=color_prop),
         opacity=0.7,
         marginal_x='histogram',
         size_max=10
@@ -185,7 +182,7 @@ def plot_interactive(catma_project, color_col: str = 'annotation collection') ->
 
     Args:
         catma_project (CatmaProject): The plotted project.
-        color_col (str, optional): 'annotation collection', 'annotator', 'tag' or any 'property'. Defaults to 'annotation collection'.
+        color_col (str, optional): 'annotation collection', 'annotator', 'tag' or any property with the prefix 'prop:'. Defaults to 'annotation collection'.
 
     Returns:
         go.Figure: Plotly scatter plot.
@@ -228,15 +225,39 @@ def plot_interactive(catma_project, color_col: str = 'annotation collection') ->
     return fig
 
 
-def compare_annotation_collections(catma_project, annotation_collections: list, color_col: str = 'tag') -> go.Figure:
-    color_dict = get_color_dict(
-        annotation_df=pd.concat(
-            [catma_project.ac_dict[ac].duplicate_by_prop(prop=color_col)
-             if 'prop:' in color_col else catma_project.ac_dict[ac].df
-             for ac in annotation_collections]
-        ),
-        color_col=color_col
-    )
+def compare_annotation_collections(
+        catma_project,
+        annotation_collections: list,
+        color_col: str = 'tag') -> go.Figure:
+    """Plots annotations of multiple annotation collections of the same texts as line plot.
+
+    Args:
+        catma_project (CatmaProject): _description_
+        annotation_collections (list): A list of annotation collection names. 
+        color_col (str, optional): Either 'tag' or one property name with prefix 'prop:'. Defaults to 'tag'.
+
+    Raises:
+        ValueError: If one of the annotation collection's names does not exist.
+
+    Returns:
+        go.Figure: Plotly Line Plot.
+    """
+    try:
+        color_dict = get_color_dict(
+            annotation_df=pd.concat(
+                [catma_project.ac_dict[ac].duplicate_by_prop(prop=color_col)
+                 if 'prop:' in color_col else catma_project.ac_dict[ac].df
+                 for ac in annotation_collections]
+            ),
+            color_col=color_col
+        )
+    except ValueError:
+        raise ValueError(
+            f"""One of the given annotation collections does not exists.
+            These are the existing annotation collections:
+            {[ac.name for ac in catma_project.annotation_collections]}
+            """
+        )
     fig = go.Figure()
     used_tags = []
     for ac in annotation_collections:
