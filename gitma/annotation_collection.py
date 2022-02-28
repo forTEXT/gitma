@@ -50,11 +50,13 @@ def duplicate_rows(ac_df: pd.DataFrame, property_col: str) -> pd.DataFrame:
                     row_dict = dict(row)
                     row_dict[property_col] = item
                     yield row_dict
-            elif isinstance(row[property_col], str) or isinstance(row[property_col], int) or isinstance(row[property_col], float):
+            elif isinstance(row[property_col], str) and len(row[property_col]) > 0:
+                yield dict(row)
+            elif isinstance(row[property_col], int) or isinstance(row[property_col], float):
                 yield dict(row)
             else:
                 row_dict = dict(row)
-                row_dict[property_col] = ''
+                row_dict[property_col] = 'NOT ANNOTATED'
                 yield dict(row_dict)
 
     df_new = pd.DataFrame(list(duplicate_generator(ac_df)))

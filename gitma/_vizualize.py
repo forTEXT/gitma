@@ -209,8 +209,10 @@ def plot_interactive(catma_project, color_col: str = 'annotation collection') ->
         color_discrete_map=get_color_dict(merged_acs, color_col=color_col)
     )
 
+    height = 300 + len(merged_acs.document.unique()) * \
+        len(merged_acs.tag.unique()) * 15
     fig.update_layout(
-        height=len(merged_acs.document.unique()) * 350,
+        height=height,
         legend=dict(
             orientation="h",
             yanchor="bottom",
