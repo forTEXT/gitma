@@ -16,6 +16,7 @@ setuptools.setup(
         "pygit2",
         "python-gitlab",
         "spacy",
-        "tabulate"
+        "tabulate",
+        "networkx"
     ]
 )
