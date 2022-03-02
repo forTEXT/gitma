@@ -131,7 +131,16 @@ def load_annotation_collections(
 
 def test_tageset_directory(
         project_uuid: str,
-        tagset_uuid: str):
+        tagset_uuid: str) -> bool:
+    """Tests if Tagset has header.json to filter empty Tagsets from loading process.
+
+    Args:
+        project_uuid (str): UUID.
+        tagset_uuid (str): UUID.
+
+    Returns:
+        boolean: True if header.json exists.
+    """
     tageset_dir = f'{project_uuid}/tagsets/{tagset_uuid}/header.json'
     if os.path.isfile(tageset_dir):
         return True
@@ -175,6 +184,7 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
             project_uuid=project_uuid,
             catma_id=directory
         ) for directory in os.listdir(texts_directory)
+        if directory.startswith('D_')
     ]
 
     texts_dict = {text.title: text for text in texts}

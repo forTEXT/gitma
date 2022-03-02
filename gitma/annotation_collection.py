@@ -208,7 +208,7 @@ class AnnotationCollection:
             excluded_tags (list, optional): List of excluded tags. Defaults to None.
             plot_stats (bool, optional): Whether to return network stats. Defaults to True.
         """
-        from gitma.network import Network
+        from gitma._network import Network
 
         nw = Network(
             annotation_collection=self,
