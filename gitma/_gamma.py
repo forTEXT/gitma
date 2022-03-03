@@ -26,8 +26,9 @@ def gamma_agreement(
     try:
         from pygamma_agreement import Continuum, CombinedCategoricalDissimilarity, CategoricalDissimilarity, PrecomputedCategoricalDissimilarity
     except ImportError:
-        ImportWarning(
-            'To compute the gamma Agreement you need to install pygamma-agreement. See https://github.com/bootphon/pygamma-agreement for details.')
+        raise ImportWarning(
+            'To compute the gamma Agreement you need to install pygamma-agreement.\
+             See https://github.com/bootphon/pygamma-agreement for details.')
 
     ac_data_frames = [
         ac.to_pygamma_table() for ac in project.annotation_collections
