@@ -36,21 +36,28 @@ def duplicate_rows(ac_df: pd.DataFrame, property_col: str) -> pd.DataFrame:
     """
     Duplicates rows in AnnotationCollection DataFrame if multiple property values exist in defined porperty column.
     """
+    if 'prop:' not in property_col:
+        property_col = f'prop:{property_col}'
+
+    if property_col not in ac_df.columns:
+        raise ValueError(
+            f'{property_col} is not a valid value in the given annotation collections. Choose any of these: {list(ac_df.columns)}')
+
     def duplicate_generator(df):
         for _, row in df.iterrows():
-            if len(row[property_col]) > 1:
+            if isinstance(row[property_col], list) and len(row[property_col]) > 0:
                 for item in row[property_col]:
                     row_dict = dict(row)
                     row_dict[property_col] = item
                     yield row_dict
+            elif isinstance(row[property_col], str) and len(row[property_col]) > 0:
+                yield dict(row)
+            elif isinstance(row[property_col], int) or isinstance(row[property_col], float):
+                yield dict(row)
             else:
                 row_dict = dict(row)
-                if len(row[property_col]) > 0:
-                    row_dict[property_col] = row[property_col][0]
-                    yield dict(row_dict)
-                else:
-                    row_dict[property_col] = 'nan'
-                    yield dict(row_dict)
+                row_dict[property_col] = 'NOT ANNOTATED'
+                yield dict(row_dict)
 
     df_new = pd.DataFrame(list(duplicate_generator(ac_df)))
     return df_new
@@ -173,7 +180,7 @@ class AnnotationCollection:
 
     def duplicate_by_prop(self, prop: str):
         try:
-            return duplicate_rows(ac_df=self.df, property_col=f'prop:{prop}')
+            return duplicate_rows(ac_df=self.df, property_col=prop)
         except KeyError:
             prop_cols = [item.replace('prop:', '')
                          for item in self.df.columns if 'prop:' in item]
@@ -185,6 +192,33 @@ class AnnotationCollection:
     from gitma._vizualize import plot_scaled_annotations
 
     from gitma._export_annotations import to_stanford_tsv
+
+    def cooccurrence_network(
+            self, character_distance: int = 100,
+            start_point: float = 0, end_point: float = 1.0,
+            included_tags: list = None, excluded_tags: list = None,
+            plot_stats: bool = True):
+        """Draws cooccurrence network graph.
+
+        Args:
+            character_distance (int, optional): In which distance annotations are considered coocurrent. Defaults to 100.
+            start_point (float, optional): Which texparts to consider. Defaults to 0.
+            end_point (float, optional): Which texparts to consider. Defaults to 1.0.
+            included_tags (list, optional): List of included tags. Defaults to None.
+            excluded_tags (list, optional): List of excluded tags. Defaults to None.
+            plot_stats (bool, optional): Whether to return network stats. Defaults to True.
+        """
+        from gitma._network import Network
+
+        nw = Network(
+            annotation_collection=self,
+            character_distance=character_distance,
+            start_point=start_point,
+            end_point=end_point,
+            included_tags=included_tags,
+            excluded_tags=excluded_tags
+        )
+        nw.plot(plot_stats=plot_stats)
 
     def to_pygamma_table(self):
         return self.df[['annotator', 'tag', 'start_point', 'end_point']]

@@ -2,15 +2,16 @@ import setuptools
 
 setuptools.setup(
     name="gitma",
-    version="1.3.6",
+    version="1.4.7",
     author="Michael Vauth",
     packages=setuptools.find_packages(),
     description="Load CATMA annotations from their Git data",
     url="https://github.com/forTEXT/gitma",
-    python_requires=">=3.5",
+    python_requires=">=3.7",
     install_requires=[
         "jupyter",
         "matplotlib",
+        "networkx",
         "pandas",
         "plotly",
         "pygit2",

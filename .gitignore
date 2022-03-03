@@ -1,7 +1,8 @@
 .git
 .idea
-**/__pycache__
+projects
+__pycache__
 *.egg-info
 own_work.py
 own_notebook.ipynb
-**/_gamma_own.py
+_gamma_own.py

@@ -100,13 +100,26 @@ def get_overlap_percentage(an_pair) -> float:
     return diff_percentage
 
 
-def get_confusion_matrix(pair_list) -> pd.DataFrame:
-    tags = set([p[0].tag.name for p in pair_list] +
-               [p[1].tag.name for p in pair_list])
-    tag_dict = {tag: {t: 0 for t in tags} for tag in tags}
-    for pair in pair_list:
-        an1, an2 = pair[0], pair[1]
-        tag_dict[an1.tag.name][an2.tag.name] += 1
+def get_confusion_matrix(pair_list: list, level: str = 'tag') -> pd.DataFrame:
+    if level == 'tag':
+        tags = set(
+            [p[0].tag.name for p in pair_list] +
+            [p[1].tag.name for p in pair_list]
+        )
+        tag_dict = {tag: {t: 0 for t in tags} for tag in tags}
+        for pair in pair_list:
+            an1, an2 = pair[0], pair[1]
+            tag_dict[an1.tag.name][an2.tag.name] += 1
+    else:
+        level = level.replace('prop:', '')
+        tags = set(
+            [p[0].properties[level][0] for p in pair_list] +
+            [p[1].properties[level][0] for p in pair_list]
+        )
+        tag_dict = {tag: {t: 0 for t in tags} for tag in tags}
+        for pair in pair_list:
+            an1, an2 = pair[0], pair[1]
+            tag_dict[an1.properties[level][0]][an2.properties[level][0]] += 1
 
     return pd.DataFrame(tag_dict)
 
@@ -174,17 +187,17 @@ def get_annotation_pairs(
             an_pair) for an_pair in pair_list if an_pair[1].tag.name != '#None#']
     ) * 100
 
-    print(textwrap.dedent(
-        f"""
-        Finished search for overlapping annotations.
-        Could match {len(pair_list)} items.
-        Average overlap is {round(string_difference, 2)} %.
-        Couldn't match {missing_an2_annotations} annotation(s) in first annotation collection.
+    print(
+        textwrap.dedent(
+            f"""
+                Finished search for overlapping annotations.
+                Could match {len(pair_list)} annotations.
+                Average overlap is {round(string_difference, 2)} %.
+                Couldn't match {missing_an2_annotations} annotation(s) in first annotation collection.
 
-        Confusion Matrix:
-        {get_confusion_matrix(pair_list).to_markdown()}
-        """
-    ))
+            """
+        )
+    )
 
     return pair_list
 
@@ -217,7 +230,7 @@ def get_iaa_data(annotation_pairs: list, level='tag'):
             if level == 'tag':
                 yield an_index, index, an.tag.name
             else:
-                yield an_index, index, an.properties[level]
+                yield an_index, index, an.properties[level.replace('prop:', '')][0]
 
 
 def get_iaa(
@@ -235,6 +248,7 @@ def get_iaa(
         ac1_name (str): AnnotationCollection name to be compared
         ac2_name (str): AnnotationCollection name to be compared with
         tag_filter (list, optional): Which Tags should be included. If None all are included. Default to None.
+        filter_both_ac (bool, optional): Whether the tag filter shall be aplied to both annotation collections. Default to False.
         level (str, optional): Whether the Annotation Tag or a specified Property should be compared.
         distance (str, optional): The IAA distance function. Either 'binary' or 'interval'. See https://www.nltk.org/api/nltk.metrics.html. Default to 'binary'.
     """
@@ -262,7 +276,10 @@ def get_iaa(
         Scott's pi: {annotation_task.pi()}
         Cohen's Kappa: {annotation_task.kappa()}
         Krippendorf Alpha: {annotation_task.alpha()}
+        -------------------
+        -------------------
+        Confusion Martrix:
         """
     ))
 
-    return get_confusion_matrix(pair_list=annotation_pairs)
+    return get_confusion_matrix(pair_list=annotation_pairs, level=level)

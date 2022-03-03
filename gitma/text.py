@@ -20,3 +20,6 @@ class Text:
 
     def __repr__(self):
         return f"Text(Name: {self.title}, Author: {self.author})"
+
+    def __len__(self):
+        return len(self.plain_text)

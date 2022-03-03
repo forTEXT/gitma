@@ -4,7 +4,7 @@ import json
 import gitlab
 import pygit2
 import pandas as pd
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Union
 from gitma.text import Text
 from gitma.tagset import Tagset
 from gitma.annotation_collection import AnnotationCollection
@@ -131,7 +131,16 @@ def load_annotation_collections(
 
 def test_tageset_directory(
         project_uuid: str,
-        tagset_uuid: str):
+        tagset_uuid: str) -> bool:
+    """Tests if Tagset has header.json to filter empty Tagsets from loading process.
+
+    Args:
+        project_uuid (str): UUID.
+        tagset_uuid (str): UUID.
+
+    Returns:
+        boolean: True if header.json exists.
+    """
     tageset_dir = f'{project_uuid}/tagsets/{tagset_uuid}/header.json'
     if os.path.isfile(tageset_dir):
         return True
@@ -175,6 +184,7 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
             project_uuid=project_uuid,
             catma_id=directory
         ) for directory in os.listdir(texts_directory)
+        if directory.startswith('D_')
     ]
 
     texts_dict = {text.title: text for text in texts}
@@ -192,32 +202,13 @@ class CatmaProject:
             load_from_gitlab: bool = False,
             gitlab_access_token: str = None,
             backup_directory: str = './'):
-        """_summary_
-
-        Args:
-            project_name (str): _description_
-            project_directory (str, optional): _description_. Defaults to './'.
-            included_acs (list, optional): _description_. Defaults to None.
-            excluded_acs (list, optional): _description_. Defaults to None.
-            ac_filter_keyword (str, optional): _description_. Defaults to None.
-            load_from_gitlab (bool, optional): _description_. Defaults to False.
-            gitlab_access_token (str, optional): _description_. Defaults to None.
-            backup_directory (str, optional): _description_. Defaults to './'.
-
-        Raises:
-            FileNotFoundError: _description_
-            FileNotFoundError: _description_
-        """
-
-        x = 0
-
         """This Project represents a CATMA Project including all Documents, Tagsets
         and Annotation Collections.
         You can eather load the Project from a local git clone or you load it directly
         from GitLab after generating a gitlab_access_token in the CATMA GUI.
 
         Args:
-            
+
             project_name (str): The CATMA Project name. Defaults to None.
             project_directory (str, optional): The directory where your CATMA Project(s) are located. Defaults to './'
             included_acs (list, optional): All Annotation Collections that should get loaded. If neither included nor excluded
@@ -226,8 +217,9 @@ class CatmaProject:
             load_from_gitlab (bool, optional): Whether the CATMA Project shall be loaded dircetly from the CATMA GitLab. Defaults to False.
             gitlab_access_token (str, optional): The private CATMA GitLab Token. Defaults to None.
             backup_directory (str, optional): The your Project clone should be located. Default to './'.
+
         Raises:
-            Exception: If the CATMA Project were not found in the CATMA GitLab.
+            FileNotFoundError: If the CATMA Project was not found in the CATMA GitLab.
             FileNotFoundError: If the local or remote CATMA Project were not found.
         """
         # get the current directory to return after loaded the project
@@ -302,6 +294,8 @@ class CatmaProject:
 
     from gitma._vizualize import plot_interactive
 
+    from gitma._vizualize import compare_annotation_collections
+
     from gitma._metrics import get_iaa
 
     from gitma._gamma import gamma_agreement
@@ -315,6 +309,27 @@ class CatmaProject:
         return pd.concat(
             [ac.df for ac in self.annotation_collections]
         )
+
+    def pygamma_table(self, annotation_collections: Union[str, list] = 'all') -> pd.DataFrame:
+        """Concatenes annotation collections to pygamma table.
+
+        Args:
+            annotation_collections (Union[str, list], optional): List of annotation collections. Defaults to 'all'.
+
+        Returns:
+            pd.DataFrame: Concatenated annotation collections as pd.DataFrame in pygamma format.
+        """
+        if annotation_collections == 'all':
+            return pd.concat(
+                [ac.to_pygamma_table() for ac in self.annotation_collections]
+            )
+        else:
+            return pd.concat(
+                [
+                    ac.to_pygamma_table() for ac in self.annotation_collections
+                    if ac.name in annotation_collections
+                ]
+            )
 
     def merge_annotations_per_document(self):
         """Merges all Annotation Collections DataFrames belonging to the same document and extends the `self.ac_dict`.
@@ -338,8 +353,8 @@ class CatmaProject:
         stats_dict = {
             ac.name: {
                 'annotations': len(ac.annotations),
-                'authors': set([an.author for an in ac.annotations]),
-                'tags': set([an.tag.name for an in ac.annotations]),
+                'annotator': set([an.author for an in ac.annotations]),
+                'tag': set([an.tag.name for an in ac.annotations]),
                 'first_annotation': min([an.date for an in ac.annotations]),
                 'last_annotation': max([an.date for an in ac.annotations]),
                 'uuid': ac.uuid,
@@ -347,7 +362,10 @@ class CatmaProject:
             if len(ac.annotations) > 0
         }
 
-        return pd.DataFrame(stats_dict).T.sort_index()
+        df = pd.DataFrame(stats_dict).T.sort_index()
+        df.reset_index(level=0, inplace=True)
+        df.rename({'index': 'annotation collection'}, axis=1, inplace=True)
+        return df
 
     def update(self) -> None:
         """Updates local git folder and reloads CatmaProject
