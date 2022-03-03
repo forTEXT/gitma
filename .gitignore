@@ -1,7 +1,8 @@
-/.git
-**/__pycache__
+.git
+.idea
+projects
+__pycache__
 *.egg-info
 own_work.py
 own_notebook.ipynb
-**/_gamma_own.py
-demo_notebooks/CATMA_**
+_gamma_own.py
