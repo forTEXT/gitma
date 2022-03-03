@@ -12,10 +12,12 @@ setuptools.setup(
         "jupyter",
         "matplotlib",
         "networkx",
+        "nltk",
         "pandas",
         "plotly",
         "pygit2",
         "python-gitlab",
+        "scipy",
         "spacy",
         "tabulate"
     ]
