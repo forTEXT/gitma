@@ -198,6 +198,8 @@ def plot_interactive(catma_project, color_col: str = 'annotation collection') ->
             property_col=color_col
         )
 
+    merged_acs.fillna('None', inplace=True)
+
     fig = px.scatter(
         merged_acs,
         x='start_point',
