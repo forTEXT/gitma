@@ -18,7 +18,13 @@ To install locally for development use: `pip install -e .`
 
 You'll find 4 Jupyter Notebooks in the demo_notebooks directory:
 
-- [Cloning and loading your CATMA Project with the package](https://github.com/forTEXT/gitma/tree/main/demo_notebooks/load_project_from_gitlab.ipynb)
-- [Exploring your annotations](https://github.com/forTEXT/gitma/tree/main/demo_notebooks/explore_annotations.ipynb)
-- [Gold Annotation Support](https://github.com/forTEXT/gitma/tree/main/demo_notebooks/gold_annotation_support.ipynb)
+- [Cloning and loading your CATMA Project with the package](https://github.com/forTEXT/gitma/blob/main/demo_notebooks/load_project_from_gitlab.ipynb)
+- [Exploring your annotations](https://github.com/forTEXT/gitma/blob/main/demo_notebooks/explore_annotations.ipynb)
+- [Gold Annotation Support](https://github.com/forTEXT/gitma/blob/main/demo_notebooks/gold_annotation_support.ipynb)
 - [Inter Annotator Agreement](https://github.com/forTEXT/gitma/blob/main/demo_notebooks/inter_annotator_agreement.ipynb)
+
+## Additional Notes
+
+Some functions in this package still rely on calling Git via subprocess. We are working on changing these to use pygit2
+instead, so that a separate Git installation (with valid saved credentials for your CATMA account) will no longer be
+required in future.
