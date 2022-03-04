@@ -10,12 +10,15 @@ setuptools.setup(
     python_requires=">=3.7",
     install_requires=[
         "jupyter",
+        "matplotlib",
+        "networkx",
+        "nltk",
         "pandas",
         "plotly",
         "pygit2",
         "python-gitlab",
+        "scipy",
         "spacy",
-        "tabulate",
-        "networkx"
+        "tabulate"
     ]
 )
