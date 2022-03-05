@@ -130,18 +130,19 @@ class EmptyTag:
 
 
 class EmptyAnnotation:
-    def __init__(self, start_point, end_point):
+    def __init__(self, start_point: int, end_point: int, property_dict: dict):
         self.start_point = start_point
         self.end_point = end_point
         self.tag = EmptyTag()
-        self.properties = None
+        self.properties = property_dict
 
 
 def get_annotation_pairs(
         ac1: AnnotationCollection,
         ac2: AnnotationCollection,
-        tag_filter=None,
-        filter_both_ac=False) -> list:
+        tag_filter: list = None,
+        filter_both_ac: bool = False,
+        property_filter: str = None) -> list:
     """
     Returns list of all overlapping annotations in two annotation collections.
     tag_filter can be defined as list of tag names if not all annotations are included.
@@ -153,11 +154,16 @@ def get_annotation_pairs(
     ac1_annotations, ac2_annotations = get_same_text(
         ac1_annotations, ac2_annotations)
 
+    if property_filter:
+        ac1_annotations = [
+            an for an in ac1_annotations if property_filter in an.properties]
+        ac2_annotations = [
+            an for an in ac2_annotations if property_filter in an.properties]
+
     pair_list = []
     missing_an2_annotations = 0
 
     for an1 in ac1_annotations:
-
         # collect all overlapping annotations
         overlapping_annotations = [
             an2 for an2 in ac2_annotations if test_overlap(an1, an2)]
@@ -170,7 +176,9 @@ def get_annotation_pairs(
                     an1,
                     EmptyAnnotation(
                         start_point=an1.start_point,
-                        end_point=an1.end_point)
+                        end_point=an1.end_point,
+                        property_dict={key: '#None#' for key in an1.properties}
+                    )
                 )
             )
         else:
@@ -232,7 +240,7 @@ def get_iaa_data(annotation_pairs: list, level='tag'):
             elif an.properties and level.replace('prop:', '') in an.properties:
                 yield an_index, index, an.properties[level.replace('prop:', '')][0]
             else:
-                yield an_index, index, '#None#'
+                yield an_index, index, an.properties[level.replace('prop:', '')][0]
 
 
 def get_iaa(
@@ -267,7 +275,13 @@ def get_iaa(
     ac2 = project.ac_dict[ac2_name]
 
     annotation_pairs = get_annotation_pairs(
-        ac1, ac2, tag_filter=tag_filter, filter_both_ac=filter_both_ac)
+        ac1=ac1,
+        ac2=ac2,
+        tag_filter=tag_filter,
+        filter_both_ac=filter_both_ac,
+        property_filter=level.replace(
+            'prop:', '') if 'prop:' in level else None
+    )
 
     data = list(get_iaa_data(annotation_pairs, level=level))
 
