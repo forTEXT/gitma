@@ -134,6 +134,7 @@ class EmptyAnnotation:
         self.start_point = start_point
         self.end_point = end_point
         self.tag = EmptyTag()
+        self.properties = None
 
 
 def get_annotation_pairs(
@@ -194,7 +195,6 @@ def get_annotation_pairs(
                 Could match {len(pair_list)} annotations.
                 Average overlap is {round(string_difference, 2)} %.
                 Couldn't match {missing_an2_annotations} annotation(s) in first annotation collection.
-
             """
         )
     )
@@ -229,8 +229,10 @@ def get_iaa_data(annotation_pairs: list, level='tag'):
         for an_index, an in enumerate(pair):
             if level == 'tag':
                 yield an_index, index, an.tag.name
-            else:
+            elif an.properties and level.replace('prop:', '') in an.properties:
                 yield an_index, index, an.properties[level.replace('prop:', '')][0]
+            else:
+                yield an_index, index, '#None#'
 
 
 def get_iaa(

@@ -47,6 +47,7 @@ class Catma:
 
         Args:
             project_name (str): The CATMA Project name.
+            backup_directory (str): Where to store the project.
         """
         self.project_dict[project_name] = CatmaProject(
             load_from_gitlab=True,
