@@ -1,6 +1,6 @@
 # Package for CATMA GitLab Access
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5669222.svg)](https://doi.org/10.5281/zenodo.5669222)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6330464.svg)](https://doi.org/10.5281/zenodo.6330464)
 
 ## Description
 
