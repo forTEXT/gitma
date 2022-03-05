@@ -55,6 +55,37 @@ def load_gitlab_project(gitlab_access_token: str, project_name: str, backup_dire
     return project_uuid
 
 
+def get_local_project_uuid(project_directory: str, project_name: str) -> str:
+    """Returns project uuid identified by name.
+
+    Args:
+        project_directory (str): The directory where the project clone is located.
+        project_name (str): The project's name.
+
+    Raises:
+        FileNotFoundError: If none of the projects in the project_directory is named as the given project name.
+        ValueError: If more then one project with the given directory exist.
+
+    Returns:
+        str: Project UUID
+    """
+    project_uuids = [
+        item for item in os.listdir(project_directory)
+        if project_name in item
+    ]
+    if len(project_uuids) < 1:
+        raise FileNotFoundError(
+            f'The project "{project_name}" name does not exist in directory "{project_directory}".\
+                Select one of these: {[item[43:-5] for item in os.listdir(project_directory)]}!'
+        )
+    elif len(project_uuids) > 1:
+        raise ValueError(
+            f'In "{project_directory}" exist multiple projects named "{project_name}".\
+                Specifiy which project to load by one of the full UUIDs as project name: {project_uuids}')
+    else:
+        return project_uuids[0]
+
+
 def get_ac_name(project_uuid: str, directory: str) -> str:
     """Gives Annotation Collection name.
 
@@ -234,11 +265,10 @@ class CatmaProject:
             )
             project_directory = backup_directory
         else:
-            project_uuid = [
-                item for item in os.listdir(project_directory)
-                if project_name in item
-            ][0]
-            self.uuid = project_uuid
+            self.uuid = get_local_project_uuid(
+                project_directory=project_directory,
+                project_name=project_name
+            )
 
         self.project_directory = project_directory
 
@@ -350,8 +380,10 @@ class CatmaProject:
         Returns:
             pd.DataFrame: DataFrame with projects stats sorted by the Annotation Collection names.
         """
-        stats_dict = {
-            ac.name: {
+        ac_stats = [
+            {
+                'annotation collection': ac.name,
+                'document': ac.text.title,
                 'annotations': len(ac.annotations),
                 'annotator': set([an.author for an in ac.annotations]),
                 'tag': set([an.tag.name for an in ac.annotations]),
@@ -360,11 +392,10 @@ class CatmaProject:
                 'uuid': ac.uuid,
             } for ac in self.annotation_collections
             if len(ac.annotations) > 0
-        }
+        ]
 
-        df = pd.DataFrame(stats_dict).T.sort_index()
-        df.reset_index(level=0, inplace=True)
-        df.rename({'index': 'annotation collection'}, axis=1, inplace=True)
+        df = pd.DataFrame(ac_stats).sort_values(
+            by=['annotation collection']).reset_index(drop=True)
         return df
 
     def update(self) -> None:
