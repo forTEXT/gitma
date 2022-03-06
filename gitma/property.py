@@ -10,4 +10,4 @@ class Property:
         self.possible_value_list = possible_value
 
     def __repr__(self):
-        return self.name
+        return f'Property(Name: {self.name}), Default Values: {self.possible_value_list})'

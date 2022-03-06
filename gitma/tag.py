@@ -74,6 +74,9 @@ class Tag:
         self.time_property = get_time_uuid(self.json)
         self.user_property = get_user_properties(self.json)
 
+    def __repr__(self):
+        return f'Tag(Name: {self.name}, Properties: {self.properties_list})'
+
     def get_parent_tag(self, tagset_dict: dict):
         self.parent = tagset_dict[self.parent_id] if self.parent_id in tagset_dict else None
 

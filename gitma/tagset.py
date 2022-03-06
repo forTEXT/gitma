@@ -42,6 +42,9 @@ class Tagset:
             tag.get_parent_tag(self.tag_dict)
             tag.get_child_tags(self.tag_list)
 
+    def __repr__(self) -> str:
+        return f'Tagset(Name: {self.name}, Tags: {self.tag_list})'
+
     def edit_property_names(self, tag_names: list, old_prop: str, new_prop: str):
         """
         Renames Property for all Tags given as tag_names.
