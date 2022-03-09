@@ -146,6 +146,11 @@ class Network:
 
         self.pos = network_layout(self.network_graph, weight='weight')
 
+    def to_gexf(self, filename: str = 'catma_network', directory: str = './'):
+        """Writes Network Graph to a GEPHI xml file.
+        """
+        nx.write_gexf(self.network_graph, f'{directory}{filename}.gexf')
+
     def stats(self) -> pd.DataFrame:
         bc = nx.betweenness_centrality(self.network_graph, normalized=True)
         bc_weighted = nx.betweenness_centrality(
