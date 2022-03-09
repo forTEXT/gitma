@@ -4,13 +4,17 @@ import json
 import gitlab
 import pygit2
 import pandas as pd
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple, Union, Generator
 from gitma.text import Text
 from gitma.tagset import Tagset
 from gitma.annotation_collection import AnnotationCollection
+from gitma.annotation import Annotation
 
 
-def load_gitlab_project(gitlab_access_token: str, project_name: str, backup_directory: str = './') -> str:
+def load_gitlab_project(
+        gitlab_access_token: str,
+        project_name: str,
+        backup_directory: str = './') -> str:
     """Downloads a CATMA Project using git.
 
     Args:
@@ -22,7 +26,7 @@ def load_gitlab_project(gitlab_access_token: str, project_name: str, backup_dire
         Exception: If no CATMA Project with the given name could be found.
 
     Returns:
-        str: The CATMA Project UUID
+        str: The CATMA Project UUID.
     """
     # cwd = os.getcwd()
     # os.chdir(backup_directory)
@@ -55,7 +59,9 @@ def load_gitlab_project(gitlab_access_token: str, project_name: str, backup_dire
     return project_uuid
 
 
-def get_local_project_uuid(project_directory: str, project_name: str) -> str:
+def get_local_project_uuid(
+        project_directory: str,
+        project_name: str) -> str:
     """Returns project uuid identified by name.
 
     Args:
@@ -64,10 +70,10 @@ def get_local_project_uuid(project_directory: str, project_name: str) -> str:
 
     Raises:
         FileNotFoundError: If none of the projects in the project_directory is named as the given project name.
-        ValueError: If more then one project with the given directory exist.
+        ValueError: If more then one project with the given project name exist.
 
     Returns:
-        str: Project UUID
+        str: Project UUID.
     """
     project_uuids = [
         item for item in os.listdir(project_directory)
@@ -81,7 +87,8 @@ def get_local_project_uuid(project_directory: str, project_name: str) -> str:
     elif len(project_uuids) > 1:
         raise ValueError(
             f'In "{project_directory}" exist multiple projects named "{project_name}".\
-                Specifiy which project to load by one of the full UUIDs as project name: {project_uuids}')
+            Specifiy which project to load by one of the full UUIDs as project name: {project_uuids}'
+        )
     else:
         return project_uuids[0]
 
@@ -113,7 +120,7 @@ def load_annotation_collections(
     Args:
         project_uuid (str): CATMA Project UUID
         included_acs (list): All listed Annotation Collections get loaded.
-        excluded_acs (list): All listed Annotations Collections don't get loaded.
+        excluded_acs (list): All listed Annotations Collections don't get loaded.\
             If neither icluded nor excluded Annotation Collections are defined, all Annotation Collections get loaded.
 
     Returns:
@@ -121,7 +128,7 @@ def load_annotation_collections(
     """
     collections_directory = catma_project.uuid + '/collections/'
 
-    if included_acs:
+    if included_acs:        # selects annotation collections listed in included_acs
         annotation_collections = [
             AnnotationCollection(
                 catma_project=catma_project,
@@ -129,7 +136,7 @@ def load_annotation_collections(
             ) for directory in os.listdir(collections_directory)
             if get_ac_name(catma_project.uuid, directory) in included_acs
         ]
-    elif excluded_acs:
+    elif excluded_acs:      # selects all annotation collections except for the excluded_acs
         annotation_collections = [
             AnnotationCollection(
                 catma_project=catma_project,
@@ -137,7 +144,7 @@ def load_annotation_collections(
             ) for directory in os.listdir(collections_directory)
             if get_ac_name(catma_project.uuid, directory) not in excluded_acs
         ]
-    elif ac_filter_keyword:
+    elif ac_filter_keyword:  # selects annotation collections with the given ac_filter_keyword
         annotation_collections = [
             AnnotationCollection(
                 catma_project=catma_project,
@@ -145,7 +152,7 @@ def load_annotation_collections(
             ) for directory in os.listdir(collections_directory)
             if ac_filter_keyword in get_ac_name(catma_project.uuid, directory)
         ]
-    else:
+    else:                   # selects all annotation collections
         annotation_collections = [
             AnnotationCollection(
                 catma_project=catma_project,
@@ -181,10 +188,10 @@ def load_tagsets(project_uuid: str) -> Tuple[List[Tagset], Dict[str, Tagset]]:
     """Generates List and Dict of Tagsets.
 
     Args:
-        project_uuid (str): CATMA Project UUID
+        project_uuid (str): CATMA Project UUID.
 
     Returns:
-        List[Tagset]: List and Dict of Tagsets
+        Tuple[List[Tagset], Dict[str, Tagset]]: Tagsets as list and dictionary with UUIDs as keys.
     """
     tagsets_directory = project_uuid + '/tagsets/'
     tagsets = [
@@ -207,7 +214,7 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
         project_uuid (str): CATMA Project UUID
 
     Returns:
-        Tuple[List[Text], Dict[Text]]: List and Dict of CATMA Texts
+        Tuple[List[Text], Dict[Text]]: List and dictionary of documents.
     """
     texts_directory = project_uuid + '/documents/'
     texts = [
@@ -242,9 +249,10 @@ class CatmaProject:
 
             project_name (str): The CATMA Project name. Defaults to None.
             project_directory (str, optional): The directory where your CATMA Project(s) are located. Defaults to './'
-            included_acs (list, optional): All Annotation Collections that should get loaded. If neither included nor excluded
+            included_acs (list, optional): All Annotation Collections that should get loaded. If neither included nor excluded.\
                 Annotation Collections are defined, all Annotation Collections get loaded. Default to None.
             excluded_acs (list, optional): All Annotation Collections that should not get loaded. Default to None.
+            ac_filter_keyword (str, bool): Only Annotation Collections with the given keyword get loaded.
             load_from_gitlab (bool, optional): Whether the CATMA Project shall be loaded dircetly from the CATMA GitLab. Defaults to False.
             gitlab_access_token (str, optional): The private CATMA GitLab Token. Defaults to None.
             backup_directory (str, optional): The your Project clone should be located. Default to './'.
@@ -330,15 +338,15 @@ class CatmaProject:
 
     from gitma._gamma import gamma_agreement
 
-    def all_annotations(self):
+    def all_annotations(self) -> Generator[Annotation]:
+        """Generator that yields all annotations as gitma annotation objects.
+
+        Yields:
+            Annotation: gitma Annotation object.
+        """
         for ac in self.annotation_collections:
             for an in ac.annotations:
                 yield an
-
-    def merge_annotations(self):
-        return pd.concat(
-            [ac.df for ac in self.annotation_collections]
-        )
 
     def pygamma_table(self, annotation_collections: Union[str, list] = 'all') -> pd.DataFrame:
         """Concatenes annotation collections to pygamma table.
@@ -361,18 +369,31 @@ class CatmaProject:
                 ]
             )
 
-    def merge_annotations_per_document(self):
-        """Merges all Annotation Collections DataFrames belonging to the same document and extends the `self.ac_dict`.
+    def merge_annotations(self) -> pd.DataFrame:
+        """Concatenes all annotation collections to one pandas data frame and resets index.
+
+        Returns:
+            pd.DataFrame: Data frame including all annotation in the CATMA project.
         """
-        for document in self.texts:
-            ac_name = f'{document.title}-all_annotations'
-            self.ac_dict[ac_name] = pd.DataFrame()
-            for ac in self.annotation_collections:
-                if ac.text.title == document.title:
-                    self.ac_dict[ac_name] = self.ac_dict[ac_name].append(
-                        ac.df, ignore_index=True)
-                    self.ac_dict[ac_name].sort_values(
-                        by=['start_point'], inplace=True)
+        return pd.concat(
+            [ac.df for ac in self.annotation_collections]
+        ).reset_index(drop=True)
+
+    def merge_annotations_per_document(self) -> Dict[str, pd.DataFrame]:
+        """Merges all annotations per document to one annotation collection.
+
+        Returns:
+            Dict[str, pd.DataFrame]: Dictionary with document titles as keys and annotations per\
+                document as pandas data frame.
+        """
+        project_df = self.merge_annotations
+        document_acs = {
+            document: project_df[project_df['document']
+                                 == document].reset_index(drop=True)
+            for document in project_df['document'].unique()
+        }
+
+        return document_acs
 
     def stats(self) -> pd.DataFrame:
         """Shows some CATMA Project stats.
