@@ -1,5 +1,6 @@
 import json
 import os
+from typing import List
 from collections import Counter
 import string
 import pandas as pd
@@ -102,6 +103,41 @@ def get_text_span_mean_per_tag(ac_df: pd.DataFrame) -> int:
     return sum(ac_df['end_point'] - ac_df['start_point']) / len(ac_df)
 
 
+def clean_text_in_ac_df(annotation: str) -> str:
+    annotation = annotation.replace('\n', ' ')
+    while '  ' in annotation:
+        annotation = annotation.replace('  ', ' ')
+    return annotation
+
+
+df_columns = [
+    'document', 'annotation collection', 'annotator',
+    'tag', 'properties', 'left_context', 'annotation',
+    'right_context', 'start_point', 'end_point', 'date'
+]
+
+
+def ac_to_df(annotations: List[Annotation], text_title, ac_name) -> pd.DataFrame:
+    # create df
+    df = pd.DataFrame(
+        [
+            (text_title, ac_name, a.author, a.tag.name, a.properties, a.pretext,
+                a.text, a.posttext, a.start_point, a.end_point, a.date)
+            for a in annotations
+        ], columns=df_columns
+    )
+
+    # create property columns
+    df = split_property_dict_to_column(df)
+
+    # clean annotations
+    df['left_context'] = df['left_context'].apply(clean_text_in_ac_df)
+    df['annotation'] = df['annotation'].apply(clean_text_in_ac_df)
+    df['right_context'] = df['right_context'].apply(clean_text_in_ac_df)
+
+    return df
+
+
 class AnnotationCollection:
     def __init__(self, ac_uuid: str, catma_project, context: int = 50):
         """Class which represents a CATMA annotation collection.
@@ -134,12 +170,6 @@ class AnnotationCollection:
         print(
             f"\t Loading Annotation Collection '{self.name}' for {self.text.title}")
 
-        df_columns = [
-            'document', 'annotation collection', 'annotator',
-            'tag', 'properties', 'left_context', 'annotation',
-            'right_context', 'start_point', 'end_point', 'date'
-        ]
-
         if os.path.isdir(catma_project.uuid + '/collections/' + self.uuid + '/annotations/'):
             self.annotations = sorted([
                 Annotation(
@@ -154,14 +184,11 @@ class AnnotationCollection:
             self.tags = [an.tag for an in self.annotations]
 
             # create pandas data frame for annotation collection
-            self.df = pd.DataFrame(
-                [
-                    (self.text.title, self.name, a.author, a.tag.name, a.properties, a.pretext,
-                     a.text, a.posttext, a.start_point, a.end_point, a.date)
-                    for a in self.annotations
-                ], columns=df_columns
+            self.df = ac_to_df(
+                annotations=self.annotations,
+                text_title=self.text.title,
+                ac_name=self.name
             )
-            self.df = split_property_dict_to_column(self.df)
         else:
             self.annotations = []
             self.df = pd.DataFrame(columns=df_columns)
