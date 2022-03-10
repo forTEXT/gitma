@@ -230,6 +230,27 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
 
 
 class CatmaProject:
+    """Class that represents a CATMA Project including all Documents, Tagsets and Annotation Collections.
+    You can eather load the Project from a local git clone or you load it directly
+    from GitLab after generating a gitlab_access_token in the CATMA GUI.
+
+    Args:
+
+        project_name (str): The CATMA Project name. Defaults to None.
+        project_directory (str, optional): The directory where your CATMA Project(s) are located. Defaults to './'
+        included_acs (list, optional): All Annotation Collections that should get loaded. If neither included nor excluded.\
+            Annotation Collections are defined, all Annotation Collections get loaded. Default to None.
+        excluded_acs (list, optional): All Annotation Collections that should not get loaded. Default to None.
+        ac_filter_keyword (str, bool): Only Annotation Collections with the given keyword get loaded.
+        load_from_gitlab (bool, optional): Whether the CATMA Project shall be loaded dircetly from the CATMA GitLab. Defaults to False.
+        gitlab_access_token (str, optional): The private CATMA GitLab Token. Defaults to None.
+        backup_directory (str, optional): The your Project clone should be located. Default to './'.
+
+    Raises:
+        FileNotFoundError: If the CATMA Project was not found in the CATMA GitLab.
+        FileNotFoundError: If the local or remote CATMA Project were not found.
+    """
+
     def __init__(
             self,
             project_name: str,
@@ -240,27 +261,6 @@ class CatmaProject:
             load_from_gitlab: bool = False,
             gitlab_access_token: str = None,
             backup_directory: str = './'):
-        """This Project represents a CATMA Project including all Documents, Tagsets
-        and Annotation Collections.
-        You can eather load the Project from a local git clone or you load it directly
-        from GitLab after generating a gitlab_access_token in the CATMA GUI.
-
-        Args:
-
-            project_name (str): The CATMA Project name. Defaults to None.
-            project_directory (str, optional): The directory where your CATMA Project(s) are located. Defaults to './'
-            included_acs (list, optional): All Annotation Collections that should get loaded. If neither included nor excluded.\
-                Annotation Collections are defined, all Annotation Collections get loaded. Default to None.
-            excluded_acs (list, optional): All Annotation Collections that should not get loaded. Default to None.
-            ac_filter_keyword (str, bool): Only Annotation Collections with the given keyword get loaded.
-            load_from_gitlab (bool, optional): Whether the CATMA Project shall be loaded dircetly from the CATMA GitLab. Defaults to False.
-            gitlab_access_token (str, optional): The private CATMA GitLab Token. Defaults to None.
-            backup_directory (str, optional): The your Project clone should be located. Default to './'.
-
-        Raises:
-            FileNotFoundError: If the CATMA Project was not found in the CATMA GitLab.
-            FileNotFoundError: If the local or remote CATMA Project were not found.
-        """
         # get the current directory to return after loaded the project
         cwd = os.getcwd()
 
@@ -338,7 +338,7 @@ class CatmaProject:
 
     from gitma._gamma import gamma_agreement
 
-    def all_annotations(self) -> Generator[Annotation]:
+    def all_annotations(self):
         """Generator that yields all annotations as gitma annotation objects.
 
         Yields:
