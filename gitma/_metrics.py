@@ -289,12 +289,12 @@ def get_iaa(
 
     print(textwrap.dedent(
         f"""
-        Scott's pi: {annotation_task.pi()}
+        Scott's Pi: {annotation_task.pi()}
         Cohen's Kappa: {annotation_task.kappa()}
         Krippendorf Alpha: {annotation_task.alpha()}
         -------------------
         -------------------
-        Confusion Martrix:
+        Confusion Matrix:
         """
     ))
 
