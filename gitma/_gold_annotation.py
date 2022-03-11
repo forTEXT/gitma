@@ -66,7 +66,7 @@ def create_gold_annotations(
         excluded_tags (list, optional): Annotations with this Tags will not be included in the Gold Annotations. Defaults to None.
         min_overlap (float, optional): The minimal overlap to genereate a gold annotation. Defaults to 1.0.
         same_tag (bool, optional): Whether both annotations need to be the same tag. Defaults to True.
-        property_values (str, optional): Whether only matching Property Values from AnnonationCollection 1 shall be copied.
+        property_values (str, optional): Whether only matching Property Values from AnnonationCollection 1 shall be copied.\
             Default to 'matching'. Further options: 'none'.
         push_to_gitlab (bool, optional): Whether the gold annotations shall be uploaded to the CATMA GitLab. Default to False.
     """

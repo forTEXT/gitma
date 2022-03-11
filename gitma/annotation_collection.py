@@ -140,17 +140,18 @@ def ac_to_df(annotations: List[Annotation], text_title, ac_name) -> pd.DataFrame
 
 
 class AnnotationCollection:
+    """Class which represents a CATMA annotation collection.
+
+    Args:
+        ac_uuid (str): The annotation collection's UUID
+        catma_project (CatmaProject): The parent Catma Project
+        context (int, optional): The text span to be considered for the annotation context. Defaults to 50.
+
+    Raises:
+        FileNotFoundError: If the directory of the Annotation Collection header.json does not exists.
+    """
+
     def __init__(self, ac_uuid: str, catma_project, context: int = 50):
-        """Class which represents a CATMA annotation collection.
-
-        Args:
-            ac_uuid (str): The annotation collection's UUID
-            catma_project (CatmaProject): The parent Catma Project
-            context (int, optional): The text span to be considered for the annotation context. Defaults to 50.
-
-        Raises:
-            FileNotFoundError: If the directory of the Annotation Collection header.json does not exists.
-        """
         #: The annotation collection's UUID.
         self.uuid: str = ac_uuid
 

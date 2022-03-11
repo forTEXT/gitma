@@ -1,26 +1,47 @@
 import os
 import pandas as pd
+from typing import List
+from gitma.annotation_collection import AnnotationCollection
+
+
+"""Computes Gamma IAA based on Mathet et. al "The Unified and Holistic Method Gamma"
+using https://github.com/bootphon/pygamma-agreement. For further installation steps of pygamma-agreement
+and different disagreement computing see the Github site.
+
+Args:
+    project (CatmaProject): The CATMA project that holds the used annotation collections.
+    annotation_collections (list): [description]
+    alpha (int, optional): [description]. Defaults to 3.
+    beta (int, optional): [description]. Defaults to 1.
+    delta_empty (float, optional): [description]. Defaults to 0.01.
+    n_samples (int, optional): [description]. Defaults to 30.
+    precision_level (int, optional): [description]. Defaults to 0.01.
+"""
 
 
 def gamma_agreement(
         project,
-        annotation_collections: list,
+        annotation_collections: List[AnnotationCollection],
         alpha: int = 3,
         beta: int = 1,
         delta_empty: float = 0.01,
         n_samples: int = 30,
         precision_level: int = 0.01):
-    """Computes Gamma IAA based on Mathed et. al "The Unified and Holistic Method Gamma"
-    using https://github.com/bootphon/pygamma-agreement. For installation of pygamma-agreement
-    see the Github site.
+    """Computes Gamma IAA based on Mathet et. al "The Unified and Holistic Method Gamma"
+    using https://github.com/bootphon/pygamma-agreement. For further installation steps of pygamma-agreement
+    and different disagreement computing see the Github site.
+
     Args:
-        project ([type]): [description]
-        annotation_collections (list): [description]
-        alpha (int, optional): [description]. Defaults to 3.
-        beta (int, optional): [description]. Defaults to 1.
-        delta_empty (float, optional): [description]. Defaults to 0.01.
-        n_samples (int, optional): [description]. Defaults to 30.
-        precision_level (int, optional): [description]. Defaults to 0.01.
+        project (_type_): The CATMA project that holds the used annotation collections.
+        annotation_collections (List[AnnotationCollection]): List of annotation collections to be included.
+        alpha (int, optional): Coefficient weighting the positional dissimilarity value. Defaults to 3.
+        beta (int, optional): Coefficient weighting the categorical dissimilarity value. Defaults to 1.
+        delta_empty (float, optional): _description_. Defaults to 0.01.
+        n_samples (int, optional): Number of random continuum sampled from this continuum. Defaults to 30.
+        precision_level (int, optional): Optional float or "high", "medium", "low" error percentage of the gamma estimation. Defaults to 0.01.
+
+    Raises:
+        ImportWarning: If pygamma has not been installed.
     """
 
     try:
