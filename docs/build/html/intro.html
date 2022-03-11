@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction &mdash; GitMA 1.5.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="prev" title="Welcome to GitMA’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> GitMA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#access-your-catma-profile-and-load-your-catma-annotations">Access your CATMA profile and load your CATMA annotations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#explore-and-analyze-your-catma-annotations">Explore and analyze your CATMA annotations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#evaluate-your-catma-annotations-with-iaa-metrics">Evaluate your CATMA annotations with IAA metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#support-your-gold-annotation-process">Support your gold annotation process</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gitma.html">GitMA Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cite_as.html">How to cite</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GitMA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/intro.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"></a></h1>
+<p><strong>GitMA</strong> is a python Package to process, analyze and manipulate <a class="reference external" href="https://catma.de/">CATMA</a> annotations via the <a class="reference external" href="https://catma.de/documentation/git-access/">CATMA Git Access</a>.</p>
+<section id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline"></a></h2>
+<p>As a Python API for your annotation data, GitMA’s main goal is the managing of large annotation projects.
+The most important functionalities get introduced in the demo Jupyter Notebooks.</p>
+</section>
+<section id="access-your-catma-profile-and-load-your-catma-annotations">
+<h2>Access your CATMA profile and load your CATMA annotations<a class="headerlink" href="#access-your-catma-profile-and-load-your-catma-annotations" title="Permalink to this headline"></a></h2>
+<p><a class="reference external" href="https://github.com/forTEXT/gitma/blob/main/demo_notebooks/load_project_from_gitlab.ipynb">In the first Notebook</a> you can use <strong>GitMA</strong> to access your CATMA account via an access token.</p>
+<p><strong>Load your CATMA project with the</strong> <code class="docutils literal notranslate"><span class="pre">CatmaProject</span></code> <strong>class</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gitma</span> <span class="kn">import</span> <span class="n">CatmaProject</span>
+
+<span class="n">my_project</span> <span class="o">=</span> <span class="n">CatmaProject</span><span class="p">(</span>
+    <span class="n">project_name</span><span class="o">=</span><span class="s1">&#39;&lt;your_project&gt;&#39;</span><span class="p">,</span>
+    <span class="n">gitlab_access_token</span><span class="o">=</span><span class="s1">&#39;&lt;your_access_token&gt;&#39;</span><span class="p">,</span>
+    <span class="n">load_from_gitlab</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="explore-and-analyze-your-catma-annotations">
+<h2>Explore and analyze your CATMA annotations<a class="headerlink" href="#explore-and-analyze-your-catma-annotations" title="Permalink to this headline"></a></h2>
+<p><a class="reference external" href="https://github.com/forTEXT/gitma/blob/main/demo_notebooks/inter_annotator_agreement.ipynb">The second Notebook</a> provides methods to explore your annotations with interactive vizualisations and analyze your annotation data with pandas.</p>
+<p><strong>Explore all annotation collections in your CATMA project with the</strong> <code class="docutils literal notranslate"><span class="pre">plot_interactive()</span></code> <strong>method</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_project</span><span class="o">.</span><span class="n">plot_interactive</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Explore all annotations in a selected annotation collection using the</strong> <code class="docutils literal notranslate"><span class="pre">ac_dict</span></code> <strong>and the</strong> <code class="docutils literal notranslate"><span class="pre">plot_annotations()</span></code> <strong>method</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_project</span><span class="o">.</span><span class="n">ac_dict</span><span class="p">[</span><span class="s1">&#39;&lt;your_annotation_collection&gt;&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot_annotations</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Get your annotation collections as Pandas DataFrame</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_project</span><span class="o">.</span><span class="n">ac_dict</span><span class="p">[</span><span class="s1">&#39;&lt;your_annotation_collection&gt;&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">df</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 1%" />
+<col style="width: 5%" />
+<col style="width: 7%" />
+<col style="width: 2%" />
+<col style="width: 3%" />
+<col style="width: 11%" />
+<col style="width: 40%" />
+<col style="width: 11%" />
+<col style="width: 3%" />
+<col style="width: 2%" />
+<col style="width: 4%" />
+<col style="width: 6%" />
+<col style="width: 4%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>document</p></th>
+<th class="head"><p>annotation collection</p></th>
+<th class="head"><p>annotator</p></th>
+<th class="head"><p>tag</p></th>
+<th class="head"><p>left_context</p></th>
+<th class="head"><p>annotation</p></th>
+<th class="head"><p>right_context</p></th>
+<th class="head"><p>start_point</p></th>
+<th class="head"><p>end_point</p></th>
+<th class="head"><p>date</p></th>
+<th class="head"><p>prop:characters</p></th>
+<th class="head"><p>prop:intentional</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>bettelweib_von_locarno</p></td>
+<td><p>bettelweib-event_type-demo_user</p></td>
+<td><p>DemoUser</p></td>
+<td><p>stative_event</p></td>
+<td><p>Weimar other Das Bettelweib von Locarno</p></td>
+<td><p>Am Fuße der Alpen, bei Locarno im oberen Italien, befand sich ein altes, einem Marchese gehöriges Schloß</p></td>
+<td><p>, das man jetzt, wenn man vom St. Gotthard kommt,</p></td>
+<td><p>2320</p></td>
+<td><p>2424</p></td>
+<td><p>2022-03-03 14:55:18</p></td>
+<td><p>[]</p></td>
+<td><p>[‘nan’]</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>bettelweib_von_locarno</p></td>
+<td><p>bettelweib-event_type-demo_user</p></td>
+<td><p>DemoUser</p></td>
+<td><p>stative_event</p></td>
+<td><p>sich ein altes, einem Marchese gehöriges Schloß,</p></td>
+<td><p>das man jetzt in Schutt und Trümmern liegen sieht</p></td>
+<td><p>: ein Schloß mit hohen und weitläufigen Zimmern, i</p></td>
+<td><p>2426</p></td>
+<td><p>2509</p></td>
+<td><p>2022-03-03 14:56:02</p></td>
+<td><p>[]</p></td>
+<td><p>[‘nan’]</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>bettelweib_von_locarno</p></td>
+<td><p>bettelweib-event_type-demo_user</p></td>
+<td><p>DemoUser</p></td>
+<td><p>non_event</p></td>
+<td><p>s, einem Marchese gehöriges Schloß, das man jetzt,</p></td>
+<td><p>wenn man vom St. Gotthard kommt</p></td>
+<td><p>, in Schutt und Trümmern liegen sieht: ein Schloß</p></td>
+<td><p>2440</p></td>
+<td><p>2472</p></td>
+<td><p>2022-03-03 14:56:14</p></td>
+<td><p>[]</p></td>
+<td><p>[‘nan’]</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>bettelweib_von_locarno</p></td>
+<td><p>bettelweib-event_type-demo_user</p></td>
+<td><p>DemoUser</p></td>
+<td><p>process_event</p></td>
+<td><p>thard kommt, in Schutt und Trümmern liegen sieht:</p></td>
+<td><p>ein Schloß mit hohen und weitläufigen Zimmern, in deren einem einst, auf Stroh, das man ihr unterschüttete, eine alte kranke Frau von der Hausfrau aus Mitleiden gebettet worden war</p></td>
+<td><p>. Der Marchese, der, bei der Rückkehr von der Jagd</p></td>
+<td><p>2511</p></td>
+<td><p>2741</p></td>
+<td><p>2022-03-03 14:57:07</p></td>
+<td><p>[‘bettelweib’, ‘marquise’]</p></td>
+<td><p>[‘yes’]</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>bettelweib_von_locarno</p></td>
+<td><p>bettelweib-event_type-demo_user</p></td>
+<td><p>DemoUser</p></td>
+<td><p>process_event</p></td>
+<td><p>as man ihr unterschüttete, eine alte kranke Frau,</p></td>
+<td><p>die sich bettelnd vor der Tür eingefunden hatte</p></td>
+<td><p>, von der Hausfrau aus Mitleiden gebettet worden w</p></td>
+<td><p>2642</p></td>
+<td><p>2689</p></td>
+<td><p>2022-03-03 14:59:17</p></td>
+<td><p>[‘bettelweib’]</p></td>
+<td><p>[‘yes’]</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="evaluate-your-catma-annotations-with-iaa-metrics">
+<h2>Evaluate your CATMA annotations with IAA metrics<a class="headerlink" href="#evaluate-your-catma-annotations-with-iaa-metrics" title="Permalink to this headline"></a></h2>
+<p><a class="reference external" href="https://github.com/forTEXT/gitma/blob/main/demo_notebooks/explore_annotations.ipynb">The third Notebook</a> shows how to cumpute the Inter Annotator Agreemment (IAA) for your Annotations:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_project</span><span class="o">.</span><span class="n">get_iaa</span><span class="p">(</span>
+    <span class="n">ac1_name</span><span class="o">=</span><span class="s1">&#39;&lt;your_first_annotation_collection&gt;&#39;</span><span class="p">,</span>
+    <span class="n">ac2_name</span><span class="o">=</span><span class="s1">&#39;&lt;your_second_annotation_collection&gt;&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="support-your-gold-annotation-process">
+<h2>Support your gold annotation process<a class="headerlink" href="#support-your-gold-annotation-process" title="Permalink to this headline"></a></h2>
+<p>With <a class="reference external" href="https://github.com/forTEXT/gitma/blob/main/demo_notebooks/gold_annotation_support.ipynb">the fourth Notebook</a> you learn how to automate parts of your gold annotation process:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_project</span><span class="o">.</span><span class="n">create_gold_annotations</span><span class="p">(</span>
+    <span class="n">ac_1_name</span><span class="o">=</span><span class="s1">&#39;&lt;your_first_annotation_collection&gt;&#39;</span><span class="p">,</span>
+    <span class="n">ac_2_name</span><span class="o">=</span><span class="s1">&#39;&lt;your_second_annotation_collection&gt;&#39;</span><span class="p">,</span>
+    <span class="n">gold_ac_name</span><span class="o">=</span><span class="s1">&#39;&lt;your_gold_annotation_collection&gt;&#39;</span><span class="p">,</span>
+    <span class="n">excluded_tags</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">min_overlap</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
+    <span class="n">same_tag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">property_values</span><span class="o">=</span><span class="s1">&#39;matching&#39;</span><span class="p">,</span>
+    <span class="n">push_to_gitlab</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to GitMA’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Michael Vauth.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

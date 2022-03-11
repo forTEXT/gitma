@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitMA Package &mdash; GitMA 1.5.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="How to cite" href="cite_as.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> GitMA
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">GitMA Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#catma">Catma</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#catmaproject">CatmaProject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tagset">Tagset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#text">Text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#annotationcollection">AnnotationCollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#annotation">Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tag">Tag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#property">Property</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gitma">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cite_as.html">How to cite</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GitMA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>GitMA Package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/gitma.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gitma-package">
+<h1>GitMA Package<a class="headerlink" href="#gitma-package" title="Permalink to this headline"></a></h1>
+<section id="catma">
+<h2>Catma<a class="headerlink" href="#catma" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gitma.Catma">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Catma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gitlab_access_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.Catma" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class which represents all Projects of 1 CATMA User.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gitlab_access_token</strong> (<em>str</em>) – Token for gitlab access. Use the CATMA UI (<a class="reference external" href="https://app.catma.de/catma/">https://app.catma.de/catma/</a>)            or the CATMA Gitlab (<a class="reference external" href="https://git.catma.de/users/sign_in">https://git.catma.de/users/sign_in</a>) to get your personal access token.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.Catma.git_clone_command">
+<span class="sig-name descname"><span class="pre">git_clone_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#gitma.Catma.git_clone_command" title="Permalink to this definition"></a></dt>
+<dd><p>Creates Git clone command for the given CATMA project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>project_name</strong> (<em>str</em>) – The project’s name.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Git clone command.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Catma.gitlab_access_token">
+<span class="sig-name descname"><span class="pre">gitlab_access_token</span></span><a class="headerlink" href="#gitma.Catma.gitlab_access_token" title="Permalink to this definition"></a></dt>
+<dd><p>The access token of the CATMA account.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.Catma.load_all_projects_from_gitlab">
+<span class="sig-name descname"><span class="pre">load_all_projects_from_gitlab</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Catma.load_all_projects_from_gitlab" title="Permalink to this definition"></a></dt>
+<dd><p>Loads all CATMA projects in your account after creating a local Git clone
+of these projects.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.Catma.load_local_project">
+<span class="sig-name descname"><span class="pre">load_local_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">included_acs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_acs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Catma.load_local_project" title="Permalink to this definition"></a></dt>
+<dd><p>Loads a local CATMA Project and stores it in the project_dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project_directory</strong> (<em>str</em>) – Directory where the CATMA Project is located.</p></li>
+<li><p><strong>project_name</strong> (<em>str</em>) – The CATMA Project name.</p></li>
+<li><p><strong>included_acs</strong> (<em>list</em><em>, </em><em>optional</em>) – Annotation Collections to load. If set to None and excluded_acs is None too all annotation collections get loaded. Defaults to None.</p></li>
+<li><p><strong>excluded_acs</strong> (<em>list</em><em>, </em><em>optional</em>) – Annotation Collections not to load. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.Catma.load_project_from_gitlab">
+<span class="sig-name descname"><span class="pre">load_project_from_gitlab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Catma.load_project_from_gitlab" title="Permalink to this definition"></a></dt>
+<dd><p>Load a CATMA Project from GitLab.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project_name</strong> (<em>str</em>) – The CATMA Project name.</p></li>
+<li><p><strong>backup_directory</strong> (<em>str</em>) – Where to store the project.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Catma.project_dict">
+<span class="sig-name descname"><span class="pre">project_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#gitma.Catma.project_dict" title="Permalink to this definition"></a></dt>
+<dd><p>A dictionary with project names as keys and instances of the CatmaProject class as values.
+The dict is empty as long as no projects have been loaded.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Catma.project_name_list">
+<span class="sig-name descname"><span class="pre">project_name_list</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gitma.Catma.project_name_list" title="Permalink to this definition"></a></dt>
+<dd><p>List of all projects within a CATMA account.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Catma.project_uuid_dict">
+<span class="sig-name descname"><span class="pre">project_uuid_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gitma.Catma.project_uuid_dict" title="Permalink to this definition"></a></dt>
+<dd><p>A dictionary with project names as keys an projects UUIDs as values.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="catmaproject">
+<h2>CatmaProject<a class="headerlink" href="#catmaproject" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gitma.CatmaProject">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CatmaProject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">included_acs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_acs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac_filter_keyword</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_from_gitlab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gitlab_access_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.CatmaProject" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class that represents a CATMA Project including all Documents, Tagsets and Annotation Collections.
+You can eather load the Project from a local git clone or you load it directly
+from GitLab after generating a gitlab_access_token in the CATMA GUI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project_name</strong> (<em>str</em>) – The CATMA Project name. Defaults to None.</p></li>
+<li><p><strong>project_directory</strong> (<em>str</em><em>, </em><em>optional</em>) – The directory where your CATMA Project(s) are located. Defaults to ‘./’</p></li>
+<li><p><strong>included_acs</strong> (<em>list</em><em>, </em><em>optional</em>) – All Annotation Collections that should get loaded. If neither any annotation collections are included nor excluded             all Annotation Collections get loaded. Default to None.</p></li>
+<li><p><strong>excluded_acs</strong> (<em>list</em><em>, </em><em>optional</em>) – All Annotation Collections that should not get loaded. Default to None.</p></li>
+<li><p><strong>ac_filter_keyword</strong> (<em>str</em><em>, </em><em>bool</em>) – Only Annotation Collections with the given keyword get loaded.</p></li>
+<li><p><strong>load_from_gitlab</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the CATMA Project shall be loaded dircetly from the CATMA GitLab. Defaults to False.</p></li>
+<li><p><strong>gitlab_access_token</strong> (<em>str</em><em>, </em><em>optional</em>) – The private CATMA GitLab Token. Defaults to None.</p></li>
+<li><p><strong>backup_directory</strong> (<em>str</em><em>, </em><em>optional</em>) – The your Project clone should be located. Default to ‘./’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – If the CATMA Project was not found in the CATMA GitLab.</p></li>
+<li><p><strong>FileNotFoundError</strong> – If the local or remote CATMA Project were not found.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.CatmaProject.ac_dict">
+<span class="sig-name descname"><span class="pre">ac_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#gitma.AnnotationCollection" title="gitma.annotation_collection.AnnotationCollection"><span class="pre">gitma.annotation_collection.AnnotationCollection</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gitma.CatmaProject.ac_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Dictionary of the project’s annotation collections with their name as keys and gitma.AnnotationCollection objects as values</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.all_annotations">
+<span class="sig-name descname"><span class="pre">all_annotations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gitma.Annotation" title="gitma.annotation.Annotation"><span class="pre">gitma.annotation.Annotation</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gitma.CatmaProject.all_annotations" title="Permalink to this definition"></a></dt>
+<dd><p>Generator that yields all annotations as gitma annotation objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields</dt>
+<dd class="field-odd"><p><em>Annotation</em> – gitma Annotation object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.CatmaProject.annotation_collections">
+<span class="sig-name descname"><span class="pre">annotation_collections</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gitma.AnnotationCollection" title="gitma.annotation_collection.AnnotationCollection"><span class="pre">gitma.annotation_collection.AnnotationCollection</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gitma.CatmaProject.annotation_collections" title="Permalink to this definition"></a></dt>
+<dd><p>List of gitma.AnnotationCollection objects.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.compare_annotation_collections">
+<span class="sig-name descname"><span class="pre">compare_annotation_collections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_collections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tag'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#gitma.CatmaProject.compare_annotation_collections" title="Permalink to this definition"></a></dt>
+<dd><p>Plots annotations of multiple annotation collections of the same texts as line plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>catma_project</strong> (<a class="reference internal" href="#gitma.CatmaProject" title="gitma.CatmaProject"><em>CatmaProject</em></a>) – <em>description</em></p></li>
+<li><p><strong>annotation_collections</strong> (<em>list</em>) – A list of annotation collection names.</p></li>
+<li><p><strong>color_col</strong> (<em>str</em><em>, </em><em>optional</em>) – Either ‘tag’ or one property name with prefix ‘prop:’. Defaults to ‘tag’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If one of the annotation collection’s names does not exist.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Plotly Line Plot.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>go.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.create_gold_annotations">
+<span class="sig-name descname"><span class="pre">create_gold_annotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ac_1_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac_2_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gold_ac_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_overlap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'matching'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">push_to_gitlab</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.CatmaProject.create_gold_annotations" title="Permalink to this definition"></a></dt>
+<dd><p>Searches for matching annotations in 2 AnnotationCollections and copies all matches in a third AnnotationCollection.
+By default only matching Property Values get copied.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ac_1_name</strong> (<em>str</em>) – AnnotationCollection 1 Name.</p></li>
+<li><p><strong>ac_2_name</strong> (<em>str</em>) – AnnnotationCollection 2 Name.</p></li>
+<li><p><strong>gold_ac_name</strong> (<em>str</em>) – AnnotationCollection Name for Gold Annotations.</p></li>
+<li><p><strong>excluded_tags</strong> (<em>list</em><em>, </em><em>optional</em>) – Annotations with this Tags will not be included in the Gold Annotations. Defaults to None.</p></li>
+<li><p><strong>min_overlap</strong> (<em>float</em><em>, </em><em>optional</em>) – The minimal overlap to genereate a gold annotation. Defaults to 1.0.</p></li>
+<li><p><strong>same_tag</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether both annotations need to be the same tag. Defaults to True.</p></li>
+<li><p><strong>property_values</strong> (<em>str</em><em>, </em><em>optional</em>) – Whether only matching Property Values from AnnonationCollection 1 shall be copied.            Default to ‘matching’. Further options: ‘none’.</p></li>
+<li><p><strong>push_to_gitlab</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the gold annotations shall be uploaded to the CATMA GitLab. Default to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.gamma_agreement">
+<span class="sig-name descname"><span class="pre">gamma_agreement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_collections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gitma.AnnotationCollection" title="gitma.annotation_collection.AnnotationCollection"><span class="pre">gitma.annotation_collection.AnnotationCollection</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_empty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.CatmaProject.gamma_agreement" title="Permalink to this definition"></a></dt>
+<dd><p>Computes Gamma IAA based on Mathet et. al “The Unified and Holistic Method Gamma”
+using <a class="reference external" href="https://github.com/bootphon/pygamma-agreement">https://github.com/bootphon/pygamma-agreement</a>. For further installation steps of pygamma-agreement
+and different disagreement computing see the Github site.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project</strong> (<em>type</em>) – The CATMA project that holds the used annotation collections.</p></li>
+<li><p><strong>annotation_collections</strong> (<em>List</em><em>[</em><a class="reference internal" href="#gitma.AnnotationCollection" title="gitma.AnnotationCollection"><em>AnnotationCollection</em></a><em>]</em>) – List of annotation collections to be included.</p></li>
+<li><p><strong>alpha</strong> (<em>int</em><em>, </em><em>optional</em>) – Coefficient weighting the positional dissimilarity value. Defaults to 3.</p></li>
+<li><p><strong>beta</strong> (<em>int</em><em>, </em><em>optional</em>) – Coefficient weighting the categorical dissimilarity value. Defaults to 1.</p></li>
+<li><p><strong>delta_empty</strong> (<em>float</em><em>, </em><em>optional</em>) – <em>description</em>. Defaults to 0.01.</p></li>
+<li><p><strong>n_samples</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of random continuum sampled from this continuum. Defaults to 30.</p></li>
+<li><p><strong>precision_level</strong> (<em>int</em><em>, </em><em>optional</em>) – Optional float or “high”, “medium”, “low” error percentage of the gamma estimation. Defaults to 0.01.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ImportWarning</strong> – If pygamma has not been installed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.get_iaa">
+<span class="sig-name descname"><span class="pre">get_iaa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ac1_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac2_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_filter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_both_ac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tag'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'binary'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.CatmaProject.get_iaa" title="Permalink to this definition"></a></dt>
+<dd><p>Computes Inter Annotator Agreement for 2 Annotation Collections.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project</strong> (<a class="reference internal" href="#gitma.CatmaProject" title="gitma.CatmaProject"><em>CatmaProject</em></a>) – CatmaProject object</p></li>
+<li><p><strong>ac1_name</strong> (<em>str</em>) – AnnotationCollection name to be compared</p></li>
+<li><p><strong>ac2_name</strong> (<em>str</em>) – AnnotationCollection name to be compared with</p></li>
+<li><p><strong>tag_filter</strong> (<em>list</em><em>, </em><em>optional</em>) – Which Tags should be included. If None all are included. Default to None.</p></li>
+<li><p><strong>filter_both_ac</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the tag filter shall be aplied to both annotation collections. Default to False.</p></li>
+<li><p><strong>level</strong> (<em>str</em><em>, </em><em>optional</em>) – Whether the Annotation Tag or a specified Property should be compared.</p></li>
+<li><p><strong>distance</strong> (<em>str</em><em>, </em><em>optional</em>) – The IAA distance function. Either ‘binary’ or ‘interval’. See <a class="reference external" href="https://www.nltk.org/api/nltk.metrics.html">https://www.nltk.org/api/nltk.metrics.html</a>. Default to ‘binary’.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.merge_annotations">
+<span class="sig-name descname"><span class="pre">merge_annotations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#gitma.CatmaProject.merge_annotations" title="Permalink to this definition"></a></dt>
+<dd><p>Concatenes all annotation collections to one pandas data frame and resets index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Data frame including all annotation in the CATMA project.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.merge_annotations_per_document">
+<span class="sig-name descname"><span class="pre">merge_annotations_per_document</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gitma.CatmaProject.merge_annotations_per_document" title="Permalink to this definition"></a></dt>
+<dd><p>Merges all annotations per document to one annotation collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Dictionary with document titles as keys and annotations per                document as pandas data frame.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Dict[str, pd.DataFrame]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.plot_annotation_progression">
+<span class="sig-name descname"><span class="pre">plot_annotation_progression</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#gitma.CatmaProject.plot_annotation_progression" title="Permalink to this definition"></a></dt>
+<dd><p>Plot the annotation progression for every annotator in a CATMA project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference internal" href="#gitma.CatmaProject" title="gitma.CatmaProject"><em>CatmaProject</em></a>) – The plotted CATMA project.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Plotly scatter plot.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>go.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.plot_interactive">
+<span class="sig-name descname"><span class="pre">plot_interactive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'annotation</span> <span class="pre">collection'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#gitma.CatmaProject.plot_interactive" title="Permalink to this definition"></a></dt>
+<dd><p>This function generates one Plotly scatter plot per annotated document in a CATMA project.
+By default the colors represent the annotation collections.
+By that they can’t be deactivated with the interactive legend.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>catma_project</strong> (<a class="reference internal" href="#gitma.CatmaProject" title="gitma.CatmaProject"><em>CatmaProject</em></a>) – The plotted project.</p></li>
+<li><p><strong>color_col</strong> (<em>str</em><em>, </em><em>optional</em>) – ‘annotation collection’, ‘annotator’, ‘tag’ or any property with the prefix ‘prop:’. Defaults to ‘annotation collection’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Plotly scatter plot.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>go.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.CatmaProject.project_directory">
+<span class="sig-name descname"><span class="pre">project_directory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.CatmaProject.project_directory" title="Permalink to this definition"></a></dt>
+<dd><p>The project’s directory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.pygamma_table">
+<span class="sig-name descname"><span class="pre">pygamma_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_collections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#gitma.CatmaProject.pygamma_table" title="Permalink to this definition"></a></dt>
+<dd><p>Concatenates annotation collections to pygamma table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>annotation_collections</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>list</em><em>]</em><em>, </em><em>optional</em>) – List of annotation collections. Defaults to ‘all’.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Concatenated annotation collections as pd.DataFrame in pygamma format.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.stats">
+<span class="sig-name descname"><span class="pre">stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#gitma.CatmaProject.stats" title="Permalink to this definition"></a></dt>
+<dd><p>Shows some CATMA Project stats.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>DataFrame with projects stats sorted by the Annotation Collection names.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.CatmaProject.tagset_dict">
+<span class="sig-name descname"><span class="pre">tagset_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#gitma.Tagset" title="gitma.tagset.Tagset"><span class="pre">gitma.tagset.Tagset</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gitma.CatmaProject.tagset_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Dictionary of the project’s tagsets with the UUIDs as keys and gitma.Tagset objects as values.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.CatmaProject.tagsets">
+<span class="sig-name descname"><span class="pre">tagsets</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gitma.Tagset" title="gitma.tagset.Tagset"><span class="pre">gitma.tagset.Tagset</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gitma.CatmaProject.tagsets" title="Permalink to this definition"></a></dt>
+<dd><p>List of gitma.Tagset objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.CatmaProject.text_dict">
+<span class="sig-name descname"><span class="pre">text_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#gitma.Text" title="gitma.text.Text"><span class="pre">gitma.text.Text</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gitma.CatmaProject.text_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Dictionary of the project’s texts with titles as keys and gitma.Text objects as values</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.CatmaProject.texts">
+<span class="sig-name descname"><span class="pre">texts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gitma.Text" title="gitma.text.Text"><span class="pre">gitma.text.Text</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gitma.CatmaProject.texts" title="Permalink to this definition"></a></dt>
+<dd><p>List of the gitma.Text objects.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.CatmaProject.update" title="Permalink to this definition"></a></dt>
+<dd><p>Updates local git folder and reloads CatmaProject</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.CatmaProject.uuid">
+<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.CatmaProject.uuid" title="Permalink to this definition"></a></dt>
+<dd><p>The project’s UUID.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.write_annotation_json">
+<span class="sig-name descname"><span class="pre">write_annotation_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_collection_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tagset_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property_annotations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.CatmaProject.write_annotation_json" title="Permalink to this definition"></a></dt>
+<dd><p>Function to write a new annotation into a given CatmaProject.
+Gets imported in the CatmaProject class and should only be used as a class method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project</strong> (<a class="reference internal" href="#gitma.CatmaProject" title="gitma.CatmaProject"><em>CatmaProject</em></a>) – A CatmaProject object.</p></li>
+<li><p><strong>annotation_collection_name</strong> (<em>str</em>) – The annotation collections name</p></li>
+<li><p><strong>tagset_name</strong> (<em>str</em>) – The tagsets name</p></li>
+<li><p><strong>text_title</strong> (<em>str</em>) – The text title</p></li>
+<li><p><strong>tag_name</strong> (<em>str</em>) – The tags name</p></li>
+<li><p><strong>start_points</strong> (<em>list</em>) – The annotation span start point</p></li>
+<li><p><strong>end_points</strong> (<em>list</em>) – The annotation span end point</p></li>
+<li><p><strong>property_annotations</strong> (<em>dict</em>) – dictionary with property annotations</p></li>
+<li><p><strong>author</strong> (<em>str</em>) – the annotations author</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="tagset">
+<h2>Tagset<a class="headerlink" href="#tagset" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gitma.Tagset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Tagset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_uuid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catma_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.Tagset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class which represents a CATMA Tagset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project_uuid</strong> (<em>str</em>) – Name of a CATMA project root folder.</p></li>
+<li><p><strong>catma_id</strong> (<em>str</em>) – UUID of the tagset which corresponds with the folder name in the “tagsets” directory.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>FileNotFoundError</strong> – <em>description</em></p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tagset.directory">
+<span class="sig-name descname"><span class="pre">directory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Tagset.directory" title="Permalink to this definition"></a></dt>
+<dd><p>The tagsets directory within the project folder structure.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.Tagset.edit_possible_property_values">
+<span class="sig-name descname"><span class="pre">edit_possible_property_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tagset.edit_possible_property_values" title="Permalink to this definition"></a></dt>
+<dd><p>Replace an old property value with a new one. The possible property values will be listed in CATMA’s
+property annotation window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag_names</strong> (<em>list</em>) – The list of tags with the given property.</p></li>
+<li><p><strong>prop</strong> (<em>str</em>) – The property that holds the given old property value.</p></li>
+<li><p><strong>old_value</strong> (<em>str</em>) – The old property value.</p></li>
+<li><p><strong>new_value</strong> (<em>str</em>) – The new property value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.Tagset.edit_property_names">
+<span class="sig-name descname"><span class="pre">edit_property_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tagset.edit_property_names" title="Permalink to this definition"></a></dt>
+<dd><p>Renames Property for all Tags given as tag_names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag_names</strong> (<em>list</em>) – List of names of the tags that hold the property to be renamed.</p></li>
+<li><p><strong>old_prop</strong> (<em>str</em>) – Property’s name that will be changed.</p></li>
+<li><p><strong>new_prop</strong> (<em>str</em>) – The new property’s name.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tagset.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Tagset.name" title="Permalink to this definition"></a></dt>
+<dd><p>The tagset’s name</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tagset.tag_dict">
+<span class="sig-name descname"><span class="pre">tag_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#gitma.Tagset.tag_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Dictionary of tags with UUIDs as keys and gitma.Tag objects as values.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tagset.tag_list">
+<span class="sig-name descname"><span class="pre">tag_list</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#gitma.Tagset.tag_list" title="Permalink to this definition"></a></dt>
+<dd><p>List of tags as gitma.Tag objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tagset.uuid">
+<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Tagset.uuid" title="Permalink to this definition"></a></dt>
+<dd><p>The tagsets UUID.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="text">
+<h2>Text<a class="headerlink" href="#text" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gitma.Text">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_uuid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catma_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.Text" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class which represents a CATMA document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project_uuid</strong> (<em>str</em>) – CATMA Project UUID.</p></li>
+<li><p><strong>catma_id</strong> (<em>str</em>) – Document UUID in the CATMA Project.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Text.author">
+<span class="sig-name descname"><span class="pre">author</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Text.author" title="Permalink to this definition"></a></dt>
+<dd><p>The text’s author.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Text.plain_text">
+<span class="sig-name descname"><span class="pre">plain_text</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Text.plain_text" title="Permalink to this definition"></a></dt>
+<dd><p>The text as a plain text. The offset annotation data refers to this plain text.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Text.title">
+<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Text.title" title="Permalink to this definition"></a></dt>
+<dd><p>The text’s title.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Text.uuid">
+<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Text.uuid" title="Permalink to this definition"></a></dt>
+<dd><p>The text’s UUID.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="annotationcollection">
+<h2>AnnotationCollection<a class="headerlink" href="#annotationcollection" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnnotationCollection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ac_uuid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catma_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class which represents a CATMA annotation collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ac_uuid</strong> (<em>str</em>) – The annotation collection’s UUID</p></li>
+<li><p><strong>catma_project</strong> (<a class="reference internal" href="#gitma.CatmaProject" title="gitma.CatmaProject"><em>CatmaProject</em></a>) – The parent Catma Project</p></li>
+<li><p><strong>context</strong> (<em>int</em><em>, </em><em>optional</em>) – The text span to be considered for the annotation context. Defaults to 50.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>FileNotFoundError</strong> – If the directory of the Annotation Collection header.json does not exists.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.annotate_properties">
+<span class="sig-name descname"><span class="pre">annotate_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.annotate_properties" title="Permalink to this definition"></a></dt>
+<dd><p>Set value for given property. This function uses the <code class="docutils literal notranslate"><span class="pre">gitma.Annotation.set_property_values()</span></code> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>str</em>) – The parent tag of the property.</p></li>
+<li><p><strong>prop</strong> (<em>str</em>) – The property to be annotated.</p></li>
+<li><p><strong>value</strong> (<em>list</em>) – The new property value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.annotations">
+<span class="sig-name descname"><span class="pre">annotations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#gitma.AnnotationCollection.annotations" title="Permalink to this definition"></a></dt>
+<dd><p>List of annotations in annotation collection as gitma.Annotation objects.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.cooccurrence_network">
+<span class="sig-name descname"><span class="pre">cooccurrence_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">character_distance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">included_tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_stats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.cooccurrence_network" title="Permalink to this definition"></a></dt>
+<dd><p>Draws cooccurrence network graph where every tag is a node and every edge represents two cooccurent tags.
+You can by the <code class="docutils literal notranslate"><span class="pre">character_distance</span></code> parameter when two annotations are considered cooccurent.
+If you set <code class="docutils literal notranslate"><span class="pre">character_distance=0</span></code> only the tags of overlapping annotations will be represented
+as connected nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>character_distance</strong> (<em>int</em><em>, </em><em>optional</em>) – In which distance annotations are considered coocurrent. Defaults to 100.</p></li>
+<li><p><strong>start_point</strong> (<em>float</em><em>, </em><em>optional</em>) – Which texparts to consider. Defaults to 0.</p></li>
+<li><p><strong>end_point</strong> (<em>float</em><em>, </em><em>optional</em>) – Which texparts to consider. Defaults to 1.0.</p></li>
+<li><p><strong>included_tags</strong> (<em>list</em><em>, </em><em>optional</em>) – List of included tags. Defaults to None.</p></li>
+<li><p><strong>excluded_tags</strong> (<em>list</em><em>, </em><em>optional</em>) – List of excluded tags. Defaults to None.</p></li>
+<li><p><strong>plot_stats</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return network stats. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.delete_properties">
+<span class="sig-name descname"><span class="pre">delete_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.delete_properties" title="Permalink to this definition"></a></dt>
+<dd><p>Deletes a property from all annotations with a given tag name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>str</em>) – The annotations tag name.</p></li>
+<li><p><strong>prop</strong> (<em>str</em>) – The name of the property that will be removed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.df">
+<span class="sig-name descname"><span class="pre">df</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">pandas.core.frame.DataFrame</span></em><a class="headerlink" href="#gitma.AnnotationCollection.df" title="Permalink to this definition"></a></dt>
+<dd><p>Annotations as a pandas.DataFrame.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.duplicate_by_prop">
+<span class="sig-name descname"><span class="pre">duplicate_by_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#gitma.AnnotationCollection.duplicate_by_prop" title="Permalink to this definition"></a></dt>
+<dd><p>Duplicates the rows in the annotation collection’s DataFrame if the given Property has multiple Property Values
+the annotations represented by a DataFrame row.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>prop</strong> (<em>str</em>) – A property used in the annotation collection.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the property has not been used in the annotation collection.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A duplicate of the annotation collection’s DataFrame.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.get_annotation_by_tag">
+<span class="sig-name descname"><span class="pre">get_annotation_by_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gitma.Annotation" title="gitma.annotation.Annotation"><span class="pre">gitma.annotation.Annotation</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gitma.AnnotationCollection.get_annotation_by_tag" title="Permalink to this definition"></a></dt>
+<dd><p>Creates list of all annotations with a given name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag_name</strong> (<em>str</em>) – The searched tag’s name.</p></li>
+<li><p><strong>tag_name</strong> – <em>description</em></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of annotations as gitma.Annotation objects.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#gitma.Annotation" title="gitma.Annotation">Annotation</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.AnnotationCollection.name" title="Permalink to this definition"></a></dt>
+<dd><p>The annotation collection’s name.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.plain_text_id">
+<span class="sig-name descname"><span class="pre">plain_text_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.AnnotationCollection.plain_text_id" title="Permalink to this definition"></a></dt>
+<dd><p>The UUID of the annotation collection’s document.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.plot_annotations">
+<span class="sig-name descname"><span class="pre">plot_annotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tag'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tag'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.plot_annotations" title="Permalink to this definition"></a></dt>
+<dd><p>Creates interactive <a class="reference external" href="https://plotly.com/python/line-and-scatter/">Plotly Scatter Plot</a> to a explore a annotation collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ac</strong> (<a class="reference internal" href="#gitma.AnnotationCollection" title="gitma.AnnotationCollection"><em>AnnotationCollection</em></a>) – gitma.AnnotationCollection</p></li>
+<li><p><strong>y_axis</strong> (<em>str</em><em>, </em><em>optional</em>) – The columns in AnnotationCollection DataFrame used for y axis. Defaults to ‘tag’.</p></li>
+<li><p><strong>color_prop</strong> (<em>str</em><em>, </em><em>optional</em>) – A Property’s name used in the AnnotationCollection . Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Plotly scatter plot.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>go.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.plot_scaled_annotations">
+<span class="sig-name descname"><span class="pre">plot_scaled_annotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing_window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.AnnotationCollection.plot_scaled_annotations" title="Permalink to this definition"></a></dt>
+<dd><p>Plots a graph with scaled annotations.
+This function is still under development.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ac</strong> (<a class="reference internal" href="#gitma.AnnotationCollection" title="gitma.AnnotationCollection"><em>AnnotationCollection</em></a>) – A CATMA</p></li>
+<li><p><strong>tag_scale</strong> (<em>dict</em><em>, </em><em>optional</em>) – <em>description</em>. Defaults to None.</p></li>
+<li><p><strong>bin_size</strong> (<em>int</em><em>, </em><em>optional</em>) – <em>description</em>. Defaults to 50.</p></li>
+<li><p><strong>smoothing_window</strong> (<em>int</em><em>, </em><em>optional</em>) – <em>description</em>. Defaults to 100.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>Exception</strong> – <em>description</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.property_stats">
+<span class="sig-name descname"><span class="pre">property_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#gitma.AnnotationCollection.property_stats" title="Permalink to this definition"></a></dt>
+<dd><p>Counts for each property the property values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>DataFrame with properties as index and property values as header.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.rename_property_value">
+<span class="sig-name descname"><span class="pre">rename_property_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.rename_property_value" title="Permalink to this definition"></a></dt>
+<dd><p>Renames Property of all annotations with the given tag name.
+Replaces only the property value defined by the parameter <code class="docutils literal notranslate"><span class="pre">old_value</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>str</em>) – The tag’s name-</p></li>
+<li><p><strong>prop</strong> (<em>str</em>) – The property’s name-</p></li>
+<li><p><strong>old_value</strong> (<em>str</em>) – The old property value that will be replaced.</p></li>
+<li><p><strong>new_value</strong> (<em>str</em>) – The new property value that will replace the old property value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.tag_stats">
+<span class="sig-name descname"><span class="pre">tag_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tag'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopwords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranking</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#gitma.AnnotationCollection.tag_stats" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the following data for each tag in the annotation collection:</p>
+<ul class="simple">
+<li><p>the count of annotations with a tag</p></li>
+<li><p>the complete text span annotated with a tag</p></li>
+<li><p>the average text span annotated with a tag</p></li>
+<li><p>the n-most frequent token in the text span annotated with a tag</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag_col</strong> (<em>str</em><em>, </em><em>optional</em>) – Whether the data for the tag a property or annotators gets computed. Defaults to ‘tag’.</p></li>
+<li><p><strong>stopwords</strong> (<em>list</em><em>, </em><em>optional</em>) – A list with stopword tokens. Defaults to None.</p></li>
+<li><p><strong>ranking</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of most frequent token to be included. Defaults to 10.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The data as pandas DataFrame.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.tags">
+<span class="sig-name descname"><span class="pre">tags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gitma.Tag" title="gitma.tag.Tag"><span class="pre">gitma.tag.Tag</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gitma.AnnotationCollection.tags" title="Permalink to this definition"></a></dt>
+<dd><p>List of tags found in the annotation collection as a list of gitma.Tag objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.text">
+<span class="sig-name descname"><span class="pre">text</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#gitma.Text" title="gitma.text.Text"><span class="pre">gitma.text.Text</span></a></em><a class="headerlink" href="#gitma.AnnotationCollection.text" title="Permalink to this definition"></a></dt>
+<dd><p>The document of the annotation collection as a gitma.Text object.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.text_version">
+<span class="sig-name descname"><span class="pre">text_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.AnnotationCollection.text_version" title="Permalink to this definition"></a></dt>
+<dd><p>The document’s version.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.to_pygamma_table">
+<span class="sig-name descname"><span class="pre">to_pygamma_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#gitma.AnnotationCollection.to_pygamma_table" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the annotation collection’s DataFrame in the format pygamma takes as input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>DataFrame with four columns: ‘annotator’, ‘tag’, ‘start_point’ and ‘end_point’.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.to_stanford_tsv">
+<span class="sig-name descname"><span class="pre">to_stanford_tsv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacy_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'de_core_news_sm'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.AnnotationCollection.to_stanford_tsv" title="Permalink to this definition"></a></dt>
+<dd><p>Takes a CATMA <code class="docutils literal notranslate"><span class="pre">AnnotationCollection</span></code> and writes a tsv-file which can be used to train a stanford NER model.
+Every token in the collection’s text gets a tag if it lays in an annotated text segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ac</strong> (<a class="reference internal" href="#gitma.AnnotationCollection" title="gitma.AnnotationCollection"><em>gitma.AnnotationCollection</em></a>) – <code class="docutils literal notranslate"><span class="pre">AnnotationCollection</span></code> object</p></li>
+<li><p><strong>tags</strong> (<em>list</em>) – List of tags, that should be considered.</p></li>
+<li><p><strong>file_name</strong> (<em>str</em><em>, </em><em>optional</em>) – name of the tsv-file. Defaults to None.</p></li>
+<li><p><strong>spacy_model</strong> (<em>str</em><em>, </em><em>optional</em>) – a spacy model as listed in <a class="reference external" href="https://spacy.io/usage/models">https://spacy.io/usage/models</a>. Default to ‘de_core_news_sm’.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.AnnotationCollection.uuid">
+<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.AnnotationCollection.uuid" title="Permalink to this definition"></a></dt>
+<dd><p>The annotation collection’s UUID.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="annotation">
+<h2>Annotation<a class="headerlink" href="#annotation" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gitma.Annotation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Annotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plain_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catma_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.Annotation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class which represents a CATMA annotation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>str</em>) – The annotations directory within the project clone.</p></li>
+<li><p><strong>plain_text</strong> (<em>str</em>) – The plain text annotated by the annotation.</p></li>
+<li><p><strong>catma_project</strong> (<em>type</em>) – The parent CatmaProject .</p></li>
+<li><p><strong>context</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of the context that gets included in the data frame representation of annotation collections. Defaults to 50.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>FileNotFoundError</strong> – If the directory of the annotation’s JSON file does not exists.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Annotation.author">
+<span class="sig-name descname"><span class="pre">author</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Annotation.author" title="Permalink to this definition"></a></dt>
+<dd><p>The annotation’s author.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.Annotation.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_collection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_start_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_end_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Annotation.copy" title="Permalink to this definition"></a></dt>
+<dd><p>Copies the Annotation into another Annotation Collection by creating a new Annotation UUID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>annotation_collection</strong> (<em>str</em>) – The annotation collection UUID to get the directory the annotation should be copied to.</p></li>
+<li><p><strong>include_property_value</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the Property Values should be copied too. Defaults to True.</p></li>
+<li><p><strong>compare_annotation</strong> (<a class="reference internal" href="#gitma.Annotation" title="gitma.Annotation"><em>Annotation</em></a><em>, </em><em>optional</em>) – An Annotation to compare Property Values. (For Gold Annotations). Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Annotation.data">
+<span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#gitma.Annotation.data" title="Permalink to this definition"></a></dt>
+<dd><p>The annotation’s data as dictionary.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Annotation.date">
+<span class="sig-name descname"><span class="pre">date</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Annotation.date" title="Permalink to this definition"></a></dt>
+<dd><p>The date the annotation has been created.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.Annotation.delete_property">
+<span class="sig-name descname"><span class="pre">delete_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Annotation.delete_property" title="Permalink to this definition"></a></dt>
+<dd><p>Deletes property if the annotation is tagged by defined tag and property.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>str</em>) – The tag with the property to be deleted.</p></li>
+<li><p><strong>prop</strong> (<em>str</em>) – The property to be deleted.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Annotation.directory">
+<span class="sig-name descname"><span class="pre">directory</span></span><a class="headerlink" href="#gitma.Annotation.directory" title="Permalink to this definition"></a></dt>
+<dd><p>The annotation’s directory.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Annotation.end_point">
+<span class="sig-name descname"><span class="pre">end_point</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#gitma.Annotation.end_point" title="Permalink to this definition"></a></dt>
+<dd><p>The annotation’s end point (character index) in the plain text.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.Annotation.modify_property_value">
+<span class="sig-name descname"><span class="pre">modify_property_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Annotation.modify_property_value" title="Permalink to this definition"></a></dt>
+<dd><p>Modifies property values if the annotation is tagged by defined tag and property
+by rewriting the annotation’s JSON file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>str</em>) – The annotations tag.</p></li>
+<li><p><strong>prop</strong> (<em>str</em>) – The tag property to be modified.</p></li>
+<li><p><strong>old_value</strong> (<em>str</em>) – The old property value.</p></li>
+<li><p><strong>new_value</strong> (<em>str</em>) – The new property value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Annotation.posttext">
+<span class="sig-name descname"><span class="pre">posttext</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Annotation.posttext" title="Permalink to this definition"></a></dt>
+<dd><p>The annotation’s right context.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Annotation.pretext">
+<span class="sig-name descname"><span class="pre">pretext</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Annotation.pretext" title="Permalink to this definition"></a></dt>
+<dd><p>The annotation’s left context.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Annotation.properties">
+<span class="sig-name descname"><span class="pre">properties</span></span><a class="headerlink" href="#gitma.Annotation.properties" title="Permalink to this definition"></a></dt>
+<dd><p>The annotation’s properties as a dictionary with property names as keys
+and the property values as list.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.Annotation.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Annotation.remove" title="Permalink to this definition"></a></dt>
+<dd><p>Removes the annotation from the annotation collection.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Annotation.selectors">
+<span class="sig-name descname"><span class="pre">selectors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">gitma.selector.Selector</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gitma.Annotation.selectors" title="Permalink to this definition"></a></dt>
+<dd><p>The annotation’s selectors as a list of gitma.Selector</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.Annotation.set_property_values">
+<span class="sig-name descname"><span class="pre">set_property_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Annotation.set_property_values" title="Permalink to this definition"></a></dt>
+<dd><p>Set property value of the given tag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>str</em>) – The tag’s name.</p></li>
+<li><p><strong>prop</strong> (<em>str</em>) – The property’s name.</p></li>
+<li><p><strong>value</strong> (<em>list</em>) – The list of new property values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Annotation.start_point">
+<span class="sig-name descname"><span class="pre">start_point</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#gitma.Annotation.start_point" title="Permalink to this definition"></a></dt>
+<dd><p>The annotation’s start point (character index) in the plain text.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Annotation.tag">
+<span class="sig-name descname"><span class="pre">tag</span></span><a class="headerlink" href="#gitma.Annotation.tag" title="Permalink to this definition"></a></dt>
+<dd><p>The annotation’s tag as a gitma.Tag object.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Annotation.text">
+<span class="sig-name descname"><span class="pre">text</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Annotation.text" title="Permalink to this definition"></a></dt>
+<dd><p>The annotated text span.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="tag">
+<h2>Tag<a class="headerlink" href="#tag" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gitma.Tag">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.Tag" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class which represents a CATMA Tag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_directory</strong> (<em>str</em>) – The directory ot the tag within the project’s folder structure.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>FileNotFoundError</strong> – If the json_file_directory could not be found.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tag.child_tags">
+<span class="sig-name descname"><span class="pre">child_tags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#gitma.Tag.child_tags" title="Permalink to this definition"></a></dt>
+<dd><p>List of child tags as gitma.Tag objects.
+Is an empy list until gitma.Tag.get_child_tags will be used.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tag.directory">
+<span class="sig-name descname"><span class="pre">directory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Tag.directory" title="Permalink to this definition"></a></dt>
+<dd><p>The tag’ directory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.Tag.get_child_tags">
+<span class="sig-name descname"><span class="pre">get_child_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tag.get_child_tags" title="Permalink to this definition"></a></dt>
+<dd><p>Adds all child tags to the tag’s tag_list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tag_list</strong> (<em>list</em>) – A list of gitma.Tag objects.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.Tag.get_parent_tag">
+<span class="sig-name descname"><span class="pre">get_parent_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tagset_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tag.get_parent_tag" title="Permalink to this definition"></a></dt>
+<dd><p>Adds the the parent tag to self.parent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tagset_dict</strong> (<em>dict</em>) – The tagset as a gitma.Tagse.tag_dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tag.id">
+<span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Tag.id" title="Permalink to this definition"></a></dt>
+<dd><p>The tag’s UUID.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tag.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Tag.name" title="Permalink to this definition"></a></dt>
+<dd><p>The tag’s name</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tag.parent">
+<span class="sig-name descname"><span class="pre">parent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Tag.parent" title="Permalink to this definition"></a></dt>
+<dd><p>Parent tag as gitma.Tag objects.
+Is None until gitma.Tag.get_child_tags will be used.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tag.parent_id">
+<span class="sig-name descname"><span class="pre">parent_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Tag.parent_id" title="Permalink to this definition"></a></dt>
+<dd><p>The parent tag’s UUID.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tag.properties">
+<span class="sig-name descname"><span class="pre">properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#gitma.Tag.properties" title="Permalink to this definition"></a></dt>
+<dd><p>The tag’s properties as a list of dictionaries.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tag.properties_dict">
+<span class="sig-name descname"><span class="pre">properties_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#gitma.Tag.properties_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Dictionary with the names of properties as keys and gitma.Propety objects as values.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tag.properties_list">
+<span class="sig-name descname"><span class="pre">properties_list</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#gitma.Tag.properties_list" title="Permalink to this definition"></a></dt>
+<dd><p>The tag’s properties as list of gitma.Property objects.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.Tag.rename_possible_property_value">
+<span class="sig-name descname"><span class="pre">rename_possible_property_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tag.rename_possible_property_value" title="Permalink to this definition"></a></dt>
+<dd><p>Renames as specified property value in the list of possible property values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prop</strong> (<em>str</em>) – The property’s name.</p></li>
+<li><p><strong>old_value</strong> (<em>str</em>) – The property value to be replaced.</p></li>
+<li><p><strong>new_value</strong> (<em>str</em>) – The new property value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.Tag.rename_property">
+<span class="sig-name descname"><span class="pre">rename_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tag.rename_property" title="Permalink to this definition"></a></dt>
+<dd><p>Renames a property of the tag by overwriting it’s json.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_prop</strong> (<em>str</em>) – The old property’s name.</p></li>
+<li><p><strong>new_prop</strong> (<em>str</em>) – The new proeprty’s name.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tag.time_property">
+<span class="sig-name descname"><span class="pre">time_property</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Tag.time_property" title="Permalink to this definition"></a></dt>
+<dd><p>The tag’s time UUID.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tag.user_property">
+<span class="sig-name descname"><span class="pre">user_property</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Tag.user_property" title="Permalink to this definition"></a></dt>
+<dd><p>The tag’s user property.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="property">
+<h2>Property<a class="headerlink" href="#property" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gitma.Property">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">possible_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.Property" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to represent a CATMA Property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uuid</strong> (<em>str</em>) – The property’s UUID.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The property’s name.</p></li>
+<li><p><strong>possible_values</strong> (<em>list</em>) – The property’s possible value.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Property.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Property.name" title="Permalink to this definition"></a></dt>
+<dd><p>The property’s name.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Property.possible_value_list">
+<span class="sig-name descname"><span class="pre">possible_value_list</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#gitma.Property.possible_value_list" title="Permalink to this definition"></a></dt>
+<dd><p>The list of possible property values that gets displayed in CATMA’s property window.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Property.uuid">
+<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Property.uuid" title="Permalink to this definition"></a></dt>
+<dd><p>The property’s UUID.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gitma">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gitma" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cite_as.html" class="btn btn-neutral float-right" title="How to cite" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Michael Vauth.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

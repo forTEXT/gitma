@@ -1,0 +1,6 @@
+﻿gitma.AnnotationCollection
+==========================
+
+.. currentmodule:: gitma
+
+.. autoclass:: AnnotationCollection
