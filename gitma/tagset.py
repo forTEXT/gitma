@@ -4,16 +4,22 @@ from gitma.tag import Tag
 
 
 class Tagset:
+    """Class which represents a CATMA Tagset.
+
+    Args:
+        project_uuid (str): Name of a CATMA project root folder.
+        catma_id (str): UUID of the tagset which corresponds with the folder name in the "tagsets" directory.
+    Raises:
+        FileNotFoundError: _description_
+
+    """
+
     def __init__(self, project_uuid: str, catma_id: str):
-        """
-        Class which represents a CATMA Tagset.
-        :param project_uuid: directory of a CATMA gitlab root folder
-        :param catma_id: UUID of the tagset which corresponds with the folder name in the "tagsets" directory.
+        #: The tagsets UUID.
+        self.uuid: str = catma_id
 
-        """
-        self.uuid = catma_id
-
-        self.directory = project_uuid + '/tagsets/' + catma_id
+        #: The tagsets directory within the project folder structure.
+        self.directory: str = project_uuid + '/tagsets/' + catma_id
 
         try:
             with open(self.directory + '/header.json') as header_input:
@@ -23,9 +29,14 @@ class Tagset:
                 f'The Tagset in this directory could not be found:\n{self.directory}\n\
                     --> Make sure the CATMA Project clone did work properly.')
 
-        self.name = header['name']
-        self.tag_list = []
-        self.tag_dict = {}
+        #: The tagset's name
+        self.name: str = header['name']
+
+        #: List of tags as gitma.Tag objects.
+        self.tag_list: list = []
+
+        #: Dictionary of tags with UUIDs as keys and gitma.Tag objects as values.
+        self.tag_dict: dict = {}
 
         # walks through tagsets directory
         for dirpath, _, filenames in os.walk(self.directory):
@@ -45,21 +56,29 @@ class Tagset:
     def __repr__(self) -> str:
         return f'Tagset(Name: {self.name}, Tags: {self.tag_list})'
 
-    def edit_property_names(self, tag_names: list, old_prop: str, new_prop: str):
-        """
-        Renames Property for all Tags given as tag_names.
+    def edit_property_names(self, tag_names: list, old_prop: str, new_prop: str) -> None:
+        """Renames Property for all Tags given as tag_names.
+
+        Args:
+            tag_names (list): List of names of the tags that hold the property to be renamed.
+            old_prop (str): Property's name that will be changed.
+            new_prop (str): The new property's name.
         """
         tags_to_edit = [tag for tag in self.tag_list if tag.name in tag_names]
-        print(tags_to_edit)
         for tag in tags_to_edit:
             tag.rename_property(old_prop=old_prop, new_prop=new_prop)
 
-    def edit_possible_property_values(self, tag_names: list, prop: str, old_value: str, new_value: str):
-        """
-        Renames Property for all Tags given as tag_names.
+    def edit_possible_property_values(self, tag_names: list, prop: str, old_value: str, new_value: str) -> None:
+        """Replace an old property value with a new one. The possible property values will be listed in CATMA's
+        property annotation window.
+
+        Args:
+            tag_names (list): The list of tags with the given property.
+            prop (str): The property that holds the given old property value.
+            old_value (str): The old property value.
+            new_value (str): The new property value.
         """
         tags_to_edit = [tag for tag in self.tag_list if tag.name in tag_names]
-        print(tags_to_edit)
         for tag in tags_to_edit:
             tag.rename_possible_property_value(
                 prop=prop, old_value=old_value, new_value=new_value)

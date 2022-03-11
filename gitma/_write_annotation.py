@@ -43,7 +43,7 @@ def write_annotation_json(
         property_annotations: dict,
         author: str):
     """Function to write a new annotation into a given CatmaProject.
-    Gets importe in the CatmaProject class and should only be used as a class method.
+    Gets imported in the CatmaProject class and should only be used as a class method.
 
     Args:
         project (CatmaProject): A CatmaProject object.

@@ -15,32 +15,40 @@ my_local_project = my_catma.load_local_project(
 print(my_local_project.stats())
 """
 
-from typing import Dict
+from typing import List, Dict
 import gitlab
 from gitma.project import CatmaProject
 
 
 class Catma:
-    def __init__(self, gitlab_access_token: str) -> None:
-        """Class which represents all Projects of 1 CATMA User.
+    """Class which represents all Projects of 1 CATMA User.
 
-        Args:
-            gitlab_access_token (str): Token for gitlab access.
-        """
+    Args:
+        gitlab_access_token (str): Token for gitlab access. Use the CATMA UI (https://app.catma.de/catma/)\
+            or the CATMA Gitlab (https://git.catma.de/users/sign_in) to get your personal access token.
+    """
+
+    def __init__(self, gitlab_access_token: str) -> None:
+        #: The access token of the CATMA account.
         self.gitlab_access_token = gitlab_access_token
 
-        gl = gitlab.Gitlab(
+        gl: gl.Gitlab = gitlab.Gitlab(
             url='https://git.catma.de/',
             private_token=gitlab_access_token
         )
 
-        self.project_name_list = [
+        #: List of all projects within a CATMA account.
+        self.project_name_list: List[str] = [
             p.name[43:-5] for p in gl.projects.list(search='_root')]
-        self.project_uuid_dict = {
+
+        #: A dictionary with project names as keys an projects UUIDs as values.
+        self.project_uuid_dict: Dict[str, str] = {
             p.name[43:-5]: p.name for p in gl.projects.list(search='_root')
         }
 
-        self.project_dict = {}
+        #: A dictionary with project names as keys and instances of the CatmaProject class as values.
+        #: The dict is empty as long as no projects have been loaded.
+        self.project_dict: dict = {}
 
     def load_project_from_gitlab(self, project_name: str, backup_directory: str = './') -> None:
         """Load a CATMA Project from GitLab.
@@ -57,7 +65,8 @@ class Catma:
         )
 
     def load_all_projects_from_gitlab(self) -> None:
-        """Loads all CATMA project from GitLab in current directory.
+        """Loads all CATMA projects in your account after creating a local Git clone
+        of these projects.
         """
         for project_name in self.project_name_list:
             self.load_project_from_gitlab(project_name=project_name)
@@ -73,7 +82,7 @@ class Catma:
         Args:
             project_directory (str): Directory where the CATMA Project is located.
             project_name (str): The CATMA Project name.
-            included_acs (list, optional): Annotation Collections to load. Defaults to None.
+            included_acs (list, optional): Annotation Collections to load. If set to None and excluded_acs is None too all annotation collections get loaded. Defaults to None.
             excluded_acs (list, optional): Annotation Collections not to load. Defaults to None.
         """
         self.project_dict[project_name] = CatmaProject(
@@ -83,7 +92,15 @@ class Catma:
             excluded_acs=excluded_acs
         )
 
-    def git_clone_command(self, project_name: str):
+    def git_clone_command(self, project_name: str) -> str:
+        """Creates Git clone command for the given CATMA project.
+
+        Args:
+            project_name (str): The project's name.
+
+        Returns:
+            str: Git clone command.
+        """
         project_uuid = self.project_uuid_dict[project_name]
         project_url = f"https://git.catma.de/{project_uuid[:-5]}/{project_uuid}.git"
         return f'git clone --recurse-submodules {project_url}'

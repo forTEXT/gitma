@@ -238,8 +238,8 @@ class CatmaProject:
 
         project_name (str): The CATMA Project name. Defaults to None.
         project_directory (str, optional): The directory where your CATMA Project(s) are located. Defaults to './'
-        included_acs (list, optional): All Annotation Collections that should get loaded. If neither included nor excluded.\
-            Annotation Collections are defined, all Annotation Collections get loaded. Default to None.
+        included_acs (list, optional): All Annotation Collections that should get loaded. If neither any annotation collections are included nor excluded \
+            all Annotation Collections get loaded. Default to None.
         excluded_acs (list, optional): All Annotation Collections that should not get loaded. Default to None.
         ac_filter_keyword (str, bool): Only Annotation Collections with the given keyword get loaded.
         load_from_gitlab (bool, optional): Whether the CATMA Project shall be loaded dircetly from the CATMA GitLab. Defaults to False.
@@ -266,19 +266,21 @@ class CatmaProject:
 
         # Clone CATMA Project
         if load_from_gitlab:
-            self.uuid = load_gitlab_project(
+            #: The project's UUID.
+            self.uuid: str = load_gitlab_project(
                 gitlab_access_token=gitlab_access_token,
                 project_name=project_name,
                 backup_directory=backup_directory
             )
             project_directory = backup_directory
         else:
-            self.uuid = get_local_project_uuid(
+            self.uuid: str = get_local_project_uuid(
                 project_directory=project_directory,
                 project_name=project_name
             )
 
-        self.project_directory = project_directory
+        #: The project's directory.
+        self.project_directory: str = project_directory
 
         try:
             os.chdir(self.project_directory)
@@ -291,8 +293,14 @@ class CatmaProject:
             # Load Tagsets
             print('Loading Tagsets ...')
             if os.path.isdir(self.uuid + '/tagsets/'):
-                self.tagsets, self.tagset_dict = load_tagsets(
+                tagsets = load_tagsets(
                     project_uuid=self.uuid)
+
+                #: List of gitma.Tagset objects.
+                self.tagsets: List[Tagset] = tagsets[0]
+
+                #: Dictionary of the project's tagsets with the UUIDs as keys and gitma.Tagset objects as values.
+                self.tagset_dict: Dict[str, Tagset] = tagsets[1]
                 print(f'\t Found {len(self.tagsets)} Tagset(s).')
             else:
                 self.tagsets, self.tagset_dict = None, None
@@ -300,17 +308,30 @@ class CatmaProject:
 
             # Load Texts
             print('Loading Documents ...')
-            self.texts, self.text_dict = load_texts(project_uuid=self.uuid)
+            texts = load_texts(project_uuid=self.uuid)
+
+            #: List of the gitma.Text objects.
+            self.texts: List[Text] = texts[0]
+
+            #: Dictionary of the project's texts with titles as keys and gitma.Text objects as values
+            self.text_dict: Dict[str, Text] = texts[1]
             print(f'\t Found {len(self.texts)} Document(s).')
 
             # Load Annotation Collections
             print('Loading Annotation Collections ...')
-            self.annotation_collections, self.ac_dict = load_annotation_collections(
+            annotation_collections = load_annotation_collections(
                 catma_project=self,
                 included_acs=included_acs,
                 excluded_acs=excluded_acs,
                 ac_filter_keyword=ac_filter_keyword,
             )
+            #: List of gitma.AnnotationCollection objects.
+            self.annotation_collections: List[AnnotationCollection] = annotation_collections[0]
+
+            #: Dictionary of the project's annotation collections with their name as keys and gitma.AnnotationCollection objects as values
+            self.ac_dict: Dict[str,
+                               AnnotationCollection] = annotation_collections[1]
+
             os.chdir(cwd)
         except FileNotFoundError:
             os.chdir(cwd)
@@ -338,7 +359,7 @@ class CatmaProject:
 
     from gitma._gamma import gamma_agreement
 
-    def all_annotations(self):
+    def all_annotations(self) -> Generator[Annotation, None, None]:
         """Generator that yields all annotations as gitma annotation objects.
 
         Yields:
@@ -349,7 +370,7 @@ class CatmaProject:
                 yield an
 
     def pygamma_table(self, annotation_collections: Union[str, list] = 'all') -> pd.DataFrame:
-        """Concatenes annotation collections to pygamma table.
+        """Concatenates annotation collections to pygamma table.
 
         Args:
             annotation_collections (Union[str, list], optional): List of annotation collections. Defaults to 'all'.

@@ -6,6 +6,7 @@ import string
 import pandas as pd
 from gitma.text import Text
 from gitma.annotation import Annotation
+from gitma.tag import Tag
 
 
 def split_property_dict_to_column(ac_df):
@@ -150,7 +151,8 @@ class AnnotationCollection:
         Raises:
             FileNotFoundError: If the directory of the Annotation Collection header.json does not exists.
         """
-        self.uuid = ac_uuid
+        #: The annotation collection's UUID.
+        self.uuid: str = ac_uuid
 
         try:
             with open(catma_project.uuid + '/collections/' + self.uuid + '/header.json') as header_json:
@@ -160,18 +162,25 @@ class AnnotationCollection:
                 f"The Annotation Collection in this directory could not be found:\n{self.directory}\n\
                     --> Make sure the CATMA Project clone did work properly.")
 
-        self.name = self.header['name']
+        #: The annotation collection's name.
+        self.name: str = self.header['name']
 
-        self.plain_text_id = self.header['sourceDocumentId']
-        self.text = Text(project_uuid=catma_project.uuid,
-                         catma_id=self.plain_text_id)
-        self.text_version = self.header['sourceDocumentVersion']
+        #: The UUID of the annotation collection's document.
+        self.plain_text_id: str = self.header['sourceDocumentId']
+
+        #: The document of the annotation collection as a gitma.Text object.
+        self.text: Text = Text(project_uuid=catma_project.uuid,
+                               catma_id=self.plain_text_id)
+
+        #: The document's version.
+        self.text_version: str = self.header['sourceDocumentVersion']
 
         print(
             f"\t Loading Annotation Collection '{self.name}' for {self.text.title}")
 
         if os.path.isdir(catma_project.uuid + '/collections/' + self.uuid + '/annotations/'):
-            self.annotations = sorted([
+            #: List of annotations in annotation collection as gitma.Annotation objects.
+            self.annotations: List[Annotation] = sorted([
                 Annotation(
                     directory=f'{catma_project.uuid}/collections/{self.uuid}/annotations/{annotation_dir}',
                     plain_text=self.text.plain_text,
@@ -181,17 +190,18 @@ class AnnotationCollection:
                 if annotation_dir.startswith('CATMA_')
             ])
 
-            self.tags = [an.tag for an in self.annotations]
+            #: List of tags found in the annotation collection as a list of gitma.Tag objects.
+            self.tags: List[Tag] = [an.tag for an in self.annotations]
 
-            # create pandas data frame for annotation collection
-            self.df = ac_to_df(
+            #:  Annotations as a pandas.DataFrame.
+            self.df: pd.DataFrame = ac_to_df(
                 annotations=self.annotations,
                 text_title=self.text.title,
                 ac_name=self.name
             )
         else:
-            self.annotations = []
-            self.df = pd.DataFrame(columns=df_columns)
+            self.annotations: list = []
+            self.df: pd.DataFrame = pd.DataFrame(columns=df_columns)
 
         print(f"\t-> with {len(self.annotations)} Annotations.")
 
@@ -205,7 +215,19 @@ class AnnotationCollection:
         for an in self.annotations:
             yield an
 
-    def duplicate_by_prop(self, prop: str):
+    def duplicate_by_prop(self, prop: str) -> pd.DataFrame:
+        """Duplicates the rows in the annotation collection's DataFrame if the given Property has multiple Property Values
+        the annotations represented by a DataFrame row.
+
+        Args:
+            prop (str): A property used in the annotation collection.
+
+        Raises:
+            ValueError: If the property has not been used in the annotation collection.
+
+        Returns:
+            pd.DataFrame: A duplicate of the annotation collection's DataFrame.
+        """
         try:
             return duplicate_rows(ac_df=self.df, property_col=prop)
         except KeyError:
@@ -225,7 +247,10 @@ class AnnotationCollection:
             start_point: float = 0, end_point: float = 1.0,
             included_tags: list = None, excluded_tags: list = None,
             plot_stats: bool = True):
-        """Draws cooccurrence network graph.
+        """Draws cooccurrence network graph where every tag is a node and every edge represents two cooccurent tags.
+        You can by the `character_distance` parameter when two annotations are considered cooccurent.
+        If you set `character_distance=0` only the tags of overlapping annotations will be represented
+        as connected nodes.
 
         Args:
             character_distance (int, optional): In which distance annotations are considered coocurrent. Defaults to 100.
@@ -247,7 +272,12 @@ class AnnotationCollection:
         )
         nw.plot(plot_stats=plot_stats)
 
-    def to_pygamma_table(self):
+    def to_pygamma_table(self) -> pd.DataFrame:
+        """Returns the annotation collection's DataFrame in the format pygamma takes as input.
+
+        Returns:
+            pd.DataFrame: DataFrame with four columns: 'annotator', 'tag', 'start_point' and 'end_point'.
+        """
         return self.df[['annotator', 'tag', 'start_point', 'end_point']]
 
     def tag_stats(
@@ -255,7 +285,11 @@ class AnnotationCollection:
             tag_col: str = 'tag',
             stopwords: list = None,
             ranking: int = 10) -> pd.DataFrame:
-        """Get data for Tags.
+        """Computes the following data for each tag in the annotation collection:
+        - the count of annotations with a tag
+        - the complete text span annotated with a tag
+        - the average text span annotated with a tag
+        - the n-most frequent token in the text span annotated with a tag
 
         Args:
             tag_col (str, optional): Whether the data for the tag a property or annotators gets computed. Defaults to 'tag'.
@@ -289,13 +323,29 @@ class AnnotationCollection:
 
         return pd.DataFrame(tag_data).T
 
-    def property_stats(self):
+    def property_stats(self) -> pd.DataFrame:
+        """Counts for each property the property values.
+
+        Returns:
+            pd.DataFrame: DataFrame with properties as index and property values as header.
+        """
         return pd.DataFrame(
             {col: duplicate_rows(self.df, col)[col].value_counts(
             ) for col in self.df.columns if 'prop:' in col}
         ).T
 
-    def get_annotation_by_tag(self, tag_name: str):
+    def get_annotation_by_tag(self, tag_name: str) -> List[Annotation]:
+        """Creates list of all annotations with a given name.
+
+        Args:
+            tag_name (str): The searched tag's name.
+
+        Args:
+            tag_name (str): _description_
+
+        Returns:
+            List[Annotation]: List of annotations as gitma.Annotation objects.
+        """
         return [
             annotation for annotation in self.annotations
             if annotation.tag.name == tag_name
@@ -303,14 +353,36 @@ class AnnotationCollection:
         ]
 
     def annotate_properties(self, tag: str, prop: str, value: list):
+        """Set value for given property. This function uses the `gitma.Annotation.set_property_values()` method.
+
+        Args:
+            tag (str): The parent tag of the property.
+            prop (str): The property to be annotated.
+            value (list): The new property value.
+        """
         for an in self.annotations:
             an.set_property_values(tag=tag, prop=prop, value=value)
 
     def rename_property_value(self, tag: str, prop: str, old_value: str, new_value: str):
+        """Renames Property of all annotations with the given tag name.
+        Replaces only the property value defined by the parameter `old_value`.
+
+        Args:
+            tag (str): The tag's name-
+            prop (str): The property's name-
+            old_value (str): The old property value that will be replaced.
+            new_value (str): The new property value that will replace the old property value.
+        """
         for an in self.annotations:
             an.modify_property_value(
                 tag=tag, prop=prop, old_value=old_value, new_value=new_value)
 
     def delete_properties(self, tag: str, prop: str):
+        """Deletes a property from all annotations with a given tag name.
+
+        Args:
+            tag (str): The annotations tag name.
+            prop (str): The name of the property that will be removed.
+        """
         for an in self.annotations:
             an.delete_property(tag=tag, prop=prop)

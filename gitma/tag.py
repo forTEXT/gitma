@@ -40,12 +40,18 @@ def get_user_uuid(tag_dict):
 
 
 class Tag:
+    """Class which represents a CATMA Tag.
+
+    Args:
+        json_file_directory (str): The directory ot the tag within the project's folder structure.
+
+    Raises:
+        FileNotFoundError: If the json_file_directory could not be found.
+    """
+
     def __init__(self, json_file_directory: str):
-        """
-        Class which represents a CATMA Tag.
-        :param: directory of a CATMA tag json file.
-        """
-        self.directory = json_file_directory.replace('\\', '/')
+        #: The tag' directory.
+        self.directory: str = json_file_directory.replace('\\', '/')
         try:
             with open(json_file_directory) as json_input:
                 self.json = json.load(json_input)
@@ -54,38 +60,74 @@ class Tag:
                 f'The Tag file in this directory could not be found:\n{self.directory}\n\
                     --> Make sure the CATMA Project clone did work properly.')
 
-        self.name = self.json['name']
-        self.id = self.json['uuid']
-        self.parent_id = self.json['parentUuid'] if 'parentUuid' in self.json else None
-        self.properties = self.json['userDefinedPropertyDefinitions']
-        self.properties_list = [
+        #: The tag's name
+        self.name: str = self.json['name']
+
+        #: The tag's UUID.
+        self.id: str = self.json['uuid']
+
+        #: The parent tag's UUID.
+        self.parent_id: str = self.json['parentUuid'] if 'parentUuid' in self.json else None
+
+        #: The tag's properties as a list of dictionaries.
+        self.properties: dict = self.json['userDefinedPropertyDefinitions']
+
+        #: The tag's properties as list of gitma.Property objects.
+        self.properties_list: list = [
             Property(
                 uuid=item,
                 name=self.properties[item]['name'],
                 possible_value=self.properties[item]["possibleValueList"]
             ) for item in self.properties
         ]
-        self.properties_dict = {
-            repr(item): item for item in self.properties_list}
 
-        self.child_tags = []
-        self.parent = None
+        #: Dictionary with the names of properties as keys and gitma.Propety objects as values.
+        self.properties_dict: dict = {
+            prop.name: prop for prop in self.properties_list
+        }
 
-        self.time_property = get_time_uuid(self.json)
-        self.user_property = get_user_properties(self.json)
+        #: List of child tags as gitma.Tag objects.
+        #: Is an empy list until gitma.Tag.get_child_tags will be used.
+        self.child_tags: list = []
+
+        #: Parent tag as gitma.Tag objects.
+        #: Is None until gitma.Tag.get_child_tags will be used.
+        self.parent: str = None
+
+        #: The tag's time UUID.
+        self.time_property: str = get_time_uuid(self.json)
+
+        #: The tag's user property.
+        self.user_property: str = get_user_properties(self.json)
 
     def __repr__(self):
         return f'Tag(Name: {self.name}, Properties: {self.properties_list})'
 
-    def get_parent_tag(self, tagset_dict: dict):
+    def get_parent_tag(self, tagset_dict: dict) -> None:
+        """Adds the the parent tag to self.parent.
+
+        Args:
+            tagset_dict (dict): The tagset as a gitma.Tagse.tag_dict.
+        """
         self.parent = tagset_dict[self.parent_id] if self.parent_id in tagset_dict else None
 
-    def get_child_tags(self, tag_list: list):
+    def get_child_tags(self, tag_list: list) -> None:
+        """Adds all child tags to the tag's tag_list
+
+        Args:
+            tag_list (list): A list of gitma.Tag objects.
+        """
         for tag in tag_list:
             if tag.parent_id == self.id:
                 self.child_tags.append(tag)
 
-    def rename_property(self, old_prop: str, new_prop: str):
+    def rename_property(self, old_prop: str, new_prop: str) -> None:
+        """Renames a property of the tag by overwriting it's json.
+
+        Args:
+            old_prop (str): The old property's name.
+            new_prop (str): The new proeprty's name.
+        """
         for item in self.properties_list:
             if item.name == old_prop:
                 self.json['userDefinedPropertyDefinitions'][item.uuid]['name'] = new_prop
@@ -93,7 +135,14 @@ class Tag:
         with open(self.file_directory, 'w') as json_output:
             json_output.write(json.dumps(self.json))
 
-    def rename_possible_property_value(self, prop: str, old_value: str, new_value: str):
+    def rename_possible_property_value(self, prop: str, old_value: str, new_value: str) -> None:
+        """Renames as specified property value in the list of possible property values.
+
+        Args:
+            prop (str): The property's name.
+            old_value (str): The property value to be replaced.
+            new_value (str): The new property value.
+        """
         for item in self.properties_list:
             if item.name == prop:
                 pv = self.json['userDefinedPropertyDefinitions'][item.uuid]["possibleValueList"]

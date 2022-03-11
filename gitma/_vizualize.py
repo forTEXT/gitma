@@ -139,8 +139,19 @@ def plot_annotation_progression(project) -> go.Figure:
     return fig
 
 
-def plot_scaled_annotations(ac, tag_scale: dict = None, bin_size: int = 50, smoothing_window: int = 100):
-    import plotly.graph_objects as go
+def plot_scaled_annotations(ac, tag_scale: dict = None, bin_size: int = 50, smoothing_window: int = 100) -> None:
+    """Plots a graph with scaled annotations.
+    This function is still under development.
+
+    Args:
+        ac (AnnotationCollection): A CATMA
+        tag_scale (dict, optional): _description_. Defaults to None.
+        bin_size (int, optional): _description_. Defaults to 50.
+        smoothing_window (int, optional): _description_. Defaults to 100.
+
+    Raises:
+        Exception: _description_
+    """
 
     if tag_scale:
         plot_df = ac.df[ac.df.tag.isin(list(tag_scale))].copy()
