@@ -10,7 +10,6 @@ setuptools.setup(
     python_requires=">=3.7",
     install_requires=[
         "jupyter",
-        "matplotlib",
         "networkx",
         "nltk",
         "pandas",
