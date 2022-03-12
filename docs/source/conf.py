@@ -45,6 +45,7 @@ autodoc_default_options = {
     'member-order': 'bysource'
 }
 autosummary_generate = True
+master_doc = 'index'
 
 # -- General configuration ---------------------------------------------------
 
