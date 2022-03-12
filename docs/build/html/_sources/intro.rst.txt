@@ -27,8 +27,8 @@ by the following Python classes.
 
         + Property
 
-All analytical methods in the package operate on the level of a CatmaProject or an AnnotationCollection.
-You'll find documentations for these classes here:
+All analytical methods in the package operate at the level of a CatmaProject or an AnnotationCollection.
+You will find documentations for these classes here:
 
 .. toctree:: 
 
