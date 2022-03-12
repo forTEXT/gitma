@@ -1,6 +1,0 @@
-﻿gitma.CatmaProject
-==================
-
-.. currentmodule:: gitma
-
-.. autoclass:: CatmaProject

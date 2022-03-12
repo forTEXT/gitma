@@ -41,6 +41,9 @@ release = '1.5.0'
 
 doctest_global_setup = "import gitma"
 autodoc_default_flags = ['members']
+autodoc_default_options = {
+    'member-order': 'bysource'
+}
 autosummary_generate = True
 
 # -- General configuration ---------------------------------------------------

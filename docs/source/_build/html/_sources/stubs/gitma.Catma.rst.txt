@@ -1,6 +1,0 @@
-﻿gitma.Catma
-===========
-
-.. currentmodule:: gitma
-
-.. autoclass:: Catma

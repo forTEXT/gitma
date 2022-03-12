@@ -18,7 +18,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="next" title="CatmaProject" href="class_docs/class_project.html" />
     <link rel="prev" title="Welcome to GitMA’s documentation!" href="index.html" /> 
 </head>
 
@@ -40,6 +40,11 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#architecture">Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="class_docs/class_project.html">CatmaProject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="class_docs/class_annotation_collection.html">AnnotationCollection</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#motivation">Motivation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#access-your-catma-profile-and-load-your-catma-annotations">Access your CATMA profile and load your CATMA annotations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#explore-and-analyze-your-catma-annotations">Explore and analyze your CATMA annotations</a></li>
@@ -48,8 +53,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gitma.html">GitMA Package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">GitMA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gitma.html">GitMA classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cite_as.html">How to cite</a></li>
 </ul>
 
@@ -80,6 +84,44 @@
   <section id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"></a></h1>
 <p><strong>GitMA</strong> is a python Package to process, analyze and manipulate <a class="reference external" href="https://catma.de/">CATMA</a> annotations via the <a class="reference external" href="https://catma.de/documentation/git-access/">CATMA Git Access</a>.</p>
+<section id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline"></a></h2>
+<p>Like the instances of the CATMA app, the GitMA package is hierarchically structured
+by the following Python classes.</p>
+<ul class="simple">
+<li><p>Catma</p>
+<ul>
+<li><p>CatmaProject</p>
+<ul>
+<li><p>AnnotationCollection</p>
+<ul>
+<li><p>Annotation</p></li>
+</ul>
+</li>
+<li><p>Text</p></li>
+<li><p>Tagset</p>
+<ul>
+<li><p>Tag</p>
+<ul>
+<li><p>Property</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>All analytical methods in the package operate at the level of a CatmaProject or an AnnotationCollection.
+You will find documentations for these classes here:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="class_docs/class_project.html">CatmaProject</a></li>
+<li class="toctree-l1"><a class="reference internal" href="class_docs/class_annotation_collection.html">AnnotationCollection</a></li>
+</ul>
+</div>
+</section>
 <section id="motivation">
 <h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline"></a></h2>
 <p>As a Python API for your annotation data, GitMA’s main goal is the managing of large annotation projects.
@@ -253,7 +295,7 @@ The most important functionalities get introduced in the demo Jupyter Notebooks.
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="Welcome to GitMA’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="class_docs/class_project.html" class="btn btn-neutral float-right" title="CatmaProject" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

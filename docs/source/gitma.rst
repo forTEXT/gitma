@@ -1,77 +1,23 @@
-GitMA Package
+=============
+GitMA classes
 =============
 
+.. toctree::
+   :maxdepth: 2
 
-Catma
-------------------
+   class_docs/class_catma
+   class_docs/class_project
+   class_docs/class_text
+   class_docs/class_tagset
+   class_docs/class_annotation_collection
+   class_docs/class_annotation
+   class_docs/class_tag
+   class_docs/class_property
+   
+.. Module contents
+.. ---------------
 
-.. autoclass:: gitma.Catma
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-CatmaProject
---------------------
-
-.. autoclass:: gitma.CatmaProject
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Tagset
--------------------
-
-.. autoclass:: gitma.Tagset
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Text
------------------
-
-.. autoclass:: gitma.Text
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-AnnotationCollection
------------------------------------
-
-.. autoclass:: gitma.AnnotationCollection
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Annotation
------------------------
-
-.. autoclass:: gitma.Annotation
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-Tag
-----------------
-
-.. autoclass:: gitma.Tag
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Property
----------------------
-
-.. autoclass:: gitma.Property
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: gitma
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. .. automodule:: gitma
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
