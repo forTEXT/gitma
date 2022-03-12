@@ -32,8 +32,8 @@ You will find documentations for these classes here:
 
 .. toctree:: 
 
-    class_docs/class_project
-    class_docs/class_annotation_collection
+    class_project
+    class_annotation_collection
 
 ----------
 Motivation

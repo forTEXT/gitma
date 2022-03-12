@@ -1,0 +1,467 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="AnnotationCollection" href="class_annotation_collection.html" /><link rel="prev" title="Introduction" href="intro.html" />
+
+    <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
+        <title>CatmaProject - GitMA 1.5.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">GitMA 1.5.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">GitMA 1.5.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="intro.html">Introduction</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">CatmaProject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="class_annotation_collection.html">AnnotationCollection</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="gitma.html">GitMA classes</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="class_catma.html">Catma</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">CatmaProject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="class_text.html">Text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="class_tagset.html">Tagset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="class_annotation_collection.html">AnnotationCollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="class_annotation.html">Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="class_tag.html">Tag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="class_property.html">Property</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cite_as.html">How to cite</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="catmaproject">
+<h1>CatmaProject<a class="headerlink" href="#catmaproject" title="Permalink to this headline">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="gitma.CatmaProject">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CatmaProject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">included_acs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_acs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac_filter_keyword</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_from_gitlab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gitlab_access_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.CatmaProject" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class that represents a CATMA Project including all Documents, Tagsets and Annotation Collections.
+You can eather load the Project from a local git clone or you load it directly
+from GitLab after generating a gitlab_access_token in the CATMA GUI.</p>
+<p>Args:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">project_name</span> <span class="p">(</span><span class="nb">str</span><span class="p">):</span> <span class="n">The</span> <span class="n">CATMA</span> <span class="n">Project</span> <span class="n">name</span><span class="o">.</span> <span class="n">Defaults</span> <span class="n">to</span> <span class="kc">None</span><span class="o">.</span>
+<span class="n">project_directory</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">optional</span><span class="p">):</span> <span class="n">The</span> <span class="n">directory</span> <span class="n">where</span> <span class="n">your</span> <span class="n">CATMA</span> <span class="n">Project</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="n">are</span> <span class="n">located</span><span class="o">.</span> <span class="n">Defaults</span> <span class="n">to</span> <span class="s1">'./'</span>
+<span class="n">included_acs</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">optional</span><span class="p">):</span> <span class="n">All</span> <span class="n">Annotation</span> <span class="n">Collections</span> <span class="n">that</span> <span class="n">should</span> <span class="n">get</span> <span class="n">loaded</span><span class="o">.</span> <span class="n">If</span> <span class="n">neither</span> <span class="nb">any</span> <span class="n">annotation</span> <span class="n">collections</span> <span class="n">are</span> <span class="n">included</span> <span class="n">nor</span> <span class="n">excluded</span>             <span class="nb">all</span> <span class="n">Annotation</span> <span class="n">Collections</span> <span class="n">get</span> <span class="n">loaded</span><span class="o">.</span> <span class="n">Default</span> <span class="n">to</span> <span class="kc">None</span><span class="o">.</span>
+<span class="n">excluded_acs</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">optional</span><span class="p">):</span> <span class="n">All</span> <span class="n">Annotation</span> <span class="n">Collections</span> <span class="n">that</span> <span class="n">should</span> <span class="ow">not</span> <span class="n">get</span> <span class="n">loaded</span><span class="o">.</span> <span class="n">Default</span> <span class="n">to</span> <span class="kc">None</span><span class="o">.</span>
+<span class="n">ac_filter_keyword</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span> <span class="n">Only</span> <span class="n">Annotation</span> <span class="n">Collections</span> <span class="k">with</span> <span class="n">the</span> <span class="n">given</span> <span class="n">keyword</span> <span class="n">get</span> <span class="n">loaded</span><span class="o">.</span>
+<span class="n">load_from_gitlab</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">optional</span><span class="p">):</span> <span class="n">Whether</span> <span class="n">the</span> <span class="n">CATMA</span> <span class="n">Project</span> <span class="n">shall</span> <span class="n">be</span> <span class="n">loaded</span> <span class="n">dircetly</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">CATMA</span> <span class="n">GitLab</span><span class="o">.</span> <span class="n">Defaults</span> <span class="n">to</span> <span class="kc">False</span><span class="o">.</span>
+<span class="n">gitlab_access_token</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">optional</span><span class="p">):</span> <span class="n">The</span> <span class="n">private</span> <span class="n">CATMA</span> <span class="n">GitLab</span> <span class="n">Token</span><span class="o">.</span> <span class="n">Defaults</span> <span class="n">to</span> <span class="kc">None</span><span class="o">.</span>
+<span class="n">backup_directory</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">optional</span><span class="p">):</span> <span class="n">The</span> <span class="n">your</span> <span class="n">Project</span> <span class="n">clone</span> <span class="n">should</span> <span class="n">be</span> <span class="n">located</span><span class="o">.</span> <span class="n">Default</span> <span class="n">to</span> <span class="s1">'./'</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Raises:
+FileNotFoundError: If the CATMA Project was not found in the CATMA GitLab.
+FileNotFoundError: If the local or remote CATMA Project were not found.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.CatmaProject.uuid">
+<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.CatmaProject.uuid" title="Permalink to this definition">#</a></dt>
+<dd><p>The project’s UUID.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.CatmaProject.project_directory">
+<span class="sig-name descname"><span class="pre">project_directory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.CatmaProject.project_directory" title="Permalink to this definition">#</a></dt>
+<dd><p>The project’s directory.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.CatmaProject.tagsets">
+<span class="sig-name descname"><span class="pre">tagsets</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="class_tagset.html#gitma.Tagset" title="gitma.tagset.Tagset"><span class="pre">gitma.tagset.Tagset</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gitma.CatmaProject.tagsets" title="Permalink to this definition">#</a></dt>
+<dd><p>List of gitma.Tagset objects.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.CatmaProject.tagset_dict">
+<span class="sig-name descname"><span class="pre">tagset_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="class_tagset.html#gitma.Tagset" title="gitma.tagset.Tagset"><span class="pre">gitma.tagset.Tagset</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gitma.CatmaProject.tagset_dict" title="Permalink to this definition">#</a></dt>
+<dd><p>Dictionary of the project’s tagsets with the UUIDs as keys and gitma.Tagset objects as values.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.CatmaProject.texts">
+<span class="sig-name descname"><span class="pre">texts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="class_text.html#gitma.Text" title="gitma.text.Text"><span class="pre">gitma.text.Text</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gitma.CatmaProject.texts" title="Permalink to this definition">#</a></dt>
+<dd><p>List of the gitma.Text objects.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.CatmaProject.text_dict">
+<span class="sig-name descname"><span class="pre">text_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="class_text.html#gitma.Text" title="gitma.text.Text"><span class="pre">gitma.text.Text</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gitma.CatmaProject.text_dict" title="Permalink to this definition">#</a></dt>
+<dd><p>Dictionary of the project’s texts with titles as keys and gitma.Text objects as values</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.CatmaProject.annotation_collections">
+<span class="sig-name descname"><span class="pre">annotation_collections</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="class_annotation_collection.html#gitma.AnnotationCollection" title="gitma.annotation_collection.AnnotationCollection"><span class="pre">gitma.annotation_collection.AnnotationCollection</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gitma.CatmaProject.annotation_collections" title="Permalink to this definition">#</a></dt>
+<dd><p>List of gitma.AnnotationCollection objects.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.CatmaProject.ac_dict">
+<span class="sig-name descname"><span class="pre">ac_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="class_annotation_collection.html#gitma.AnnotationCollection" title="gitma.annotation_collection.AnnotationCollection"><span class="pre">gitma.annotation_collection.AnnotationCollection</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gitma.CatmaProject.ac_dict" title="Permalink to this definition">#</a></dt>
+<dd><p>Dictionary of the project’s annotation collections with their name as keys and gitma.AnnotationCollection objects as values</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.create_gold_annotations">
+<span class="sig-name descname"><span class="pre">create_gold_annotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ac_1_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac_2_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gold_ac_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_overlap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'matching'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">push_to_gitlab</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.CatmaProject.create_gold_annotations" title="Permalink to this definition">#</a></dt>
+<dd><p>Searches for matching annotations in 2 AnnotationCollections and copies all matches in a third AnnotationCollection.
+By default only matching Property Values get copied.</p>
+<p>Args:
+ac_1_name (str): AnnotationCollection 1 Name.
+ac_2_name (str): AnnnotationCollection 2 Name.
+gold_ac_name (str): AnnotationCollection Name for Gold Annotations.
+excluded_tags (list, optional): Annotations with this Tags will not be included in the Gold Annotations. Defaults to None.
+min_overlap (float, optional): The minimal overlap to genereate a gold annotation. Defaults to 1.0.
+same_tag (bool, optional): Whether both annotations need to be the same tag. Defaults to True.
+property_values (str, optional): Whether only matching Property Values from AnnonationCollection 1 shall be copied.            Default to ‘matching’. Further options: ‘none’.
+push_to_gitlab (bool, optional): Whether the gold annotations shall be uploaded to the CATMA GitLab. Default to False.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.write_annotation_json">
+<span class="sig-name descname"><span class="pre">write_annotation_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_collection_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tagset_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property_annotations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.CatmaProject.write_annotation_json" title="Permalink to this definition">#</a></dt>
+<dd><p>Function to write a new annotation into a given CatmaProject.
+Gets imported in the CatmaProject class and should only be used as a class method.</p>
+<p>Args:
+project (CatmaProject): A CatmaProject object.
+annotation_collection_name (str): The annotation collections name
+tagset_name (str): The tagsets name
+text_title (str): The text title
+tag_name (str): The tags name
+start_points (list): The annotation span start point
+end_points (list): The annotation span end point
+property_annotations (dict): dictionary with property annotations
+author (str): the annotations author</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.plot_annotation_progression">
+<span class="sig-name descname"><span class="pre">plot_annotation_progression</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#gitma.CatmaProject.plot_annotation_progression" title="Permalink to this definition">#</a></dt>
+<dd><p>Plot the annotation progression for every annotator in a CATMA project.</p>
+<p>Args:
+project (CatmaProject): The plotted CATMA project.</p>
+<p>Returns:
+go.Figure: Plotly scatter plot.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.plot_interactive">
+<span class="sig-name descname"><span class="pre">plot_interactive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'annotation</span> <span class="pre">collection'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#gitma.CatmaProject.plot_interactive" title="Permalink to this definition">#</a></dt>
+<dd><p>This function generates one Plotly scatter plot per annotated document in a CATMA project.
+By default the colors represent the annotation collections.
+By that they can’t be deactivated with the interactive legend.</p>
+<p>Args:
+catma_project (CatmaProject): The plotted project.
+color_col (str, optional): ‘annotation collection’, ‘annotator’, ‘tag’ or any property with the prefix ‘prop:’. Defaults to ‘annotation collection’.</p>
+<p>Returns:
+go.Figure: Plotly scatter plot.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.compare_annotation_collections">
+<span class="sig-name descname"><span class="pre">compare_annotation_collections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_collections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tag'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#gitma.CatmaProject.compare_annotation_collections" title="Permalink to this definition">#</a></dt>
+<dd><p>Plots annotations of multiple annotation collections of the same texts as line plot.</p>
+<p>Args:
+catma_project (CatmaProject): <em>description</em>
+annotation_collections (list): A list of annotation collection names.
+color_col (str, optional): Either ‘tag’ or one property name with prefix ‘prop:’. Defaults to ‘tag’.</p>
+<p>Raises:
+ValueError: If one of the annotation collection’s names does not exist.</p>
+<p>Returns:
+go.Figure: Plotly Line Plot.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.get_iaa">
+<span class="sig-name descname"><span class="pre">get_iaa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ac1_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac2_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_filter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_both_ac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tag'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'binary'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.CatmaProject.get_iaa" title="Permalink to this definition">#</a></dt>
+<dd><p>Computes Inter Annotator Agreement for 2 Annotation Collections.</p>
+<p>Args:
+project (CatmaProject): CatmaProject object
+ac1_name (str): AnnotationCollection name to be compared
+ac2_name (str): AnnotationCollection name to be compared with
+tag_filter (list, optional): Which Tags should be included. If None all are included. Default to None.
+filter_both_ac (bool, optional): Whether the tag filter shall be aplied to both annotation collections. Default to False.
+level (str, optional): Whether the Annotation Tag or a specified Property should be compared.
+distance (str, optional): The IAA distance function. Either ‘binary’ or ‘interval’. See <a class="reference external" href="https://www.nltk.org/api/nltk.metrics.html">https://www.nltk.org/api/nltk.metrics.html</a>. Default to ‘binary’.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.gamma_agreement">
+<span class="sig-name descname"><span class="pre">gamma_agreement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_collections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="class_annotation_collection.html#gitma.AnnotationCollection" title="gitma.annotation_collection.AnnotationCollection"><span class="pre">gitma.annotation_collection.AnnotationCollection</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_empty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.CatmaProject.gamma_agreement" title="Permalink to this definition">#</a></dt>
+<dd><p>Computes Gamma IAA based on Mathet et. al “The Unified and Holistic Method Gamma”
+using <a class="reference external" href="https://github.com/bootphon/pygamma-agreement">https://github.com/bootphon/pygamma-agreement</a>. For further installation steps of pygamma-agreement
+and different disagreement computing see the Github site.</p>
+<p>Args:
+project (<em>type</em>): The CATMA project that holds the used annotation collections.
+annotation_collections (List[AnnotationCollection]): List of annotation collections to be included.
+alpha (int, optional): Coefficient weighting the positional dissimilarity value. Defaults to 3.
+beta (int, optional): Coefficient weighting the categorical dissimilarity value. Defaults to 1.
+delta_empty (float, optional): <em>description</em>. Defaults to 0.01.
+n_samples (int, optional): Number of random continuum sampled from this continuum. Defaults to 30.
+precision_level (int, optional): Optional float or “high”, “medium”, “low” error percentage of the gamma estimation. Defaults to 0.01.</p>
+<p>Raises:
+ImportWarning: If pygamma has not been installed.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.all_annotations">
+<span class="sig-name descname"><span class="pre">all_annotations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="class_annotation.html#gitma.Annotation" title="gitma.annotation.Annotation"><span class="pre">gitma.annotation.Annotation</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gitma.CatmaProject.all_annotations" title="Permalink to this definition">#</a></dt>
+<dd><p>Generator that yields all annotations as gitma annotation objects.</p>
+<p>Yields:
+Annotation: gitma Annotation object.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.pygamma_table">
+<span class="sig-name descname"><span class="pre">pygamma_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_collections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#gitma.CatmaProject.pygamma_table" title="Permalink to this definition">#</a></dt>
+<dd><p>Concatenates annotation collections to pygamma table.</p>
+<p>Args:
+annotation_collections (Union[str, list], optional): List of annotation collections. Defaults to ‘all’.</p>
+<p>Returns:
+pd.DataFrame: Concatenated annotation collections as pd.DataFrame in pygamma format.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.merge_annotations">
+<span class="sig-name descname"><span class="pre">merge_annotations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#gitma.CatmaProject.merge_annotations" title="Permalink to this definition">#</a></dt>
+<dd><p>Concatenes all annotation collections to one pandas data frame and resets index.</p>
+<p>Returns:
+pd.DataFrame: Data frame including all annotation in the CATMA project.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.merge_annotations_per_document">
+<span class="sig-name descname"><span class="pre">merge_annotations_per_document</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gitma.CatmaProject.merge_annotations_per_document" title="Permalink to this definition">#</a></dt>
+<dd><p>Merges all annotations per document to one annotation collection.</p>
+<p>Returns:
+Dict[str, pd.DataFrame]: Dictionary with document titles as keys and annotations per                document as pandas data frame.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.stats">
+<span class="sig-name descname"><span class="pre">stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#gitma.CatmaProject.stats" title="Permalink to this definition">#</a></dt>
+<dd><p>Shows some CATMA Project stats.</p>
+<p>Returns:
+pd.DataFrame: DataFrame with projects stats sorted by the Annotation Collection names.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.CatmaProject.update" title="Permalink to this definition">#</a></dt>
+<dd><p>Updates local git folder and reloads CatmaProject</p>
+</dd></dl>
+</dd></dl>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="class_annotation_collection.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">AnnotationCollection</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="intro.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Introduction</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022, Michael Vauth
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    </body>
+</html>

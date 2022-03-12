@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Introduction" href="intro.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Annotation" href="class_annotation.html" /><link rel="prev" title="Text" href="class_text.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>GitMA 1.5.0 documentation</title>
+        <title>Tagset - GitMA 1.5.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
@@ -121,7 +121,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="#"><div class="brand">GitMA 1.5.0 documentation</div></a>
+      <a href="index.html"><div class="brand">GitMA 1.5.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -132,7 +132,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -141,7 +141,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="#">
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
   <span class="sidebar-brand-text">GitMA 1.5.0 documentation</span>
@@ -153,18 +153,18 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1 has-children"><a class="reference internal" href="intro.html">Introduction</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="class_project.html">CatmaProject</a></li>
 <li class="toctree-l2"><a class="reference internal" href="class_annotation_collection.html">AnnotationCollection</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="gitma.html">GitMA classes</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="gitma.html">GitMA classes</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="class_catma.html">Catma</a></li>
 <li class="toctree-l2"><a class="reference internal" href="class_project.html">CatmaProject</a></li>
 <li class="toctree-l2"><a class="reference internal" href="class_text.html">Text</a></li>
-<li class="toctree-l2"><a class="reference internal" href="class_tagset.html">Tagset</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Tagset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="class_annotation_collection.html">AnnotationCollection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="class_annotation.html">Annotation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="class_tag.html">Tag</a></li>
@@ -198,57 +198,70 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
-          <section id="welcome-to-gitma-s-documentation">
-<h1>Welcome to GitMA’s documentation!<a class="headerlink" href="#welcome-to-gitma-s-documentation" title="Permalink to this headline">#</a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="intro.html#architecture">Architecture</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="class_project.html">CatmaProject</a></li>
-<li class="toctree-l3"><a class="reference internal" href="class_annotation_collection.html">AnnotationCollection</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="intro.html#motivation">Motivation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intro.html#access-your-catma-profile-and-load-your-catma-annotations">Access your CATMA profile and load your CATMA annotations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intro.html#explore-and-analyze-your-catma-annotations">Explore and analyze your CATMA annotations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intro.html#evaluate-your-catma-annotations-with-iaa-metrics">Evaluate your CATMA annotations with IAA metrics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intro.html#support-your-gold-annotation-process">Support your gold annotation process</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#installation-via-pip">Installation via <code class="docutils literal notranslate"><span class="pre">pip</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#installation-via-docker">Installation via Docker</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="gitma.html">GitMA classes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="class_catma.html">Catma</a></li>
-<li class="toctree-l2"><a class="reference internal" href="class_project.html">CatmaProject</a></li>
-<li class="toctree-l2"><a class="reference internal" href="class_text.html">Text</a></li>
-<li class="toctree-l2"><a class="reference internal" href="class_tagset.html">Tagset</a></li>
-<li class="toctree-l2"><a class="reference internal" href="class_annotation_collection.html">AnnotationCollection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="class_annotation.html">Annotation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="class_tag.html">Tag</a></li>
-<li class="toctree-l2"><a class="reference internal" href="class_property.html">Property</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="cite_as.html">How to cite</a></li>
-</ul>
-</div>
-</section>
-<section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">#</a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
+          <section id="tagset">
+<h1>Tagset<a class="headerlink" href="#tagset" title="Permalink to this headline">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="gitma.Tagset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Tagset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_uuid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catma_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.Tagset" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class which represents a CATMA Tagset.</p>
+<p>Args:
+project_uuid (str): Name of a CATMA project root folder.
+catma_id (str): UUID of the tagset which corresponds with the folder name in the “tagsets” directory.
+Raises:
+FileNotFoundError: <em>description</em></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tagset.uuid">
+<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Tagset.uuid" title="Permalink to this definition">#</a></dt>
+<dd><p>The tagsets UUID.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tagset.directory">
+<span class="sig-name descname"><span class="pre">directory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Tagset.directory" title="Permalink to this definition">#</a></dt>
+<dd><p>The tagsets directory within the project folder structure.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tagset.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Tagset.name" title="Permalink to this definition">#</a></dt>
+<dd><p>The tagset’s name</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tagset.tag_list">
+<span class="sig-name descname"><span class="pre">tag_list</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#gitma.Tagset.tag_list" title="Permalink to this definition">#</a></dt>
+<dd><p>List of tags as gitma.Tag objects.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tagset.tag_dict">
+<span class="sig-name descname"><span class="pre">tag_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#gitma.Tagset.tag_dict" title="Permalink to this definition">#</a></dt>
+<dd><p>Dictionary of tags with UUIDs as keys and gitma.Tag objects as values.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.Tagset.edit_property_names">
+<span class="sig-name descname"><span class="pre">edit_property_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tagset.edit_property_names" title="Permalink to this definition">#</a></dt>
+<dd><p>Renames Property for all Tags given as tag_names.</p>
+<p>Args:
+tag_names (list): List of names of the tags that hold the property to be renamed.
+old_prop (str): Property’s name that will be changed.
+new_prop (str): The new property’s name.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.Tagset.edit_possible_property_values">
+<span class="sig-name descname"><span class="pre">edit_possible_property_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tagset.edit_possible_property_values" title="Permalink to this definition">#</a></dt>
+<dd><p>Replace an old property value with a new one. The possible property values will be listed in CATMA’s
+property annotation window.</p>
+<p>Args:
+tag_names (list): The list of tags with the given property.
+prop (str): The property that holds the given old property value.
+old_value (str): The old property value.
+new_value (str): The new property value.</p>
+</dd></dl>
+</dd></dl>
 </section>
 
         </article>
@@ -256,16 +269,26 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="intro.html">
+          <a class="next-page" href="class_annotation.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Introduction</div>
+                <div class="title">Annotation</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          
+          <a class="prev-page" href="class_text.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Text</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -286,25 +309,8 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            Contents
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">Welcome to GitMA’s documentation!</a></li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>

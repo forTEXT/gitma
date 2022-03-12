@@ -1,7 +1,9 @@
 Annotation
 -----------------------
 
-.. autoclass:: gitma.Annotation
+.. currentmodule:: gitma
+
+.. autoclass:: Annotation
    :members:
    :undoc-members:
    :show-inheritance:

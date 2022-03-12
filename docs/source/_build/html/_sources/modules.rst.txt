@@ -1,4 +1,6 @@
 GitMA
 =====
 
+.. currentmodule:: gitma
 
+.. automodule:: gitma
