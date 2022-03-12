@@ -77,7 +77,7 @@ class Tag:
             Property(
                 uuid=item,
                 name=self.properties[item]['name'],
-                possible_value=self.properties[item]["possibleValueList"]
+                possible_values=self.properties[item]["possibleValueList"]
             ) for item in self.properties
         ]
 
