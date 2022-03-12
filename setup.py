@@ -12,6 +12,7 @@ setuptools.setup(
         "jupyter",
         "networkx",
         "nltk",
+        "numpy",
         "pandas",
         "plotly",
         "pygit2",
