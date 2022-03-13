@@ -211,8 +211,11 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Catma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gitlab_access_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.Catma" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class which represents all Projects of 1 CATMA User.</p>
-<p>Args:
-gitlab_access_token (str): Token for gitlab access. Use the CATMA UI (<a class="reference external" href="https://app.catma.de/catma/">https://app.catma.de/catma/</a>)            or the CATMA Gitlab (<a class="reference external" href="https://git.catma.de/users/sign_in">https://git.catma.de/users/sign_in</a>) to get your personal access token.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gitlab_access_token</strong> (<em>str</em>) – Token for gitlab access. Use the CATMA UI (<a class="reference external" href="https://app.catma.de/catma/">https://app.catma.de/catma/</a>)            or the CATMA Gitlab (<a class="reference external" href="https://git.catma.de/users/sign_in">https://git.catma.de/users/sign_in</a>) to get your personal access token.</p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="gitma.Catma.gitlab_access_token">
 <span class="sig-name descname"><span class="pre">gitlab_access_token</span></span><a class="headerlink" href="#gitma.Catma.gitlab_access_token" title="Permalink to this definition">#</a></dt>
@@ -238,9 +241,14 @@ The dict is empty as long as no projects have been loaded.</p>
 <dt class="sig sig-object py" id="gitma.Catma.load_project_from_gitlab">
 <span class="sig-name descname"><span class="pre">load_project_from_gitlab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Catma.load_project_from_gitlab" title="Permalink to this definition">#</a></dt>
 <dd><p>Load a CATMA Project from GitLab.</p>
-<p>Args:
-project_name (str): The CATMA Project name.
-backup_directory (str): Where to store the project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project_name</strong> (<em>str</em>) – The CATMA Project name.</p></li>
+<li><p><strong>backup_directory</strong> (<em>str</em>) – Where to store the project.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.Catma.load_all_projects_from_gitlab">
@@ -252,20 +260,32 @@ of these projects.</p>
 <dt class="sig sig-object py" id="gitma.Catma.load_local_project">
 <span class="sig-name descname"><span class="pre">load_local_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">included_acs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_acs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Catma.load_local_project" title="Permalink to this definition">#</a></dt>
 <dd><p>Loads a local CATMA Project and stores it in the project_dict.</p>
-<p>Args:
-project_directory (str): Directory where the CATMA Project is located.
-project_name (str): The CATMA Project name.
-included_acs (list, optional): Annotation Collections to load. If set to None and excluded_acs is None too all annotation collections get loaded. Defaults to None.
-excluded_acs (list, optional): Annotation Collections not to load. Defaults to None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project_directory</strong> (<em>str</em>) – Directory where the CATMA Project is located.</p></li>
+<li><p><strong>project_name</strong> (<em>str</em>) – The CATMA Project name.</p></li>
+<li><p><strong>included_acs</strong> (<em>list</em><em>, </em><em>optional</em>) – Annotation Collections to load. If set to None and excluded_acs is None too all annotation collections get loaded. Defaults to None.</p></li>
+<li><p><strong>excluded_acs</strong> (<em>list</em><em>, </em><em>optional</em>) – Annotation Collections not to load. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.Catma.git_clone_command">
 <span class="sig-name descname"><span class="pre">git_clone_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#gitma.Catma.git_clone_command" title="Permalink to this definition">#</a></dt>
 <dd><p>Creates Git clone command for the given CATMA project.</p>
-<p>Args:
-project_name (str): The project’s name.</p>
-<p>Returns:
-str: Git clone command.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>project_name</strong> (<em>str</em>) – The project’s name.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Git clone command.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 </dd></dl>
 </section>

@@ -211,13 +211,19 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Annotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plain_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catma_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.Annotation" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class which represents a CATMA annotation.</p>
-<p>Args:
-directory (str): The annotations directory within the project clone.
-plain_text (str): The plain text annotated by the annotation.
-catma_project (<em>type</em>): The parent CatmaProject .
-context (int, optional): Size of the context that gets included in the data frame representation of annotation collections. Defaults to 50.</p>
-<p>Raises:
-FileNotFoundError: If the directory of the annotation’s JSON file does not exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>str</em>) – The annotations directory within the project clone.</p></li>
+<li><p><strong>plain_text</strong> (<em>str</em>) – The plain text annotated by the annotation.</p></li>
+<li><p><strong>catma_project</strong> (<em>type</em>) – The parent CatmaProject .</p></li>
+<li><p><strong>context</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of the context that gets included in the data frame representation of annotation collections. Defaults to 50.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>FileNotFoundError</strong> – If the directory of the annotation’s JSON file does not exists.</p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="gitma.Annotation.directory">
 <span class="sig-name descname"><span class="pre">directory</span></span><a class="headerlink" href="#gitma.Annotation.directory" title="Permalink to this definition">#</a></dt>
@@ -284,37 +290,57 @@ and the property values as list.</p>
 <span class="sig-name descname"><span class="pre">modify_property_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Annotation.modify_property_value" title="Permalink to this definition">#</a></dt>
 <dd><p>Modifies property values if the annotation is tagged by defined tag and property
 by rewriting the annotation’s JSON file.</p>
-<p>Args:
-tag (str): The annotations tag.
-prop (str): The tag property to be modified.
-old_value (str): The old property value.
-new_value (str): The new property value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>str</em>) – The annotations tag.</p></li>
+<li><p><strong>prop</strong> (<em>str</em>) – The tag property to be modified.</p></li>
+<li><p><strong>old_value</strong> (<em>str</em>) – The old property value.</p></li>
+<li><p><strong>new_value</strong> (<em>str</em>) – The new property value.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.Annotation.set_property_values">
 <span class="sig-name descname"><span class="pre">set_property_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Annotation.set_property_values" title="Permalink to this definition">#</a></dt>
 <dd><p>Set property value of the given tag.</p>
-<p>Args:
-tag (str): The tag’s name.
-prop (str): The property’s name.
-value (list): The list of new property values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>str</em>) – The tag’s name.</p></li>
+<li><p><strong>prop</strong> (<em>str</em>) – The property’s name.</p></li>
+<li><p><strong>value</strong> (<em>list</em>) – The list of new property values.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.Annotation.delete_property">
 <span class="sig-name descname"><span class="pre">delete_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Annotation.delete_property" title="Permalink to this definition">#</a></dt>
 <dd><p>Deletes property if the annotation is tagged by defined tag and property.</p>
-<p>Args:
-tag (str): The tag with the property to be deleted.
-prop (str): The property to be deleted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<em>str</em>) – The tag with the property to be deleted.</p></li>
+<li><p><strong>prop</strong> (<em>str</em>) – The property to be deleted.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.Annotation.copy">
 <span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_collection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_start_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_end_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Annotation.copy" title="Permalink to this definition">#</a></dt>
 <dd><p>Copies the Annotation into another Annotation Collection by creating a new Annotation UUID.</p>
-<p>Args:
-annotation_collection (str): The annotation collection UUID to get the directory the annotation should be copied to.
-include_property_value (bool, optional): Whether the Property Values should be copied too. Defaults to True.
-compare_annotation (Annotation, optional): An Annotation to compare Property Values. (For Gold Annotations). Defaults to True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>annotation_collection</strong> (<em>str</em>) – The annotation collection UUID to get the directory the annotation should be copied to.</p></li>
+<li><p><strong>include_property_value</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the Property Values should be copied too. Defaults to True.</p></li>
+<li><p><strong>compare_annotation</strong> (<a class="reference internal" href="#gitma.Annotation" title="gitma.Annotation"><em>Annotation</em></a><em>, </em><em>optional</em>) – An Annotation to compare Property Values. (For Gold Annotations). Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.Annotation.remove">

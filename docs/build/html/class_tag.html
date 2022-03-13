@@ -211,10 +211,14 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.Tag" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class which represents a CATMA Tag.</p>
-<p>Args:
-json_file_directory (str): The directory ot the tag within the project’s folder structure.</p>
-<p>Raises:
-FileNotFoundError: If the json_file_directory could not be found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_directory</strong> (<em>str</em>) – The directory ot the tag within the project’s folder structure.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>FileNotFoundError</strong> – If the json_file_directory could not be found.</p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="gitma.Tag.directory">
 <span class="sig-name descname"><span class="pre">directory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Tag.directory" title="Permalink to this definition">#</a></dt>
@@ -276,32 +280,48 @@ Is None until gitma.Tag.get_child_tags will be used.</p>
 <dt class="sig sig-object py" id="gitma.Tag.get_parent_tag">
 <span class="sig-name descname"><span class="pre">get_parent_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tagset_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tag.get_parent_tag" title="Permalink to this definition">#</a></dt>
 <dd><p>Adds the the parent tag to self.parent.</p>
-<p>Args:
-tagset_dict (dict): The tagset as a gitma.Tagse.tag_dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tagset_dict</strong> (<em>dict</em>) – The tagset as a gitma.Tagse.tag_dict.</p>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.Tag.get_child_tags">
 <span class="sig-name descname"><span class="pre">get_child_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tag.get_child_tags" title="Permalink to this definition">#</a></dt>
 <dd><p>Adds all child tags to the tag’s tag_list</p>
-<p>Args:
-tag_list (list): A list of gitma.Tag objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tag_list</strong> (<em>list</em>) – A list of gitma.Tag objects.</p>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.Tag.rename_property">
 <span class="sig-name descname"><span class="pre">rename_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tag.rename_property" title="Permalink to this definition">#</a></dt>
 <dd><p>Renames a property of the tag by overwriting it’s json.</p>
-<p>Args:
-old_prop (str): The old property’s name.
-new_prop (str): The new proeprty’s name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_prop</strong> (<em>str</em>) – The old property’s name.</p></li>
+<li><p><strong>new_prop</strong> (<em>str</em>) – The new proeprty’s name.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.Tag.rename_possible_property_value">
 <span class="sig-name descname"><span class="pre">rename_possible_property_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tag.rename_possible_property_value" title="Permalink to this definition">#</a></dt>
 <dd><p>Renames as specified property value in the list of possible property values.</p>
-<p>Args:
-prop (str): The property’s name.
-old_value (str): The property value to be replaced.
-new_value (str): The new property value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prop</strong> (<em>str</em>) – The property’s name.</p></li>
+<li><p><strong>old_value</strong> (<em>str</em>) – The property value to be replaced.</p></li>
+<li><p><strong>new_value</strong> (<em>str</em>) – The new property value.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 </dd></dl>
 </section>

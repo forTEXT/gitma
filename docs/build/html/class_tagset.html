@@ -211,11 +211,17 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Tagset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_uuid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catma_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.Tagset" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class which represents a CATMA Tagset.</p>
-<p>Args:
-project_uuid (str): Name of a CATMA project root folder.
-catma_id (str): UUID of the tagset which corresponds with the folder name in the “tagsets” directory.
-Raises:
-FileNotFoundError: <em>description</em></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project_uuid</strong> (<em>str</em>) – Name of a CATMA project root folder.</p></li>
+<li><p><strong>catma_id</strong> (<em>str</em>) – UUID of the tagset which corresponds with the folder name in the “tagsets” directory.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>FileNotFoundError</strong> – <em>description</em></p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="gitma.Tagset.uuid">
 <span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#gitma.Tagset.uuid" title="Permalink to this definition">#</a></dt>
@@ -245,21 +251,31 @@ FileNotFoundError: <em>description</em></p>
 <dt class="sig sig-object py" id="gitma.Tagset.edit_property_names">
 <span class="sig-name descname"><span class="pre">edit_property_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tagset.edit_property_names" title="Permalink to this definition">#</a></dt>
 <dd><p>Renames Property for all Tags given as tag_names.</p>
-<p>Args:
-tag_names (list): List of names of the tags that hold the property to be renamed.
-old_prop (str): Property’s name that will be changed.
-new_prop (str): The new property’s name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag_names</strong> (<em>list</em>) – List of names of the tags that hold the property to be renamed.</p></li>
+<li><p><strong>old_prop</strong> (<em>str</em>) – Property’s name that will be changed.</p></li>
+<li><p><strong>new_prop</strong> (<em>str</em>) – The new property’s name.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.Tagset.edit_possible_property_values">
 <span class="sig-name descname"><span class="pre">edit_possible_property_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tagset.edit_possible_property_values" title="Permalink to this definition">#</a></dt>
 <dd><p>Replace an old property value with a new one. The possible property values will be listed in CATMA’s
 property annotation window.</p>
-<p>Args:
-tag_names (list): The list of tags with the given property.
-prop (str): The property that holds the given old property value.
-old_value (str): The old property value.
-new_value (str): The new property value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag_names</strong> (<em>list</em>) – The list of tags with the given property.</p></li>
+<li><p><strong>prop</strong> (<em>str</em>) – The property that holds the given old property value.</p></li>
+<li><p><strong>old_value</strong> (<em>str</em>) – The old property value.</p></li>
+<li><p><strong>new_value</strong> (<em>str</em>) – The new property value.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 </dd></dl>
 </section>
