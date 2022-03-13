@@ -1,12 +1,13 @@
-# Package for CATMA GitLab Access
+# GitMA
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6330464.svg)](https://doi.org/10.5281/zenodo.6330464)
 
 ## Description
 
-Classes for working with CATMA Projects, Annotation Collections and Tagsets.
+Python Package to access and process CATMA Projects via the CATMA GitLab Backend.
 
 This package makes use of [CATMA's Git Access](https://catma.de/documentation/git-access/).
+For further infortmations see the [GitMA Documentation](https://gitma.readthedocs.io/en/latest/index.html).
 
 ## Installation
 
