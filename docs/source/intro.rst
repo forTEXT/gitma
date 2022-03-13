@@ -27,13 +27,20 @@ by the following Python classes.
 
         + Property
 
-All analytical methods in the package operate at the level of a CatmaProject or an AnnotationCollection.
-You will find documentations for these classes here:
+All analytical methods in the package operate at the level of a 
+:doc:`CatmaProject <class_project>`
+or an
+:doc:`AnnotationCollection <class_annotation_collection>`.
 
-.. toctree:: 
-
-    class_project
-    class_annotation_collection
+:doc:`AnnotationCollections <class_annotation_collection>`,
+:doc:`Tagsests <class_tagset>`,
+:doc:`Texts <class_text>` and
+:doc:`Annotations <class_annotation_collection>` with their
+:doc:`Tags <class_tag>` and
+:doc:`Properties <class_property>`
+are accessible via the
+:doc:`CatmaProject class <class_project>`
+and should not get loaded separately!
 
 ----------
 Motivation

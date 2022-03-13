@@ -3,7 +3,7 @@ GitMA classes
 =============
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    class_catma
    class_project

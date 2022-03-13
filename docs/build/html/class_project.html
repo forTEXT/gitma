@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="AnnotationCollection" href="class_annotation_collection.html" /><link rel="prev" title="Introduction" href="intro.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Text" href="class_text.html" /><link rel="prev" title="Catma" href="class_catma.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
         <title>CatmaProject - GitMA 1.5.0 documentation</title>
@@ -132,7 +132,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -154,13 +154,9 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="intro.html">Introduction</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">CatmaProject</a></li>
-<li class="toctree-l2"><a class="reference internal" href="class_annotation_collection.html">AnnotationCollection</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="gitma.html">GitMA classes</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="gitma.html">GitMA classes</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="class_catma.html">Catma</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">CatmaProject</a></li>
 <li class="toctree-l2"><a class="reference internal" href="class_text.html">Text</a></li>
@@ -198,7 +194,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -210,9 +206,10 @@
 <dt class="sig sig-object py" id="gitma.CatmaProject">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CatmaProject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">included_acs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_acs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac_filter_keyword</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_from_gitlab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gitlab_access_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.CatmaProject" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class that represents a CATMA Project including all Documents, Tagsets and Annotation Collections.
-You can eather load the Project from a local git clone or you load it directly
-from GitLab after generating a gitlab_access_token in the CATMA GUI.</p>
+<p>Class that represents a CATMA Project including all Documents, Tagsets and Annotation Collections.</p>
+<p>You can eather load the Project from a local git clone or you load it directly
+from GitLab after generating a gitlab_access_token in the CATMA GUI.
+See <a class="reference external" href="https://gitma.readthedocs.io/en/latest/class_project.html#examples">https://gitma.readthedocs.io/en/latest/class_project.html#examples</a> for details.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -483,9 +480,64 @@ and different disagreement computing see the Github site.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.CatmaProject.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.CatmaProject.update" title="Permalink to this definition">#</a></dt>
-<dd><p>Updates local git folder and reloads CatmaProject</p>
+<dd><p>Updates local git folder and reloads CatmaProject.</p>
+<p>Warning: This method can only be used if you have <a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Git</a> installed.</p>
 </dd></dl>
 </dd></dl>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">#</a></h2>
+<section id="load-a-local-catma-project">
+<h3>Load a local CATMA project<a class="headerlink" href="#load-a-local-catma-project" title="Permalink to this headline">#</a></h3>
+<p>If you load a CATMA project you already have cloned only the project’s name and its location
+are required to load the project:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">project</span> <span class="o">=</span> <span class="n">gitma</span><span class="o">.</span><span class="n">CatmaProject</span><span class="p">(</span>
+   <span class="n">project_name</span><span class="o">=</span><span class="s1">'DemoProject'</span><span class="p">,</span>
+   <span class="n">project_directory</span><span class="o">=</span><span class="s1">'../projects/'</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Adding the paramter <code class="docutils literal notranslate"><span class="pre">included_acs</span></code>, <code class="docutils literal notranslate"><span class="pre">excluded_acs</span></code> and <code class="docutils literal notranslate"><span class="pre">ac_filter_keyword</span></code>, you can select which annotation collections
+get loaded.
+Assuming you have a project with three annotation collections named ‘ac1’, ‘ac2’ and ‘AC3’ you can select the two first annotation
+collections by any of these methods:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># option 1</span>
+<span class="n">project</span> <span class="o">=</span> <span class="n">gitma</span><span class="o">.</span><span class="n">CatmaProject</span><span class="p">(</span>
+   <span class="n">project_name</span><span class="o">=</span><span class="s1">'DemoProject'</span><span class="p">,</span>
+   <span class="n">project_directory</span><span class="o">=</span><span class="s1">'../projects/'</span><span class="p">,</span>
+   <span class="n">included_acs</span><span class="o">=</span><span class="p">[</span><span class="s1">'ac1'</span><span class="p">,</span> <span class="s1">'ac2'</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># option 2</span>
+<span class="n">project</span> <span class="o">=</span> <span class="n">gitma</span><span class="o">.</span><span class="n">CatmaProject</span><span class="p">(</span>
+   <span class="n">project_name</span><span class="o">=</span><span class="s1">'DemoProject'</span><span class="p">,</span>
+   <span class="n">project_directory</span><span class="o">=</span><span class="s1">'../projects/'</span><span class="p">,</span>
+   <span class="n">excluded_acs</span><span class="o">=</span><span class="p">[</span><span class="s1">'AC3'</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># option 3</span>
+<span class="n">project</span> <span class="o">=</span> <span class="n">gitma</span><span class="o">.</span><span class="n">CatmaProject</span><span class="p">(</span>
+   <span class="n">project_name</span><span class="o">=</span><span class="s1">'DemoProject'</span><span class="p">,</span>
+   <span class="n">project_directory</span><span class="o">=</span><span class="s1">'../projects/'</span><span class="p">,</span>
+   <span class="n">ac_filter_keyword</span><span class="o">=</span><span class="s1">'ac'</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="load-a-remote-catma-project">
+<h3>Load a remote CATMA project<a class="headerlink" href="#load-a-remote-catma-project" title="Permalink to this headline">#</a></h3>
+<p>If you load your project from the CATMA gitlab three further paramters are required:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">project</span> <span class="o">=</span> <span class="n">gitma</span><span class="o">.</span><span class="n">CatmaProject</span><span class="p">(</span>
+   <span class="n">project_name</span><span class="o">=</span><span class="s1">'DemoProject'</span><span class="p">,</span>
+   <span class="n">load_from_gitlab</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+   <span class="n">gitlab_access_token</span><span class="o">=</span><span class="s1">'&lt;your_access_token&gt;'</span><span class="p">,</span>
+   <span class="n">backup_directory</span><span class="o">=</span><span class="s1">'../projects'</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>By loading a remote CATMA project it will be cloned in the <code class="docutils literal notranslate"><span class="pre">backup_directory</span></code>.
+After you loaded a CATMA project one in this directory, you have to load this project as a local project, as demonstrated above.</p>
+</section>
+</section>
 </section>
 
         </article>
@@ -493,23 +545,23 @@ and different disagreement computing see the Github site.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="class_annotation_collection.html">
+          <a class="next-page" href="class_text.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">AnnotationCollection</div>
+                <div class="title">Text</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="intro.html">
+          <a class="prev-page" href="class_catma.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Introduction</div>
+                <div class="title">Catma</div>
                 
               </div>
             </a>
@@ -533,8 +585,31 @@ and different disagreement computing see the Github site.</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">CatmaProject</a><ul>
+<li><a class="reference internal" href="#examples">Examples</a><ul>
+<li><a class="reference internal" href="#load-a-local-catma-project">Load a local CATMA project</a></li>
+<li><a class="reference internal" href="#load-a-remote-catma-project">Load a remote CATMA project</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

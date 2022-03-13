@@ -231,8 +231,10 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
 
 class CatmaProject:
     """Class that represents a CATMA Project including all Documents, Tagsets and Annotation Collections.
+    
     You can eather load the Project from a local git clone or you load it directly
     from GitLab after generating a gitlab_access_token in the CATMA GUI.
+    See https://gitma.readthedocs.io/en/latest/class_project.html#examples for details.
 
     Args:
 
@@ -441,7 +443,9 @@ class CatmaProject:
         return df
 
     def update(self) -> None:
-        """Updates local git folder and reloads CatmaProject
+        """Updates local git folder and reloads CatmaProject.
+
+        Warning: This method can only be used if you have [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) installed.
         """
         cwd = os.getcwd()
         os.chdir(f'{self.project_directory}{self.uuid}/')
