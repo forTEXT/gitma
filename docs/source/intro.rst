@@ -3,7 +3,7 @@ Introduction
 ============
 
 
-**GitMA** is a python Package to process, analyze and manipulate `CATMA <https://catma.de/>`_ annotations via the `CATMA Git Access <https://catma.de/documentation/git-access/>`_.
+**GitMA** is a Python package to process, analyze and manipulate `CATMA <https://catma.de/>`_ annotations via the `CATMA Git Access <https://catma.de/documentation/git-access/>`_.
 
 ------------
 Architecture
