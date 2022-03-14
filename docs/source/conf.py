@@ -75,6 +75,17 @@ add_module_names = False
 # a list of builtin themes.
 #
 html_theme = 'furo'
+html_logo = "catma-gitlab-combo-favicon.png"
+html_theme_options = {
+    "light_css_variables": {
+        "color-brand-primary": '#5A98A1',
+        "color-brand-content": '#093658',
+    },
+    "dark_css_variables": {
+        "color-brand-primary": '#093658',
+        "color-brand-content": '#5A98A1',
+    },
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

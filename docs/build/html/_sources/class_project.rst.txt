@@ -60,4 +60,4 @@ If you load your project from the CATMA gitlab three further paramters are requi
    )
 
 By loading a remote CATMA project it will be cloned in the ``backup_directory``.
-After you loaded a CATMA project one in this directory, you have to load this project as a local project, as demonstrated above. 
+After you loaded a CATMA project in this directory once you have to load this project as a local project, as demonstrated above. 
