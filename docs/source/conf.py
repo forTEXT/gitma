@@ -78,12 +78,12 @@ html_theme = 'furo'
 html_logo = "catma-gitlab-combo-favicon.png"
 html_theme_options = {
     "light_css_variables": {
-        "color-brand-primary": '#5A98A1',
-        "color-brand-content": '#093658',
+        "color-brand-primary": '#093658',
+        "color-brand-content": '#5A98A1',
     },
     "dark_css_variables": {
-        "color-brand-primary": '#fbb14a',
-        "color-brand-content": '#fc6d26',
+        "color-brand-primary": '#fc6d26',
+        "color-brand-content": '#fbb14a',
     },
 }
 
