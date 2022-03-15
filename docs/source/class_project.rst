@@ -71,8 +71,8 @@ You can plot coocurrent annotations::
    project.cooccurrence_network()
 
 
-You can customize your network by the following parameters
-
+You can customize your network by the following parameters::
+   
    project.cooccurrence_network(
       annotation_collections=[
          '<your_first_annotation_collection>',
