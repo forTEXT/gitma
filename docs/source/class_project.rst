@@ -72,15 +72,15 @@ You can plot coocurrent annotations::
 
 
 You can customize your network by the following parameters::
-   
+
    project.cooccurrence_network(
-      annotation_collections=[
+      annotation_collections=[      # define the included annotation collections
          '<your_first_annotation_collection>',
-         '<your_first_annotation_collection>'
+         '<your_second_annotation_collection>'
       ],
-      level='prop:characters',	   # set a property as level
+      level='prop:characters',      # set a property as level
       character_distance=50,        # define which distance is considered cooccurrent
-      included_tags=None,           # define here a list with tags included
-      excluded_tags=None,           # define here a list with tags excluded
+      included_tags=None,           # define a list with tags included
+      excluded_tags=None,           # define a list with tags excluded
       save_as_gexf='my_gephi_file'  # save your network as Gephi file
    )
