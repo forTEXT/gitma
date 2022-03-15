@@ -458,7 +458,7 @@ class CatmaProject:
         If you set `character_distance=0` only the tags of overlapping annotations will be represented
         as connected nodes.
 
-        See the [examples in the docs](https://gitma.readthedocs.io/en/latest/class_project.html#examples) for details about the usage.
+        See the [examples in the docs](https://gitma.readthedocs.io/en/latest/class_project.html#plot-a-cooccurrence-network-for-the-annotations-in-your-project) for details about the usage.
 
         Args:
             annotation_collections (Union[str, List[str]]): List with the names of the included annotation collections.\

@@ -78,7 +78,7 @@ You can customize your network by the following parameters::
          '<your_first_annotation_collection>',
          '<your_second_annotation_collection>'
       ],
-      level='prop:characters',      # set a property as level
+      level='prop:<your_property>', # set a property as level
       character_distance=50,        # define which distance is considered cooccurrent
       included_tags=None,           # define a list with tags included
       excluded_tags=None,           # define a list with tags excluded
