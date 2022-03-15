@@ -82,5 +82,5 @@ You can customize your network by the following parameters
       character_distance=50,        # define which distance is considered cooccurrent
       included_tags=None,           # define here a list with tags included
       excluded_tags=None,           # define here a list with tags excluded
-      save_as_gexf='my_gephi_file'
+      save_as_gexf='my_gephi_file'  # save your network as Gephi file
    )
