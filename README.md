@@ -1,6 +1,7 @@
 # GitMA
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6330464.svg)](https://doi.org/10.5281/zenodo.6330464)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/forTEXT/gitma/HEAD?labpath=demo_notebooks%2Fexplore_annotations.ipynb)
 
 ## Description
 
