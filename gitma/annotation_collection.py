@@ -1,6 +1,6 @@
 import json
 import os
-from typing import List
+from typing import List, Union
 from collections import Counter
 import string
 import pandas as pd
@@ -244,10 +244,12 @@ class AnnotationCollection:
     from gitma._export_annotations import to_stanford_tsv
 
     def cooccurrence_network(
-            self, character_distance: int = 100,
-            start_point: float = 0, end_point: float = 1.0,
+            self,
+            character_distance: int = 100,
             included_tags: list = None, excluded_tags: list = None,
-            plot_stats: bool = True):
+            level: str = 'tag',
+            plot_stats: bool = True,
+            save_as_gexf: Union[bool, str]= False):
         """Draws cooccurrence network graph where every tag is a node and every edge represents two cooccurent tags.
         You can by the `character_distance` parameter when two annotations are considered cooccurent.
         If you set `character_distance=0` only the tags of overlapping annotations will be represented
@@ -255,23 +257,24 @@ class AnnotationCollection:
 
         Args:
             character_distance (int, optional): In which distance annotations are considered coocurrent. Defaults to 100.
-            start_point (float, optional): Which texparts to consider. Defaults to 0.
-            end_point (float, optional): Which texparts to consider. Defaults to 1.0.
             included_tags (list, optional): List of included tags. Defaults to None.
+            level (str, optional): Select 'tag' or any property in your annotation collections with the prefix 'prop'.
             excluded_tags (list, optional): List of excluded tags. Defaults to None.
             plot_stats (bool, optional): Whether to return network stats. Defaults to True.
+            save_as_gexf (bool, optional): If given any string as filename the network gets saved as Gephi file.
         """
         from gitma._network import Network
 
         nw = Network(
-            annotation_collection=self,
+            annotation_collections=[self],
             character_distance=character_distance,
-            start_point=start_point,
-            end_point=end_point,
             included_tags=included_tags,
-            excluded_tags=excluded_tags
+            excluded_tags=excluded_tags,
+            level=level
         )
         nw.plot(plot_stats=plot_stats)
+        if save_as_gexf:
+            nw.to_gexf(filename=save_as_gexf)
 
     def to_pygamma_table(self) -> pd.DataFrame:
         """Returns the annotation collection's DataFrame in the format pygamma takes as input.

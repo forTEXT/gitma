@@ -1,27 +1,33 @@
+from os import dup
 import pandas as pd
 import networkx as nx
 import plotly.graph_objects as go
+from typing import List
 from IPython.display import display
-from gitma.annotation_collection import AnnotationCollection as ac
+from gitma.annotation_collection import AnnotationCollection, duplicate_rows
 
 
-def affiliated_annotations(ac_df: pd.DataFrame, character_distance: int = 100) -> dict:
+def affiliated_annotations(
+    ac_df: pd.DataFrame,
+    character_distance: int = 100,
+    level='tag') -> dict:
     tag_dict = {
         tag: {
-            t: 0 for t in ac_df.tag.unique()
-        } for tag in ac_df.tag.unique()
+            t: 0 for t in ac_df[level].unique()
+        } for tag in ac_df[level].unique()
     }
 
     for _, row in ac_df.iterrows():
         filtered_df = ac_df[
             (ac_df.end_point > row.start_point - character_distance) &
-            (ac_df.start_point < row.end_point + character_distance)
+            (ac_df.start_point < row.end_point + character_distance) &
+            (ac_df['document'] == row['document'])
         ].copy()
 
-        tag_count = dict(filtered_df.value_counts('tag'))
+        tag_count = dict(filtered_df[level].value_counts())
 
         for tag in tag_count:
-            tag_dict[row.tag][tag] += tag_count[tag]
+            tag_dict[row[level]][tag] += tag_count[tag]
 
     return tag_dict
 
@@ -55,8 +61,7 @@ def get_node_data(
         pos_dict: dict,
         node_size_dict: dict,
         node_factor: int,
-        node_alpha: int,
-        stats: pd.DataFrame):
+        node_alpha: int):
     nodes = list(node_size_dict)
     x_positions = [pos_dict[node][0] for node in nodes]
     y_positions = [pos_dict[node][1] for node in nodes]
@@ -87,39 +92,32 @@ def get_color_dict(annotation_df: pd.DataFrame, color_col: str, colors: list = c
 
 class Network:
     """Class to draw annotation coocurrence network graphs.
+    Args:
+            annotation_collection (ac): _description_
+            character_distance (int, optional): _description_. Defaults to 100.
+            included_tags (list, optional): _description_. Defaults to None.
+            excluded_tags (list, optional): _description_. Defaults to None.
+            level (str, optional): Whether the annotations tag or the values of the given property gets included.
+            network_layout (callable, optional): _description_. Defaults to nx.drawing.layout.kamada_kawai_layout.
     """
 
     def __init__(
             self,
-            annotation_collection: ac,
+            annotation_collections: List[AnnotationCollection],
             character_distance: int = 100,
-            start_point: float = 0,
-            end_point: int = 1.0,
             included_tags: list = None,
             excluded_tags: list = None,
+            level: str = 'tag',
             network_layout: callable = nx.drawing.layout.kamada_kawai_layout):
-        """Initiate Graph by
-
-        Args:
-            annotation_collection (ac): _description_
-            character_distance (int, optional): _description_. Defaults to 100.
-            start_point (float, optional): _description_. Defaults to 0.
-            end_point (int, optional): _description_. Defaults to 1.0.
-            included_tags (list, optional): _description_. Defaults to None.
-            excluded_tags (list, optional): _description_. Defaults to None.
-            network_layout (callable, optional): _description_. Defaults to nx.drawing.layout.kamada_kawai_layout.
-        """
-        self.title = annotation_collection.name
-        self.df = annotation_collection.df
-
-        # filter annotations by text position
-        if start_point > 0 or end_point < 1:
-            text_len = len(ac.Text)
-            min_point = start_point * text_len
-            max_point = end_point * text_len
+        self.level = level
+        
+        self.df = pd.concat(
+            [ac.df for ac in annotation_collections]
+        )
+        if level != 'tag':
+            self.df = duplicate_rows(self.df, property_col=level)
             self.df = self.df[
-                (self.df.start_point > min_point) &
-                (self.df.end_point < max_point)
+                self.df[level] != 'NOT ANNOTATED'
             ].copy()
 
         # filter annotations by tag
@@ -138,7 +136,8 @@ class Network:
             edge_generator(
                 tag_dict=affiliated_annotations(
                     ac_df=self.df,
-                    character_distance=character_distance
+                    character_distance=character_distance,
+                    level=level
                 )
             )
         )
@@ -194,7 +193,11 @@ class Network:
 
         color_dict = get_color_dict(
             annotation_df=self.df,
-            color_col='tag'
+            color_col=self.level
+        )
+
+        edge_weights_sum = sum(
+            [edge[2] for edge in self.edges]
         )
 
         fig = go.Figure()
@@ -210,7 +213,7 @@ class Network:
                     opacity=0.5,
                     mode='lines',
                     line=dict(
-                        width=0.3 * edge[2],
+                        width=1 + (50 * edge[2] / edge_weights_sum),    # normalized edge weight
                         color='grey'
                     ),
                     name='Edges',
@@ -224,8 +227,7 @@ class Network:
             pos_dict=self.pos,
             node_size_dict=node_size_dict,
             node_factor=node_factor,
-            node_alpha=node_alpha,
-            stats=stats
+            node_alpha=node_alpha
         )
         fig.add_trace(
             go.Scatter(
@@ -253,7 +255,7 @@ class Network:
                    'showgrid': False, 'visible': False},
             height=600,
             width=1000,
-            title=f'Cooccurrence Tag Network for {self.title}'
+            title=f'Cooccurrence Network:  {self.level.upper()}'
         )
 
         fig.update_xaxes(

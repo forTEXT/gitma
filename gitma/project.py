@@ -234,7 +234,7 @@ class CatmaProject:
     
     You can eather load the Project from a local git clone or you load it directly
     from GitLab after generating a gitlab_access_token in the CATMA GUI.
-    See https://gitma.readthedocs.io/en/latest/class_project.html#examples for details.
+    See the [examples in the docs](https://gitma.readthedocs.io/en/latest/class_project.html#examples) for details.
 
     Args:
 
@@ -354,7 +354,7 @@ class CatmaProject:
     from gitma._vizualize import plot_annotation_progression
 
     from gitma._vizualize import plot_interactive
-
+    
     from gitma._vizualize import compare_annotation_collections
 
     from gitma._metrics import get_iaa
@@ -441,6 +441,54 @@ class CatmaProject:
         df = pd.DataFrame(ac_stats).sort_values(
             by=['annotation collection']).reset_index(drop=True)
         return df
+
+    def cooccurrence_network(
+        self,
+        annotation_collections: Union[str, List[str]] = 'all',
+        character_distance: int = 100,
+        included_tags: list = None,
+        excluded_tags: list = None,
+        level: str = 'tag',
+        plot_stats: bool = True,
+        save_as_gexf: Union[bool, str] = False):
+        """Draws cooccurrence network graph for annotations.
+         
+        Every tag is represented by a node and every edge represents two cooccurent tags.
+        You can by the `character_distance` parameter when two annotations are considered cooccurent.
+        If you set `character_distance=0` only the tags of overlapping annotations will be represented
+        as connected nodes.
+
+        See the [examples in the docs](https://gitma.readthedocs.io/en/latest/class_project.html#examples) for details about the usage.
+
+        Args:
+            annotation_collections (Union[str, List[str]]): List with the names of the included annotation collections.\
+                If set to 'all' all annotation collections are included. Defaults to 'all'.
+            character_distance (int, optional): In which distance annotations are considered coocurrent. Defaults to 100.
+            included_tags (list, optional): List of included tags. Defaults to None.
+            excluded_tags (list, optional): List of excluded tags. Defaults to None.
+            plot_stats (bool, optional): Whether to return network stats. Defaults to True.
+            save_as_gexf (bool, optional): If given any string the network gets saved as Gephi file with the string as filename.
+        """
+        if isinstance(annotation_collections, list):
+            plot_acs = [
+                ac for ac in self.annotation_collections
+                if ac.name in annotation_collections
+            ]
+        else:
+            plot_acs = self.annotation_collections
+
+        from gitma._network import Network
+        nw = Network(
+            annotation_collections=plot_acs,
+            character_distance=character_distance,
+            included_tags=included_tags,
+            excluded_tags=excluded_tags,
+            level=level
+        )
+        nw.plot(plot_stats=plot_stats)
+        if save_as_gexf:
+            nw.to_gexf(filename=f'{save_as_gexf}.gexf')
+
 
     def update(self) -> None:
         """Updates local git folder and reloads CatmaProject.
