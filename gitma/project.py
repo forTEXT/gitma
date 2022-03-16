@@ -9,6 +9,7 @@ from gitma.text import Text
 from gitma.tagset import Tagset
 from gitma.annotation_collection import AnnotationCollection
 from gitma.annotation import Annotation
+from gitma.tag import Tag
 
 
 def load_gitlab_project(
@@ -362,15 +363,25 @@ class CatmaProject:
     from gitma._gamma import gamma_agreement
 
     def all_annotations(self) -> Generator[Annotation, None, None]:
-        """Generator that yields all annotations as gitma annotation objects.
+        """Generator that yields all annotations as gitma.annotation.Annotation objects.
 
         Yields:
-            Annotation: gitma Annotation object.
+            Annotation: gitma.annotation.Annotation
         """
         for ac in self.annotation_collections:
             for an in ac.annotations:
                 yield an
 
+    def all_tags(self) -> Generator[Tag, None, None]:
+        """Generator that yields all tags as gitma.tag.Tag objects.
+
+        Yields:
+            Tag: gitma.tag.Tag
+        """
+        for tagset in self.tagsets:
+            for tag in tagset.tags:
+                yield tag
+    
     def pygamma_table(self, annotation_collections: Union[str, list] = 'all') -> pd.DataFrame:
         """Concatenates annotation collections to pygamma table.
 
@@ -481,6 +492,34 @@ class CatmaProject:
         nw = Network(
             annotation_collections=plot_acs,
             character_distance=character_distance,
+            included_tags=included_tags,
+            excluded_tags=excluded_tags,
+            level=level
+        )
+        nw.plot(plot_stats=plot_stats)
+        if save_as_gexf:
+            nw.to_gexf(filename=f'{save_as_gexf}.gexf')
+
+    def disagreement_network(
+        self,
+        annotation_collections: Union[str, List[str]] = 'all',
+        included_tags: list = None,
+        excluded_tags: list = None,
+        level: str = 'tag',
+        plot_stats: bool = True,
+        save_as_gexf: Union[bool, str] = False):
+        if isinstance(annotation_collections, list):
+            plot_acs = [
+                ac for ac in self.annotation_collections
+                if ac.name in annotation_collections
+            ]
+        else:
+            plot_acs = self.annotation_collections
+
+        from gitma._network import Network
+        nw = Network(
+            annotation_collections=plot_acs,
+            edge_func='overlapping',
             included_tags=included_tags,
             excluded_tags=excluded_tags,
             level=level
