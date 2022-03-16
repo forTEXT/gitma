@@ -477,6 +477,7 @@ class CatmaProject:
             character_distance (int, optional): In which distance annotations are considered coocurrent. Defaults to 100.
             included_tags (list, optional): List of included tags. Defaults to None.
             excluded_tags (list, optional): List of excluded tags. Defaults to None.
+            level (str, optional): 'tag' or any property name with 'prop:' as prefix. Defaults to 'tag'.
             plot_stats (bool, optional): Whether to return network stats. Defaults to True.
             save_as_gexf (bool, optional): If given any string the network gets saved as Gephi file with the string as filename.
         """
@@ -508,6 +509,20 @@ class CatmaProject:
         level: str = 'tag',
         plot_stats: bool = True,
         save_as_gexf: Union[bool, str] = False):
+        """Draws disagreement network.
+
+        Every edge in the network represents to overlapping annotation from different annotation collections
+        and with different tags. 
+
+        Args:
+            annotation_collections (Union[str, List[str]], optional): List with the names of the included annotation collections.\
+                If set to 'all' all annotation collections are included. Defaults to 'all'.
+            included_tags (list, optional): List of included tags. Defaults to None.
+            excluded_tags (list, optional): List of excluded tags. Defaults to None.
+            level (str, optional): 'tag' or any property name with 'prop:' as prefix. Defaults to 'tag'.
+            plot_stats (bool, optional): Whether to return network stats. Defaults to True.
+            save_as_gexf (bool, optional): If given any string the network gets saved as Gephi file with the string as filename.
+        """
         if isinstance(annotation_collections, list):
             plot_acs = [
                 ac for ac in self.annotation_collections
