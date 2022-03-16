@@ -5,7 +5,7 @@ from gitma.tagset import Tagset
 
 
 def find_tag_by_name(tagset: Tagset, tag_name: str):
-    tag = [tag for tag in tagset.tag_list if tag.name == tag_name][0]
+    tag = [tag for tag in tagset.tags if tag.name == tag_name][0]
     return tag
 
 

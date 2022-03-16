@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import textwrap
+from typing import List
 from gitma.annotation import Annotation
 from gitma.annotation_collection import AnnotationCollection
 
@@ -39,7 +40,7 @@ def get_same_text(annotation_list1, annotation_list2):
     return an1, an2
 
 
-def test_max_overlap(silver_annotation: Annotation, second_annotator_annotations: list) -> Annotation:
+def test_max_overlap(silver_annotation: Annotation, second_annotator_annotations: List[Annotation]) -> Annotation:
     """Looks for best matching Annotation in second annotator annotations.
 
     Args:

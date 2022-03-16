@@ -3,6 +3,23 @@ import json
 from gitma.property import Property
 
 
+def rgbint_to_hex(rgb: int) -> str:
+    red = (rgb >> 16) & 0xFF
+    green = (rgb >> 8) & 0xFF
+    blue = (rgb >> 0) & 0xFF
+    return '0x'+'{:02x}'.format(red)+'{:02x}'.format(green)+'{:02x}'.format(blue)
+
+
+def get_tag_color(tag_dict: dict) -> str:
+    system_properties = tag_dict['systemPropertyDefinitions']
+    color_prop = [
+        system_properties[item] for item in system_properties
+        if system_properties[item]['name'] == "catma_displaycolor"
+    ][0]
+    color_rgbstr = color_prop["possibleValueList"][0]
+    return rgbint_to_hex(int(color_rgbstr))
+
+
 def get_tag_name(tag_dict):
     return tag_dict['name']
 
@@ -86,6 +103,9 @@ class Tag:
             prop.name: prop for prop in self.properties_list
         }
 
+        #: The color defined for the tag in the CATMA UI
+        self.color = get_tag_color(self.json)
+
         #: List of child tags as gitma.Tag objects.
         #: Is an empy list until gitma.Tag.get_child_tags will be used.
         self.child_tags: list = []
@@ -111,13 +131,13 @@ class Tag:
         """
         self.parent = tagset_dict[self.parent_id] if self.parent_id in tagset_dict else None
 
-    def get_child_tags(self, tag_list: list) -> None:
-        """Adds all child tags to the tag's tag_list
+    def get_child_tags(self, tags: list) -> None:
+        """Adds all child tags to the tag's tags
 
         Args:
-            tag_list (list): A list of gitma.Tag objects.
+            tags (list): A list of gitma.Tag objects.
         """
-        for tag in tag_list:
+        for tag in tags:
             if tag.parent_id == self.id:
                 self.child_tags.append(tag)
 

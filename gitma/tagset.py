@@ -33,7 +33,7 @@ class Tagset:
         self.name: str = header['name']
 
         #: List of tags as gitma.Tag objects.
-        self.tag_list: list = []
+        self.tags: list = []
 
         #: Dictionary of tags with UUIDs as keys and gitma.Tag objects as values.
         self.tag_dict: dict = {}
@@ -45,16 +45,16 @@ class Tagset:
                     # create a Tag Class object
                     new_tag = Tag(dirpath + '/' + file)
                     # and store it in a list
-                    self.tag_list.append(new_tag)
+                    self.tags.append(new_tag)
                     # and store it in a dict
                     self.tag_dict[new_tag.id] = new_tag
 
-        for tag in self.tag_list:
+        for tag in self.tags:
             tag.get_parent_tag(self.tag_dict)
-            tag.get_child_tags(self.tag_list)
+            tag.get_child_tags(self.tags)
 
     def __repr__(self) -> str:
-        return f'Tagset(Name: {self.name}, Tags: {self.tag_list})'
+        return f'Tagset(Name: {self.name}, Tags: {self.tags})'
 
     def edit_property_names(self, tag_names: list, old_prop: str, new_prop: str) -> None:
         """Renames Property for all Tags given as tag_names.
@@ -64,7 +64,7 @@ class Tagset:
             old_prop (str): Property's name that will be changed.
             new_prop (str): The new property's name.
         """
-        tags_to_edit = [tag for tag in self.tag_list if tag.name in tag_names]
+        tags_to_edit = [tag for tag in self.tags if tag.name in tag_names]
         for tag in tags_to_edit:
             tag.rename_property(old_prop=old_prop, new_prop=new_prop)
 
@@ -78,7 +78,7 @@ class Tagset:
             old_value (str): The old property value.
             new_value (str): The new property value.
         """
-        tags_to_edit = [tag for tag in self.tag_list if tag.name in tag_names]
+        tags_to_edit = [tag for tag in self.tags if tag.name in tag_names]
         for tag in tags_to_edit:
             tag.rename_possible_property_value(
                 prop=prop, old_value=old_value, new_value=new_value)
