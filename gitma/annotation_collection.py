@@ -248,7 +248,7 @@ class AnnotationCollection:
             character_distance: int = 100,
             included_tags: list = None, excluded_tags: list = None,
             level: str = 'tag',
-            plot_stats: bool = True,
+            plot_stats: bool = False,
             save_as_gexf: Union[bool, str]= False):
         """Draws cooccurrence network graph where every tag is a node and every edge represents two cooccurent tags.
         You can by the `character_distance` parameter when two annotations are considered cooccurent.
@@ -260,7 +260,7 @@ class AnnotationCollection:
             included_tags (list, optional): List of included tags. Defaults to None.
             level (str, optional): Select 'tag' or any property in your annotation collections with the prefix 'prop'.
             excluded_tags (list, optional): List of excluded tags. Defaults to None.
-            plot_stats (bool, optional): Whether to return network stats. Defaults to True.
+            plot_stats (bool, optional): Whether to return network stats. Defaults to False.
             save_as_gexf (bool, optional): If given any string as filename the network gets saved as Gephi file.
         """
         from gitma._network import Network
@@ -272,9 +272,10 @@ class AnnotationCollection:
             excluded_tags=excluded_tags,
             level=level
         )
-        nw.plot(plot_stats=plot_stats)
         if save_as_gexf:
             nw.to_gexf(filename=save_as_gexf)
+
+        return nw.plot(plot_stats=plot_stats)
 
     def to_pygamma_table(self) -> pd.DataFrame:
         """Returns the annotation collection's DataFrame in the format pygamma takes as input.

@@ -211,6 +211,7 @@ class Network:
             excluded_tags: list = None,
             level: str = 'tag',
             network_layout: callable = nx.drawing.layout.kamada_kawai_layout):
+        self.edge_func = edge_func
         self.level = level
         
         self.df = pd.concat(
@@ -279,7 +280,7 @@ class Network:
             node_size: str = 'weighted_degree',
             node_factor: float = 100.0,
             node_alpha: int = 15,
-            plot_stats: bool = True):
+            plot_stats: bool = False):
         """Plots network as plotly graph.
 
         Args:
@@ -351,6 +352,7 @@ class Network:
             )
         )
 
+        title = 'Cooccurence' if self.edge_func == 'cooccurrent' else 'Disagreement'
         fig.update_layout(
             template="simple_white",
             xaxis={'ticks': '', 'showticklabels': False,
@@ -359,7 +361,7 @@ class Network:
                    'showgrid': False, 'visible': False},
             height=600,
             width=1000,
-            title=f'Cooccurrence Network:  {self.level.upper()}'
+            title=f'{title} Network for {self.level.upper()}'
         )
 
         if len(self.edges) > 0: # prevents: ValueError: min() arg is an empty sequence
@@ -376,10 +378,10 @@ class Network:
                 ]
             )
 
-        fig.show()
-
         if plot_stats:
             display(stats.head(5))
+        
+        return fig
 
 
 if __name__ == "__main__":

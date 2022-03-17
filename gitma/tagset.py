@@ -1,5 +1,6 @@
 import json
 import os
+from typing import List, Dict
 from gitma.tag import Tag
 
 
@@ -33,10 +34,10 @@ class Tagset:
         self.name: str = header['name']
 
         #: List of tags as gitma.Tag objects.
-        self.tags: list = []
+        self.tags: List[Tag] = []
 
         #: Dictionary of tags with UUIDs as keys and gitma.Tag objects as values.
-        self.tag_dict: dict = {}
+        self.tag_dict: Dict[str, Tag] = {}
 
         # walks through tagsets directory
         for dirpath, _, filenames in os.walk(self.directory):

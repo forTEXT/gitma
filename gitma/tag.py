@@ -1,4 +1,3 @@
-import os
 import json
 from gitma.property import Property
 

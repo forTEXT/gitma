@@ -460,7 +460,7 @@ class CatmaProject:
         included_tags: list = None,
         excluded_tags: list = None,
         level: str = 'tag',
-        plot_stats: bool = True,
+        plot_stats: bool = False,
         save_as_gexf: Union[bool, str] = False):
         """Draws cooccurrence network graph for annotations.
          
@@ -478,7 +478,7 @@ class CatmaProject:
             included_tags (list, optional): List of included tags. Defaults to None.
             excluded_tags (list, optional): List of excluded tags. Defaults to None.
             level (str, optional): 'tag' or any property name with 'prop:' as prefix. Defaults to 'tag'.
-            plot_stats (bool, optional): Whether to return network stats. Defaults to True.
+            plot_stats (bool, optional): Whether to return network stats. Defaults to False.
             save_as_gexf (bool, optional): If given any string the network gets saved as Gephi file with the string as filename.
         """
         if isinstance(annotation_collections, list):
@@ -497,9 +497,11 @@ class CatmaProject:
             excluded_tags=excluded_tags,
             level=level
         )
-        nw.plot(plot_stats=plot_stats)
+
         if save_as_gexf:
             nw.to_gexf(filename=f'{save_as_gexf}.gexf')
+
+        return nw.plot(plot_stats=plot_stats)
 
     def disagreement_network(
         self,
@@ -507,11 +509,11 @@ class CatmaProject:
         included_tags: list = None,
         excluded_tags: list = None,
         level: str = 'tag',
-        plot_stats: bool = True,
+        plot_stats: bool = False,
         save_as_gexf: Union[bool, str] = False):
         """Draws disagreement network.
 
-        Every edge in the network represents to overlapping annotation from different annotation collections
+        Every edge in the network represents two overlapping annotation from different annotation collections
         and with different tags. 
 
         Args:
@@ -520,7 +522,7 @@ class CatmaProject:
             included_tags (list, optional): List of included tags. Defaults to None.
             excluded_tags (list, optional): List of excluded tags. Defaults to None.
             level (str, optional): 'tag' or any property name with 'prop:' as prefix. Defaults to 'tag'.
-            plot_stats (bool, optional): Whether to return network stats. Defaults to True.
+            plot_stats (bool, optional): Whether to return network stats. Defaults to False.
             save_as_gexf (bool, optional): If given any string the network gets saved as Gephi file with the string as filename.
         """
         if isinstance(annotation_collections, list):
@@ -539,9 +541,11 @@ class CatmaProject:
             excluded_tags=excluded_tags,
             level=level
         )
-        nw.plot(plot_stats=plot_stats)
+        
         if save_as_gexf:
             nw.to_gexf(filename=f'{save_as_gexf}.gexf')
+
+        return nw.plot(plot_stats=plot_stats)
 
 
     def update(self) -> None:
