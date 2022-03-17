@@ -55,11 +55,9 @@ extensions = [
     'sphinx.ext.napoleon',      # reads docstrings in Google format
     'sphinx.ext.autosummary',
     'sphinx.ext.autodoc',
-    # 'myst_parser',
-    "myst_nb",
+    'myst_parser',
     'sphinx.ext.githubpages'
 ]
-jupyter_execute_notebooks = "off"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
