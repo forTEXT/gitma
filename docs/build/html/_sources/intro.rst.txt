@@ -3,7 +3,8 @@ Introduction
 ============
 
 
-**GitMA** is a Python package to process, analyze and manipulate `CATMA <https://catma.de/>`_ annotations via the `CATMA Git Access <https://catma.de/documentation/git-access/>`_.
+GitMA is a Python package to process, analyze and manipulate `CATMA <https://catma.de/>`_ annotations via the `CATMA Git Access <https://catma.de/documentation/git-access/>`_.
+As a Python API for your annotation data, GitMA's main goal is the managing of large annotation projects.
 
 Like the instances of the CATMA app, the GitMA package is hierarchically structured
 by the following Python classes.
@@ -38,8 +39,6 @@ are accessible via the
 :doc:`CatmaProject class <class_project>`
 and should not get loaded separately!
 
-
-As a Python API for your annotation data, GitMA's main goal is the managing of large annotation projects.
 The most important functionalities get introduced in the demo Jupyter Notebooks:
 
 - `Load Annotation Data <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/load_project_from_gitlab.ipynb>`_
@@ -68,6 +67,8 @@ Load your CATMA project
 
 Explore your annotations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You can plot in an annotation collection with the ``plot_annotations()`` method.
+(`For customize options see the docs <https://gitma.readthedocs.io/en/latest/class_annotation_collection.html#gitma.AnnotationCollection.plot_annotations>`_):
 ::
 
     my_project.ac_dict['<your_annotation_collection>'].plot_annotations()
@@ -92,7 +93,6 @@ Process your annotation collections as Pandas DataFrame
 ====  ======================  ===============================  ===========  =============  ==================================================  ====================================================================================================================================================================================  ==================================================  =============  ===========  ===================  ==========================  ==================
 
 
-
 Cooccurrence networks
 ~~~~~~~~~~~~~~~~~~~~~
 Plots cooccurrent annotations of the same document
@@ -103,6 +103,7 @@ Plots cooccurrent annotations of the same document
         character_distance=50,
         level='prop:characters'
     )
+
 .. raw:: html
    :file: img/cooccurrence_network.html
 

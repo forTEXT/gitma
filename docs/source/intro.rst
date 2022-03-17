@@ -3,7 +3,8 @@ Introduction
 ============
 
 
-**GitMA** is a Python package to process, analyze and manipulate `CATMA <https://catma.de/>`_ annotations via the `CATMA Git Access <https://catma.de/documentation/git-access/>`_.
+GitMA is a Python package to process, analyze and manipulate `CATMA <https://catma.de/>`_ annotations via the `CATMA Git Access <https://catma.de/documentation/git-access/>`_.
+As a Python API for your annotation data, GitMA's main goal is the managing of large annotation projects.
 
 Like the instances of the CATMA app, the GitMA package is hierarchically structured
 by the following Python classes.
@@ -38,8 +39,6 @@ are accessible via the
 :doc:`CatmaProject class <class_project>`
 and should not get loaded separately!
 
-
-As a Python API for your annotation data, GitMA's main goal is the managing of large annotation projects.
 The most important functionalities get introduced in the demo Jupyter Notebooks:
 
 - `Load Annotation Data <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/load_project_from_gitlab.ipynb>`_
@@ -92,7 +91,6 @@ Process your annotation collections as Pandas DataFrame
    0  bettelweib_von_locarno  bettelweib-event_type-demo_user  DemoUser     stative_event  Weimar other Das Bettelweib von Locarno             Am Fuße der Alpen, bei Locarno im oberen Italien, befand sich ein altes, einem Marchese gehöriges Schloß                                                                              , das man jetzt, wenn man vom St. Gotthard kommt,            2320         2424  2022-03-03 14:55:18  []                          ['nan']
    1  bettelweib_von_locarno  bettelweib-event_type-demo_user  DemoUser     stative_event  sich ein altes, einem Marchese gehöriges Schloß,    das man jetzt in Schutt und Trümmern liegen sieht                                                                                                                                     : ein Schloß mit hohen und weitläufigen Zimmern, i           2426         2509  2022-03-03 14:56:02  []                          ['nan']
 ====  ======================  ===============================  ===========  =============  ==================================================  ====================================================================================================================================================================================  ==================================================  =============  ===========  ===================  ==========================  ==================
-
 
 
 Cooccurrence networks
