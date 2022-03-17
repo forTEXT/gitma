@@ -75,7 +75,7 @@ add_module_names = False
 # a list of builtin themes.
 #
 html_theme = 'furo'
-html_logo = "catma-gitlab-combo-favicon.png"
+html_logo = "img/catma-gitlab-combo-favicon.png"
 html_theme_options = {
     "light_css_variables": {
         "color-brand-primary": '#093658',

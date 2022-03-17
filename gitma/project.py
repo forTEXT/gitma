@@ -513,8 +513,8 @@ class CatmaProject:
         save_as_gexf: Union[bool, str] = False):
         """Draws disagreement network.
 
-        Every edge in the network represents two overlapping annotation from different annotation collections
-        and with different tags. 
+        Every edge in the network represents two overlapping annotations from different annotation collections
+        and with different tags or property values. 
 
         Args:
             annotation_collections (Union[str, List[str]], optional): List with the names of the included annotation collections.\
