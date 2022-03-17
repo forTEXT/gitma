@@ -68,6 +68,8 @@ Load your CATMA project
 
 Explore your annotations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You can plot in an annotation collection with the ``plot_annotations()`` method.
+(`For customize options see the docs <https://gitma.readthedocs.io/en/latest/class_annotation_collection.html#gitma.AnnotationCollection.plot_annotations>`_):
 ::
 
     my_project.ac_dict['<your_annotation_collection>'].plot_annotations()
@@ -103,6 +105,7 @@ Plots cooccurrent annotations of the same document
         character_distance=50,
         level='prop:characters'
     )
+
 .. raw:: html
    :file: img/cooccurrence_network.html
 
