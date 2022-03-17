@@ -9,6 +9,8 @@
         <title>Tag - GitMA 1.5.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
     
     
@@ -18,24 +20,24 @@
   body {
     --color-code-background: #f8f8f8;
   --color-code-foreground: black;
-  --color-brand-primary: #5A98A1;
-  --color-brand-content: #093658;
+  --color-brand-primary: #093658;
+  --color-brand-content: #5A98A1;
   
   }
   @media not print {
     body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
-  --color-brand-primary: #093658;
-  --color-brand-content: #5A98A1;
+  --color-brand-primary: #fc6d26;
+  --color-brand-content: #fbb14a;
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
-  --color-brand-primary: #093658;
-  --color-brand-content: #5A98A1;
+  --color-brand-primary: #fc6d26;
+  --color-brand-content: #fbb14a;
   
       }
     }
@@ -259,6 +261,11 @@
 <dd><p>Dictionary with the names of properties as keys and gitma.Propety objects as values.</p>
 </dd></dl>
 <dl class="py attribute">
+<dt class="sig sig-object py" id="gitma.Tag.color">
+<span class="sig-name descname"><span class="pre">color</span></span><a class="headerlink" href="#gitma.Tag.color" title="Permalink to this definition">#</a></dt>
+<dd><p>The color defined for the tag in the CATMA UI</p>
+</dd></dl>
+<dl class="py attribute">
 <dt class="sig sig-object py" id="gitma.Tag.child_tags">
 <span class="sig-name descname"><span class="pre">child_tags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#gitma.Tag.child_tags" title="Permalink to this definition">#</a></dt>
 <dd><p>List of child tags as gitma.Tag objects.
@@ -292,11 +299,11 @@ Is None until gitma.Tag.get_child_tags will be used.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.Tag.get_child_tags">
-<span class="sig-name descname"><span class="pre">get_child_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tag.get_child_tags" title="Permalink to this definition">#</a></dt>
-<dd><p>Adds all child tags to the tag’s tag_list</p>
+<span class="sig-name descname"><span class="pre">get_child_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tag.get_child_tags" title="Permalink to this definition">#</a></dt>
+<dd><p>Adds all child tags to the tag’s tags</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>tag_list</strong> (<em>list</em>) – A list of gitma.Tag objects.</p>
+<dd class="field-odd"><p><strong>tags</strong> (<em>list</em>) – A list of gitma.Tag objects.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -386,5 +393,10 @@ Is None until gitma.Tag.get_child_tags will be used.</p>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     </body>
 </html>

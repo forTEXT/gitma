@@ -60,4 +60,27 @@ If you load your project from the CATMA gitlab three further paramters are requi
    )
 
 By loading a remote CATMA project it will be cloned in the ``backup_directory``.
-After you loaded a CATMA project in this directory once you have to load this project as a local project, as demonstrated above. 
+After you loaded a CATMA project in this directory once you have to load this project as a local project, as demonstrated above.
+
+
+Plot a cooccurrence network for the annotations in your project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can plot coocurrent annotations::
+   
+   project.cooccurrence_network()
+
+
+You can customize your network by the following parameters::
+
+   project.cooccurrence_network(
+      annotation_collections=[      # define the included annotation collections
+         '<your_first_annotation_collection>',
+         '<your_second_annotation_collection>'
+      ],
+      level='prop:<your_property>', # set a property as level
+      character_distance=50,        # define which distance is considered cooccurrent
+      included_tags=None,           # define a list with tags included
+      excluded_tags=None,           # define a list with tags excluded
+      save_as_gexf='my_gephi_file'  # save your network as Gephi file
+   )

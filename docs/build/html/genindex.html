@@ -7,6 +7,8 @@
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/><title>Index - GitMA 1.5.0 documentation</title>
 <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
     
     
@@ -16,24 +18,24 @@
   body {
     --color-code-background: #f8f8f8;
   --color-code-foreground: black;
-  --color-brand-primary: #5A98A1;
-  --color-brand-content: #093658;
+  --color-brand-primary: #093658;
+  --color-brand-content: #5A98A1;
   
   }
   @media not print {
     body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
-  --color-brand-primary: #093658;
-  --color-brand-content: #5A98A1;
+  --color-brand-primary: #fc6d26;
+  --color-brand-content: #fbb14a;
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
-  --color-brand-primary: #093658;
-  --color-brand-content: #5A98A1;
+  --color-brand-primary: #fc6d26;
+  --color-brand-content: #fbb14a;
   
       }
     }
@@ -219,6 +221,8 @@
 </li>
         <li><a href="class_project.html#gitma.CatmaProject.all_annotations">all_annotations() (CatmaProject method)</a>
 </li>
+        <li><a href="class_project.html#gitma.CatmaProject.all_tags">all_tags() (CatmaProject method)</a>
+</li>
         <li><a href="class_annotation_collection.html#gitma.AnnotationCollection.annotate_properties">annotate_properties() (AnnotationCollection method)</a>
 </li>
         <li><a href="class_annotation.html#gitma.Annotation">Annotation (class in gitma)</a>
@@ -251,12 +255,18 @@
 </li>
         <li><a href="class_tag.html#gitma.Tag.child_tags">child_tags (Tag attribute)</a>
 </li>
+        <li><a href="class_tag.html#gitma.Tag.color">color (Tag attribute)</a>
+</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="class_project.html#gitma.CatmaProject.compare_annotation_collections">compare_annotation_collections() (CatmaProject method)</a>
 </li>
         <li><a href="class_annotation_collection.html#gitma.AnnotationCollection.cooccurrence_network">cooccurrence_network() (AnnotationCollection method)</a>
+
+        <ul>
+          <li><a href="class_project.html#gitma.CatmaProject.cooccurrence_network">(CatmaProject method)</a>
 </li>
+        </ul></li>
         <li><a href="class_annotation.html#gitma.Annotation.copy">copy() (Annotation method)</a>
 </li>
         <li><a href="class_project.html#gitma.CatmaProject.create_gold_annotations">create_gold_annotations() (CatmaProject method)</a>
@@ -277,10 +287,10 @@
 </li>
         <li><a href="class_annotation.html#gitma.Annotation.delete_property">delete_property() (Annotation method)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="class_annotation_collection.html#gitma.AnnotationCollection.df">df (AnnotationCollection attribute)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="class_annotation.html#gitma.Annotation.directory">directory (Annotation attribute)</a>
 
         <ul>
@@ -289,6 +299,8 @@
           <li><a href="class_tagset.html#gitma.Tagset.directory">(Tagset attribute)</a>
 </li>
         </ul></li>
+        <li><a href="class_project.html#gitma.CatmaProject.disagreement_network">disagreement_network() (CatmaProject method)</a>
+</li>
         <li><a href="class_annotation_collection.html#gitma.AnnotationCollection.duplicate_by_prop">duplicate_by_prop() (AnnotationCollection method)</a>
 </li>
     </ul></td>
@@ -497,12 +509,14 @@
 </li>
         <li><a href="class_tagset.html#gitma.Tagset.tag_dict">tag_dict (Tagset attribute)</a>
 </li>
-        <li><a href="class_tagset.html#gitma.Tagset.tag_list">tag_list (Tagset attribute)</a>
-</li>
         <li><a href="class_annotation_collection.html#gitma.AnnotationCollection.tag_stats">tag_stats() (AnnotationCollection method)</a>
 </li>
         <li><a href="class_annotation_collection.html#gitma.AnnotationCollection.tags">tags (AnnotationCollection attribute)</a>
+
+        <ul>
+          <li><a href="class_tagset.html#gitma.Tagset.tags">(Tagset attribute)</a>
 </li>
+        </ul></li>
         <li><a href="class_tagset.html#gitma.Tagset">Tagset (class in gitma)</a>
 </li>
         <li><a href="class_project.html#gitma.CatmaProject.tagset_dict">tagset_dict (CatmaProject attribute)</a>
@@ -610,5 +624,10 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     </body>
 </html>

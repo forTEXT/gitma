@@ -48,14 +48,22 @@ Motivation
 
 As a Python API for your annotation data, GitMA's main goal is the managing of large annotation projects.
 The most important functionalities get introduced in the demo Jupyter Notebooks.
+The can find them here:
+
+- `Load Annotation Data <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/load_project_from_gitlab.ipynb>`_
+- `Explore Annotation <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/explore_annotations.ipynb>`_
+- `Inter Annotator Agreement <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/inter_annotator_agreement.ipynb>`_
+- `Gold Annotation Support <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/gold_annotation_support.ipynb>`_
 
 ---------------------------------------------------------
-Access your CATMA profile and load your CATMA annotations
+Examples
 ---------------------------------------------------------
 
-`In the first Notebook <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/load_project_from_gitlab.ipynb>`_ you can use **GitMA** to access your CATMA account via an access token.
+Some examples used in the demo notebooks follow here:
 
-**Load your CATMA project with the** ``CatmaProject`` **class**::
+Load your CATMA project
+~~~~~~~~~~~~~~~~~~~~~~~
+::
 
     from gitma import CatmaProject
 
@@ -66,21 +74,20 @@ Access your CATMA profile and load your CATMA annotations
     )
 
 
-------------------------------------------
-Explore and analyze your CATMA annotations
-------------------------------------------
-
-`The second Notebook <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/inter_annotator_agreement.ipynb>`_ provides methods to explore your annotations with interactive vizualisations and analyze your annotation data with pandas.
-
-**Explore all annotation collections in your CATMA project with the** ``plot_interactive()`` **method**::
-
-    my_project.plot_interactive()
-
-**Explore all annotations in a selected annotation collection using the** ``ac_dict`` **and the** ``plot_annotations()`` **method**::
+Explore your annotations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
 
     my_project.ac_dict['<your_annotation_collection>'].plot_annotations()
 
-**Get your annotation collections as Pandas DataFrame**::
+.. raw:: html
+   :file: img/plot_annotations.html
+
+
+
+Process your annotation collections as Pandas DataFrame
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
 
     my_project.ac_dict['<your_annotation_collection>'].df
 
@@ -90,38 +97,37 @@ Explore and analyze your CATMA annotations
 ====  ======================  ===============================  ===========  =============  ==================================================  ====================================================================================================================================================================================  ==================================================  =============  ===========  ===================  ==========================  ==================
    0  bettelweib_von_locarno  bettelweib-event_type-demo_user  DemoUser     stative_event  Weimar other Das Bettelweib von Locarno             Am Fuße der Alpen, bei Locarno im oberen Italien, befand sich ein altes, einem Marchese gehöriges Schloß                                                                              , das man jetzt, wenn man vom St. Gotthard kommt,            2320         2424  2022-03-03 14:55:18  []                          ['nan']
    1  bettelweib_von_locarno  bettelweib-event_type-demo_user  DemoUser     stative_event  sich ein altes, einem Marchese gehöriges Schloß,    das man jetzt in Schutt und Trümmern liegen sieht                                                                                                                                     : ein Schloß mit hohen und weitläufigen Zimmern, i           2426         2509  2022-03-03 14:56:02  []                          ['nan']
-   2  bettelweib_von_locarno  bettelweib-event_type-demo_user  DemoUser     non_event      s, einem Marchese gehöriges Schloß, das man jetzt,  wenn man vom St. Gotthard kommt                                                                                                                                                       , in Schutt und Trümmern liegen sieht: ein Schloß            2440         2472  2022-03-03 14:56:14  []                          ['nan']
-   3  bettelweib_von_locarno  bettelweib-event_type-demo_user  DemoUser     process_event  thard kommt, in Schutt und Trümmern liegen sieht:   ein Schloß mit hohen und weitläufigen Zimmern, in deren einem einst, auf Stroh, das man ihr unterschüttete, eine alte kranke Frau von der Hausfrau aus Mitleiden gebettet worden war  . Der Marchese, der, bei der Rückkehr von der Jagd           2511         2741  2022-03-03 14:57:07  ['bettelweib', 'marquise']  ['yes']
-   4  bettelweib_von_locarno  bettelweib-event_type-demo_user  DemoUser     process_event  as man ihr unterschüttete, eine alte kranke Frau,   die sich bettelnd vor der Tür eingefunden hatte                                                                                                                                       , von der Hausfrau aus Mitleiden gebettet worden w           2642         2689  2022-03-03 14:59:17  ['bettelweib']              ['yes']
 ====  ======================  ===============================  ===========  =============  ==================================================  ====================================================================================================================================================================================  ==================================================  =============  ===========  ===================  ==========================  ==================
 
 
-------------------------------------------------
-Evaluate your CATMA annotations with IAA metrics
-------------------------------------------------
 
-`The third Notebook <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/explore_annotations.ipynb>`_ shows how to cumpute the Inter Annotator Agreemment (IAA) for your Annotations::
-    
-    my_project.get_iaa(
-        ac1_name='<your_first_annotation_collection>',
-        ac2_name='<your_second_annotation_collection>'
+Cooccurrence networks
+~~~~~~~~~~~~~~~~~~~~~
+Plots cooccurrent annotations of the same document
+(`Docs <https://gitma.readthedocs.io/en/latest/class_annotation_collection.html#gitma.AnnotationCollection.cooccurrence_network>`_):
+::
+
+    project.ac_dict['<your_first_annotation_collection>'].cooccurrence_network(
+        character_distance=50,
+        level='prop:characters'
+    )
+.. raw:: html
+   :file: img/cooccurrence_network.html
+
+
+Disagreement networks
+~~~~~~~~~~~~~~~~~~~~~
+Plots overlapping annotations of the same document by different annotation collections
+(`Docs <https://gitma.readthedocs.io/en/latest/class_project.html#gitma.CatmaProject.disagreement_network>`_):
+::
+
+    project.disagreement_network(
+        annotation_collections=[
+            '<your_first_annotation_collection>',
+            '<your_second_annotation_collection>',
+        ],
+        level='prop:characters'
     )
 
-
-
-------------------------------------
-Support your gold annotation process
-------------------------------------
-
-With `the fourth Notebook <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/gold_annotation_support.ipynb>`_ you learn how to automate parts of your gold annotation process::
-
-    my_project.create_gold_annotations(
-        ac_1_name='<your_first_annotation_collection>',               
-        ac_2_name='<your_second_annotation_collection>',               
-        gold_ac_name='<your_gold_annotation_collection>',
-        excluded_tags=[],
-        min_overlap=0.95,               
-        same_tag=True,
-        property_values='matching',     
-        push_to_gitlab=False            
-    )
+.. raw:: html
+   :file: img/disagreement_network.html

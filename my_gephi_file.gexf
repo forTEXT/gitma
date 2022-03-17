@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2022-03-17">
+    <creator>NetworkX 2.7.1</creator>
+  </meta>
+  <graph defaultedgetype="undirected" mode="static" name="">
+    <nodes>
+      <node id="marquis" label="marquis" />
+      <node id="bettelweib" label="bettelweib" />
+      <node id="marquise" label="marquise" />
+      <node id="ritter" label="ritter" />
+      <node id="geist" label="geist" />
+      <node id="diener" label="diener" />
+      <node id="kaeufer" label="kaeufer" />
+      <node id="bediente" label="bediente" />
+    </nodes>
+    <edges>
+      <edge source="marquis" target="bettelweib" id="0" weight="13" />
+      <edge source="marquis" target="marquise" id="1" weight="48" />
+      <edge source="marquis" target="ritter" id="2" weight="35" />
+      <edge source="marquis" target="geist" id="3" weight="15" />
+      <edge source="marquis" target="diener" id="4" weight="2" />
+      <edge source="marquis" target="kaeufer" id="5" weight="2" />
+      <edge source="marquis" target="bediente" id="6" weight="20" />
+      <edge source="bettelweib" target="marquise" id="7" weight="3" />
+      <edge source="bettelweib" target="ritter" id="8" weight="2" />
+      <edge source="marquise" target="ritter" id="9" weight="11" />
+      <edge source="marquise" target="geist" id="10" weight="8" />
+      <edge source="marquise" target="diener" id="11" weight="1" />
+      <edge source="marquise" target="kaeufer" id="12" weight="1" />
+      <edge source="marquise" target="bediente" id="13" weight="14" />
+      <edge source="ritter" target="geist" id="14" weight="2" />
+      <edge source="ritter" target="diener" id="15" weight="4" />
+      <edge source="ritter" target="kaeufer" id="16" weight="3" />
+      <edge source="geist" target="bediente" id="17" weight="5" />
+      <edge source="diener" target="kaeufer" id="18" weight="1" />
+      <edge source="kaeufer" target="bediente" id="19" weight="1" />
+    </edges>
+  </graph>
+</gexf>

@@ -9,6 +9,8 @@
         <title>CatmaProject - GitMA 1.5.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
     
     
@@ -18,24 +20,24 @@
   body {
     --color-code-background: #f8f8f8;
   --color-code-foreground: black;
-  --color-brand-primary: #5A98A1;
-  --color-brand-content: #093658;
+  --color-brand-primary: #093658;
+  --color-brand-content: #5A98A1;
   
   }
   @media not print {
     body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
-  --color-brand-primary: #093658;
-  --color-brand-content: #5A98A1;
+  --color-brand-primary: #fc6d26;
+  --color-brand-content: #fbb14a;
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
-  --color-brand-primary: #093658;
-  --color-brand-content: #5A98A1;
+  --color-brand-primary: #fc6d26;
+  --color-brand-content: #fbb14a;
   
       }
     }
@@ -217,7 +219,7 @@
 <p>Class that represents a CATMA Project including all Documents, Tagsets and Annotation Collections.</p>
 <p>You can eather load the Project from a local git clone or you load it directly
 from GitLab after generating a gitlab_access_token in the CATMA GUI.
-See <a class="reference external" href="https://gitma.readthedocs.io/en/latest/class_project.html#examples">https://gitma.readthedocs.io/en/latest/class_project.html#examples</a> for details.</p>
+See the <a class="reference external" href="https://gitma.readthedocs.io/en/latest/class_project.html#examples">examples in the docs</a> for details.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -423,10 +425,20 @@ and different disagreement computing see the Github site.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.CatmaProject.all_annotations">
 <span class="sig-name descname"><span class="pre">all_annotations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="class_annotation.html#gitma.Annotation" title="gitma.annotation.Annotation"><span class="pre">gitma.annotation.Annotation</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gitma.CatmaProject.all_annotations" title="Permalink to this definition">#</a></dt>
-<dd><p>Generator that yields all annotations as gitma annotation objects.</p>
+<dd><p>Generator that yields all annotations as gitma.annotation.Annotation objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Yields</dt>
-<dd class="field-odd"><p><em>Annotation</em> – gitma Annotation object.</p>
+<dd class="field-odd"><p><em>Annotation</em> – gitma.annotation.Annotation</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.all_tags">
+<span class="sig-name descname"><span class="pre">all_tags</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="class_tag.html#gitma.Tag" title="gitma.tag.Tag"><span class="pre">gitma.tag.Tag</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gitma.CatmaProject.all_tags" title="Permalink to this definition">#</a></dt>
+<dd><p>Generator that yields all tags as gitma.tag.Tag objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields</dt>
+<dd class="field-odd"><p><em>Tag</em> – gitma.tag.Tag</p>
 </dd>
 </dl>
 </dd></dl>
@@ -482,6 +494,48 @@ and different disagreement computing see the Github site.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.cooccurrence_network">
+<span class="sig-name descname"><span class="pre">cooccurrence_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_collections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">character_distance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">included_tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tag'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_stats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as_gexf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.CatmaProject.cooccurrence_network" title="Permalink to this definition">#</a></dt>
+<dd><p>Draws cooccurrence network graph for annotations.</p>
+<p>Every tag is represented by a node and every edge represents two cooccurent tags.
+You can by the <code class="docutils literal notranslate"><span class="pre">character_distance</span></code> parameter when two annotations are considered cooccurent.
+If you set <code class="docutils literal notranslate"><span class="pre">character_distance=0</span></code> only the tags of overlapping annotations will be represented
+as connected nodes.</p>
+<p>See the <a class="reference external" href="https://gitma.readthedocs.io/en/latest/class_project.html#plot-a-cooccurrence-network-for-the-annotations-in-your-project">examples in the docs</a> for details about the usage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>annotation_collections</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – List with the names of the included annotation collections.                If set to ‘all’ all annotation collections are included. Defaults to ‘all’.</p></li>
+<li><p><strong>character_distance</strong> (<em>int</em><em>, </em><em>optional</em>) – In which distance annotations are considered coocurrent. Defaults to 100.</p></li>
+<li><p><strong>included_tags</strong> (<em>list</em><em>, </em><em>optional</em>) – List of included tags. Defaults to None.</p></li>
+<li><p><strong>excluded_tags</strong> (<em>list</em><em>, </em><em>optional</em>) – List of excluded tags. Defaults to None.</p></li>
+<li><p><strong>level</strong> (<em>str</em><em>, </em><em>optional</em>) – ‘tag’ or any property name with ‘prop:’ as prefix. Defaults to ‘tag’.</p></li>
+<li><p><strong>plot_stats</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return network stats. Defaults to False.</p></li>
+<li><p><strong>save_as_gexf</strong> (<em>bool</em><em>, </em><em>optional</em>) – If given any string the network gets saved as Gephi file with the string as filename.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gitma.CatmaProject.disagreement_network">
+<span class="sig-name descname"><span class="pre">disagreement_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_collections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">included_tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tag'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_stats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as_gexf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.CatmaProject.disagreement_network" title="Permalink to this definition">#</a></dt>
+<dd><p>Draws disagreement network.</p>
+<p>Every edge in the network represents two overlapping annotation from different annotation collections
+and with different tags.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>annotation_collections</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – List with the names of the included annotation collections.                If set to ‘all’ all annotation collections are included. Defaults to ‘all’.</p></li>
+<li><p><strong>included_tags</strong> (<em>list</em><em>, </em><em>optional</em>) – List of included tags. Defaults to None.</p></li>
+<li><p><strong>excluded_tags</strong> (<em>list</em><em>, </em><em>optional</em>) – List of excluded tags. Defaults to None.</p></li>
+<li><p><strong>level</strong> (<em>str</em><em>, </em><em>optional</em>) – ‘tag’ or any property name with ‘prop:’ as prefix. Defaults to ‘tag’.</p></li>
+<li><p><strong>plot_stats</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return network stats. Defaults to False.</p></li>
+<li><p><strong>save_as_gexf</strong> (<em>bool</em><em>, </em><em>optional</em>) – If given any string the network gets saved as Gephi file with the string as filename.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -544,6 +598,27 @@ collections by any of these methods:</p>
 </div>
 <p>By loading a remote CATMA project it will be cloned in the <code class="docutils literal notranslate"><span class="pre">backup_directory</span></code>.
 After you loaded a CATMA project in this directory once you have to load this project as a local project, as demonstrated above.</p>
+</section>
+<section id="plot-a-cooccurrence-network-for-the-annotations-in-your-project">
+<h3>Plot a cooccurrence network for the annotations in your project<a class="headerlink" href="#plot-a-cooccurrence-network-for-the-annotations-in-your-project" title="Permalink to this headline">#</a></h3>
+<p>You can plot coocurrent annotations:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">project</span><span class="o">.</span><span class="n">cooccurrence_network</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can customize your network by the following parameters:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">project</span><span class="o">.</span><span class="n">cooccurrence_network</span><span class="p">(</span>
+   <span class="n">annotation_collections</span><span class="o">=</span><span class="p">[</span>      <span class="c1"># define the included annotation collections</span>
+      <span class="s1">'&lt;your_first_annotation_collection&gt;'</span><span class="p">,</span>
+      <span class="s1">'&lt;your_second_annotation_collection&gt;'</span>
+   <span class="p">],</span>
+   <span class="n">level</span><span class="o">=</span><span class="s1">'prop:&lt;your_property&gt;'</span><span class="p">,</span> <span class="c1"># set a property as level</span>
+   <span class="n">character_distance</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>        <span class="c1"># define which distance is considered cooccurrent</span>
+   <span class="n">included_tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>           <span class="c1"># define a list with tags included</span>
+   <span class="n">excluded_tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>           <span class="c1"># define a list with tags excluded</span>
+   <span class="n">save_as_gexf</span><span class="o">=</span><span class="s1">'my_gephi_file'</span>  <span class="c1"># save your network as Gephi file</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 </section>
 </section>
 </section>
@@ -609,6 +684,7 @@ After you loaded a CATMA project in this directory once you have to load this pr
 <li><a class="reference internal" href="#examples">Examples</a><ul>
 <li><a class="reference internal" href="#load-a-local-catma-project">Load a local CATMA project</a></li>
 <li><a class="reference internal" href="#load-a-remote-catma-project">Load a remote CATMA project</a></li>
+<li><a class="reference internal" href="#plot-a-cooccurrence-network-for-the-annotations-in-your-project">Plot a cooccurrence network for the annotations in your project</a></li>
 </ul>
 </li>
 </ul>
@@ -627,5 +703,10 @@ After you loaded a CATMA project in this directory once you have to load this pr
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     </body>
 </html>
