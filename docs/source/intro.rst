@@ -5,10 +5,6 @@ Introduction
 
 **GitMA** is a Python package to process, analyze and manipulate `CATMA <https://catma.de/>`_ annotations via the `CATMA Git Access <https://catma.de/documentation/git-access/>`_.
 
-------------
-Architecture
-------------
-
 Like the instances of the CATMA app, the GitMA package is hierarchically structured
 by the following Python classes.
 
@@ -42,13 +38,9 @@ are accessible via the
 :doc:`CatmaProject class <class_project>`
 and should not get loaded separately!
 
-----------
-Motivation
-----------
 
 As a Python API for your annotation data, GitMA's main goal is the managing of large annotation projects.
-The most important functionalities get introduced in the demo Jupyter Notebooks.
-The can find them here:
+The most important functionalities get introduced in the demo Jupyter Notebooks:
 
 - `Load Annotation Data <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/load_project_from_gitlab.ipynb>`_
 - `Explore Annotation <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/explore_annotations.ipynb>`_
