@@ -40,9 +40,15 @@ CATMA_AB9A223C-C6F7-495A-817F-ED57E1B69A70  bettelweib-event_type  das man jetzt
 CATMA_2A4C8A4E-2842-44D2-B2E2-F9A6AE2B8063  bettelweib-event_type  wenn man  vom St. Gotthard kommt                                          non_event      characters   
 ==========================================  =====================  ========================================================================  =============  ===========  ================
 
+**Step 2:** Add property values:
+
 For every property per annotation a table row will be created.
 In these tables only the **values** column is editable.
 If you want to add multiple values for a property seperate the values by a comma.
+Finish your annotations by saving the csv file.
+
+
+**Step 3:** Load the added property values in your CATMA project
 
 After you finished the property annotations within the csv file you can load the annotations to the CATMA gitlab.
 ::
