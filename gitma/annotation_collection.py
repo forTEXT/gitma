@@ -412,13 +412,13 @@ class AnnotationCollection:
         The added property values can be imported with the `read_annotation_csv`.
 
         Args:
-            tags (Union[str, list], optional): List of tag names to be included.
-                If set to 'all' all annotations will be written into the csv file.
+            tags (Union[str, list], optional): List of tag names to be included.\
+                If set to 'all' all annotations will be written into the csv file.\
                 Defaults to 'all'.
-            property (str, optional): The property to be included.
-                If set to 'all' all annotations will be written into the csv file.
+            property (str, optional): The property to be included.\
+                If set to 'all' all annotations will be written into the csv file.\
                 Defaults to 'all'.
-            only_missing_prop_values (bool, optional): Whether only empy properties should be included.
+            only_missing_prop_values (bool, optional): Whether only empy properties should be included.\
                 Defaults to False.
             filename (str, optional): The csv file name. Defaults to 'PropertyAnnotationTable'.
         """
@@ -475,7 +475,7 @@ class AnnotationCollection:
         The annotation json files.
 
         Args:
-            filename (str, optional): The annotation csv file's name/directory.
+            filename (str, optional): The annotation csv file's name/directory.\
                 Defaults to 'PropertyAnnotationTable.csv'.
             push_to_gitlab (bool, optional): Whether to push the annotations to gitlab. Defaults to False.
         """

@@ -1,5 +1,5 @@
 AnnotationCollection
------------------------------------
+=====================
 
 .. autoclass:: gitma.AnnotationCollection
    :members:
