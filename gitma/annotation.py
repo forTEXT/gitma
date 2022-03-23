@@ -155,14 +155,14 @@ class Annotation:
         try:
             with open(directory, 'r', encoding='utf-8') as ip:  # load annotation json file as dict
                 #: The annotation's data as dictionary.
-                self.data = json.load(ip)
+                self.data: dict = json.load(ip)
         except FileNotFoundError:
             raise FileNotFoundError(
                 f'The Annotation in this directory could not be found:\n{self.directory}\n\
                     --> Make sure the CATMA Project clone did work properly.')
 
         #: The annotation's uuid.
-        self.uuid = get_uuid(self.data)
+        self.uuid: str = get_uuid(self.data)
         
         #: The date the annotation has been created.
         self.date: str = get_date(self.data)
