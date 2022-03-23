@@ -10,15 +10,15 @@ AnnotationCollection
 Examples
 --------
 
-Add property values via CSV Table
+Add property values via csv table
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``AnnotationCollection`` class can be used to add property values to existing annotations using a csv table.
 
-**Step 1:** Create a csv table to annotate the existing annotations/properties:
+**Step 1:** Load your project and create a csv table to annotate the existing annotations/properties:
 ::
 
-   imort gitma
+   import gitma
 
    project = gitma.CatmaProject(
       project_name='<your_project_name>',
@@ -43,7 +43,10 @@ CATMA_2A4C8A4E-2842-44D2-B2E2-F9A6AE2B8063  bettelweib-event_type  wenn man  vom
 **Step 2:** Add property values:
 
 For every property per annotation a table row will be created.
-In these tables only the **values** column is editable.
+
+.. caution::
+   In these tables only the values column is editable!
+
 If you want to add multiple values for a property seperate the values by a comma.
 Finish your annotations by saving the csv file.
 
@@ -58,11 +61,16 @@ After you finished the property annotations within the csv file you can load the
       push_to_gitlab=True                       # default is False
    )
 
-**Warning: The push to gitlab will only work if you have git installed and your CATMA access token is stored in the git credential manager.**
+
+.. caution::
+   The push to gitlab will only work if you have git installed and your CATMA access token is stored in the git credential manager.
+
+**Step 4 (optional):** Import your annotation to CATMA
+
 If ``push_to_gitlab=False`` you can push the changed annotations to gitlab on your own.
 To do so the ``read_annotation_csv`` method will print the annotation collection's directory.
-Using the git bash or another terminal, go to the annotation collection's directory and run::
+Use the git bash or another terminal, go to the annotation collection's directory and run::
    
    git add .
    git commit -m 'new property annotations'
-   git push origin HEAD:master 
+   git push origin HEAD:master
