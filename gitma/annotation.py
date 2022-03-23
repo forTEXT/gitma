@@ -6,6 +6,13 @@ from datetime import datetime
 from gitma.selector import Selector
 
 
+def get_uuid(annotation_dict: dict) -> str:
+    full_id = annotation_dict['id']
+    filename = full_id.split('/')[-1]
+    uuid = filename.replace('.json', '')
+    return uuid
+
+
 def get_start_point(annotation_dict: dict) -> int:
     return annotation_dict['target']['items'][0]['selector']['start']
 
@@ -154,6 +161,9 @@ class Annotation:
                 f'The Annotation in this directory could not be found:\n{self.directory}\n\
                     --> Make sure the CATMA Project clone did work properly.')
 
+        #: The annotation's uuid.
+        self.uuid = get_uuid(self.data)
+        
         #: The date the annotation has been created.
         self.date: str = get_date(self.data)
 

@@ -1,9 +1,10 @@
 import json
 import os
-from typing import List, Union
-from collections import Counter
 import string
+import subprocess
 import pandas as pd
+from typing import List, Union, Dict
+from collections import Counter
 from gitma.text import Text
 from gitma.annotation import Annotation
 from gitma.tag import Tag
@@ -155,6 +156,12 @@ class AnnotationCollection:
         #: The annotation collection's UUID.
         self.uuid: str = ac_uuid
 
+        #: The parent project's name
+        self.project_directory = catma_project.project_directory
+
+        #: The annotation collection's directory
+        self.directory = f'{catma_project.uuid}/collections/{self.uuid}/'
+
         try:
             with open(catma_project.uuid + '/collections/' + self.uuid + '/header.json') as header_json:
                 self.header = json.load(header_json)
@@ -215,6 +222,9 @@ class AnnotationCollection:
     def __iter__(self):
         for an in self.annotations:
             yield an
+
+    def annotation_dict(self) -> Dict[str, Annotation]:
+        return {an.uuid: an for an in self.annotations}
 
     def duplicate_by_prop(self, prop: str) -> pd.DataFrame:
         """Duplicates the rows in the annotation collection's DataFrame if the given Property has multiple Property Values
@@ -391,3 +401,112 @@ class AnnotationCollection:
         """
         for an in self.annotations:
             an.delete_property(tag=tag, prop=prop)
+
+    def write_annotation_csv(
+        self,
+        tags: Union[str, list] = 'all',
+        property: str = 'all',
+        only_missing_prop_values: bool = False,
+        filename: str = 'PropertyAnnotationTable'):
+        """Creates csv file to add propertiy values to existing annotations.
+        The added property values can be imported with the `read_annotation_csv`.
+
+        Args:
+            tags (Union[str, list], optional): List of tag names to be included.
+                If set to 'all' all annotations will be written into the csv file.
+                Defaults to 'all'.
+            property (str, optional): The property to be included.
+                If set to 'all' all annotations will be written into the csv file.
+                Defaults to 'all'.
+            only_missing_prop_values (bool, optional): Whether only empy properties should be included.
+                Defaults to False.
+            filename (str, optional): The csv file name. Defaults to 'PropertyAnnotationTable'.
+        """
+        
+        
+        # filter annotations by selected tags
+        if tags == 'all':
+            annotations = self.annotations
+        else:
+            annotations = [an for an in self.annotations if an.tag.name in tags]
+        
+        if property == 'all':
+            # use the annotation collection's data frame to collect all used properties
+            properties = [col for col in self.df.columns if 'prop:' in col]
+            properties = [prop.replace('prop:', '') for prop in properties]
+        else:
+            properties = [property]
+        
+        # list with annotations that get annotated
+        annotation_output = []
+        for an in annotations:
+            for prop in an.properties:
+                if prop in properties:
+                    if only_missing_prop_values:
+                        if len(an.properties[prop]) < 1:
+                            annotation_output.append(
+                                {
+                                    'id': an.uuid,
+                                    'annotation_collection': self.name,
+                                    'tag': an.tag.name,
+                                    'property': prop,
+                                    'values': ''
+                                }
+                            )
+                    else:
+                        annotation_output.append(
+                            {
+                                'id': an.uuid,
+                                'annotation_collection': self.name,
+                                'text': an.text,
+                                'tag': an.tag.name,
+                                'property': prop,
+                                'values': ','.join(an.properties[prop])
+                            }
+                        )
+        annotation_df = pd.DataFrame(annotation_output)
+        annotation_df.to_csv(f'{filename}.csv', encoding='utf-8', index=None)
+
+    def read_annotation_csv(
+        self,
+        filename: str = 'PropertyAnnotationTable.csv',
+        push_to_gitlab=False) -> None:
+        """Reads csv file created by AnnotationCollection.write_annotation_csv and updates
+        The annotation json files.
+
+        Args:
+            filename (str, optional): The annotation csv file's name/directory.
+                Defaults to 'PropertyAnnotationTable.csv'.
+            push_to_gitlab (bool, optional): Whether to push the annotations to gitlab. Defaults to False.
+        """
+        annotation_table = pd.read_csv(filename)
+        an_dict = self.annotation_dict()
+
+        
+        cwd = os.getcwd()
+        os.chdir(self.project_directory)
+        annotation_counter = 0
+        missed_annotation_counter = 0
+        for _, row in annotation_table.iterrows():
+            try:
+                if isinstance(row['values'], str):    # test if any property values are defined
+                    an_dict[row['id']].set_property_values(
+                        tag=row['tag'],
+                        prop=row['property'],
+                        value=row['values'].split(',')
+                    )
+                    annotation_counter += 1
+                else:
+                    missed_annotation_counter += 1
+            except KeyError:
+                missed_annotation_counter += 1
+        
+        if push_to_gitlab:
+            os.chdir(self.directory)
+            subprocess.run(['git', 'add', '.'])
+            subprocess.run(['git', 'commit', '-m', 'new property annotations'])
+            subprocess.run(['git', 'push', 'origin', 'HEAD:master'])
+        os.chdir(cwd)
+        print(f"Updated values for {annotation_counter} annotations.")
+        if not push_to_gitlab:
+            print(f'Your annotations are stored in {self.directory}')
