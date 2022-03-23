@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import string
 import subprocess
 import pandas as pd
@@ -112,6 +113,27 @@ def clean_text_in_ac_df(annotation: str) -> str:
     return annotation
 
 
+def load_annotations(catma_project, ac, context: int):
+    annotation_dirs = [
+        file for file in os.listdir(catma_project.uuid + '/collections/' + ac.uuid + '/annotations/')
+        if file.startswith('CATMA_')
+    ]
+    file_count = len(annotation_dirs)
+    steps = list(range(0, 10000, 50)) + [file_count]
+    for index, annotation_dir in enumerate(annotation_dirs):
+        if index + 1 in steps:
+            sys.stdout.write('\r')
+            sys.stdout.write(f"\t\tAnnotations: {index + 1}/{file_count}")
+            # sys.stdout.flush()
+        yield Annotation(
+                directory=f'{catma_project.uuid}/collections/{ac.uuid}/annotations/{annotation_dir}',
+                plain_text=ac.text.plain_text,
+                catma_project=catma_project,
+                context=context
+        )
+    print('\n')
+
+
 df_columns = [
     'document', 'annotation collection', 'annotator',
     'tag', 'properties', 'left_context', 'annotation',
@@ -156,15 +178,15 @@ class AnnotationCollection:
         #: The annotation collection's UUID.
         self.uuid: str = ac_uuid
 
-        #: The parent project's name
-        self.project_directory = catma_project.project_directory
+        #: The parent project's directory
+        self.project_directory: str = catma_project.project_directory
 
         #: The annotation collection's directory
-        self.directory = f'{catma_project.uuid}/collections/{self.uuid}/'
+        self.directory: str = f'{catma_project.uuid}/collections/{self.uuid}/'
 
         try:
             with open(catma_project.uuid + '/collections/' + self.uuid + '/header.json') as header_json:
-                self.header = json.load(header_json)
+                self.header: str = json.load(header_json)
         except FileNotFoundError:
             raise FileNotFoundError(
                 f"The Annotation Collection in this directory could not be found:\n{self.directory}\n\
@@ -177,26 +199,24 @@ class AnnotationCollection:
         self.plain_text_id: str = self.header['sourceDocumentId']
 
         #: The document of the annotation collection as a gitma.Text object.
-        self.text: Text = Text(project_uuid=catma_project.uuid,
-                               catma_id=self.plain_text_id)
+        self.text: Text = Text(
+            project_uuid=catma_project.uuid,
+            catma_id=self.plain_text_id
+        )
 
         #: The document's version.
         self.text_version: str = self.header['sourceDocumentVersion']
 
-        print(
-            f"\t Loading Annotation Collection '{self.name}' for {self.text.title}")
+        
+        print(f"\tAnnotation Collection {self.name.upper()} for {self.text.title.upper()}")
 
         if os.path.isdir(catma_project.uuid + '/collections/' + self.uuid + '/annotations/'):
             #: List of annotations in annotation collection as gitma.Annotation objects.
-            self.annotations: List[Annotation] = sorted([
-                Annotation(
-                    directory=f'{catma_project.uuid}/collections/{self.uuid}/annotations/{annotation_dir}',
-                    plain_text=self.text.plain_text,
-                    catma_project=catma_project,
-                    context=context
-                ) for annotation_dir in os.listdir(catma_project.uuid + '/collections/' + self.uuid + '/annotations/')
-                if annotation_dir.startswith('CATMA_')
-            ])
+            self.annotations: List[Annotation] = sorted(list(load_annotations(
+                catma_project=catma_project,
+                ac=self,
+                context=context
+            )))
 
             #: List of tags found in the annotation collection as a list of gitma.Tag objects.
             self.tags: List[Tag] = [an.tag for an in self.annotations]
@@ -211,8 +231,6 @@ class AnnotationCollection:
             self.annotations: list = []
             self.df: pd.DataFrame = pd.DataFrame(columns=df_columns)
 
-        print(f"\t-> with {len(self.annotations)} Annotations.")
-
     def __repr__(self):
         return f"AnnotationCollection(Name: {self.name}, Document: {self.text.title}, Length: {len(self)})"
 
@@ -224,6 +242,11 @@ class AnnotationCollection:
             yield an
 
     def annotation_dict(self) -> Dict[str, Annotation]:
+        """Creates dictionary with UUIDs as keys an Annotation objects as values.
+
+        Returns:
+            Dict[str, Annotation]: Dictionary with UUIDs as keys an Annotation objects as values.
+        """
         return {an.uuid: an for an in self.annotations}
 
     def duplicate_by_prop(self, prop: str) -> pd.DataFrame:
@@ -409,7 +432,10 @@ class AnnotationCollection:
         only_missing_prop_values: bool = False,
         filename: str = 'PropertyAnnotationTable'):
         """Creates csv file to add propertiy values to existing annotations.
-        The added property values can be imported with the `read_annotation_csv`.
+        The added property values can be imported with the `read_annotation_csv()` method.
+
+        [See the example below.](https://gitma.readthedocs.io/en/latest/class_annotation_collection.html#add-property-values-via-csv-table)
+
 
         Args:
             tags (Union[str, list], optional): List of tag names to be included.\
@@ -423,13 +449,13 @@ class AnnotationCollection:
             filename (str, optional): The csv file name. Defaults to 'PropertyAnnotationTable'.
         """
         
-        
         # filter annotations by selected tags
         if tags == 'all':
             annotations = self.annotations
         else:
             annotations = [an for an in self.annotations if an.tag.name in tags]
         
+        # get list of properties to be modified
         if property == 'all':
             # use the annotation collection's data frame to collect all used properties
             properties = [col for col in self.df.columns if 'prop:' in col]
@@ -471,8 +497,11 @@ class AnnotationCollection:
         self,
         filename: str = 'PropertyAnnotationTable.csv',
         push_to_gitlab=False) -> None:
-        """Reads csv file created by AnnotationCollection.write_annotation_csv and updates
-        The annotation json files.
+        """Reads csv file created by the `write_annotation_csv()` method and updates
+        the annotation json files. Additionally, if `push_to_gitlab=True` the annotations
+        get imported in the CATMA Gitlab backend.
+        
+        [See the example below.](https://gitma.readthedocs.io/en/latest/class_annotation_collection.html#add-property-values-via-csv-table)
 
         Args:
             filename (str, optional): The annotation csv file's name/directory.\
