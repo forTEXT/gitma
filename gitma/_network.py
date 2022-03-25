@@ -2,7 +2,7 @@ from os import dup
 import pandas as pd
 import networkx as nx
 import plotly.graph_objects as go
-from typing import List
+from typing import List, Dict
 from dataclasses import dataclass
 from IPython.display import display
 from gitma.annotation_collection import AnnotationCollection, duplicate_rows
@@ -15,7 +15,19 @@ COLORS = [
 ] * 100
 
 
-def get_color_dict(annotation_df: pd.DataFrame, color_col: str, colors: list = COLORS):
+def get_color_dict(annotation_df: pd.DataFrame, color_col: str = 'tag', colors: list = None) -> Dict[str, str]:
+    """Creates a color dict where every tag get a single color.
+
+    Args:
+        annotation_df (pd.DataFrame): DataFrame in the AnnotationCollection.df format.
+        color_col (str): 'tag' or anoather column in the annotation_df. Defaults to 'tag'.
+        colors (list, optional): List of colors as hex values. Defaults to None.
+
+    Returns:
+        Dict[str, str]: Dictionary with tag names as keys and colors as hex value.
+    """
+    if not colors:
+        colors = COLORS
     color_dict = {
         prop: colors[index] for index, prop
         in enumerate(list(annotation_df[color_col].unique()))
@@ -86,7 +98,7 @@ def cooccurrent_annotations(
 def overlapping_annotations(
     ac_df: pd.DataFrame,
     level: str = 'tag',
-    only_different_acs: bool = True):
+    only_different_acs: bool = True) -> dict:
     """Searches for overlapping annotations and returns frequency of overlapping pairs.
 
     Args:
@@ -96,7 +108,17 @@ def overlapping_annotations(
             are considered. Defaults to True.
 
     Returns:
-        _type_: _description_
+        dict: A dictionary with cooccurency frequency in the format:
+        {
+            'tag1': {
+                'tag2': 4,
+                'tag3': 2
+            },
+            'tag2':{
+                'tag1': 4,
+                'tag3': 1
+            }
+        }
     """
     tag_dict = {
         tag: {
@@ -151,21 +173,30 @@ def edge_generator(tag_dict: dict):
 
 
 def create_network_from_edges(edge_list: List[Edge]) -> nx.Graph:
+    """Creates networkX from Edge object.
+
+    Args:
+        edge_list (List[Edge]): List of edges.
+
+    Returns:
+        nx.Graph: A nedworkX graph.
+    """
     edges = [edge.to_tuple() for edge in edge_list]
     graph = nx.Graph()
     graph.add_weighted_edges_from(edges)
     return graph
 
 
-def format_network_stats(stats_df: pd.DataFrame, character: str) -> str:
-    stats_html_string = f'{character.upper().replace("_", " ")}<br>'
-    for key in dict(stats_df.loc[character]):
-        stats_html_string += '<b>' + key.upper() + '</b>' + ' = '
-        stats_html_string += str(dict(stats_df.loc[character])[key]) + '<br>'
-    return stats_html_string
-
-
 def norm_col(value: float, values: pd.Series) -> float:
+    """Normalizes values in a pandas series.
+
+    Args:
+        value (float): Cell value.
+        values (pd.Series): Column values.
+
+    Returns:
+        float: Normalized cell value.
+    """
     return value / sum(values)
 
 
@@ -173,7 +204,18 @@ def get_node_data(
         pos_dict: dict,
         node_size_dict: dict,
         node_factor: int,
-        node_alpha: int):
+        node_alpha: int) -> Dict[str, list]:
+    """Creates dictionary with 
+
+    Args:
+        pos_dict (dict): _description_
+        node_size_dict (dict): _description_
+        node_factor (int): _description_
+        node_alpha (int): _description_
+
+    Returns:
+        Dict[str, list]: The node's x and y axis positions, their size and their label.
+    """
     nodes = list(node_size_dict)
     x_positions = [pos_dict[node][0] for node in nodes]
     y_positions = [pos_dict[node][1] for node in nodes]
@@ -211,9 +253,13 @@ class Network:
             excluded_tags: list = None,
             level: str = 'tag',
             network_layout: callable = nx.drawing.layout.kamada_kawai_layout):
+        #: The edge function.
         self.edge_func = edge_func
+        
+        #: The annotation level.
         self.level = level
         
+        #: Merged annotationd dataframe
         self.df = pd.concat(
             [ac.df for ac in annotation_collections]
         )
@@ -248,17 +294,30 @@ class Network:
             )
 
         # create networkx graph
+        #: List of edge objects.
         self.edges = list(edge_generator(tag_dict=tag_dict))
+        
+        #: The networkX graph object.
         self.network_graph = create_network_from_edges(edge_list=self.edges)
 
+        #: The node position
         self.pos = network_layout(self.network_graph, weight='weight')
 
-    def to_gexf(self, filename: str = 'catma_network', directory: str = './'):
+    def to_gexf(self, filename: str = 'catma_network', directory: str = './') -> None:
         """Writes Network Graph to a GEPHI xml file.
+
+        Args:
+            filename (str, optional): The name of the gexf file. Defaults to 'catma_network'.
+            directory (str, optional): The file's directory. Defaults to './'.
         """
         nx.write_gexf(self.network_graph, f'{directory}{filename}.gexf')
 
     def stats(self) -> pd.DataFrame:
+        """Creates network stats data frame.
+
+        Returns:
+            pd.DataFrame: degree, weighted_degree, betweenness centrality, weighted betweenness centrality
+        """
         bc = nx.betweenness_centrality(self.network_graph, normalized=True)
         bc_weighted = nx.betweenness_centrality(
             self.network_graph, normalized=True, weight='weight')
@@ -382,7 +441,3 @@ class Network:
             display(stats.head(5))
         
         return fig
-
-
-if __name__ == "__main__":
-    pass
