@@ -3,6 +3,7 @@ import os
 import sys
 import string
 import subprocess
+import re
 import pandas as pd
 from typing import List, Union, Dict
 from collections import Counter
@@ -107,9 +108,8 @@ def get_text_span_mean_per_tag(ac_df: pd.DataFrame) -> int:
 
 
 def clean_text_in_ac_df(annotation: str) -> str:
-    annotation = annotation.replace('\n', ' ')
-    while '  ' in annotation:
-        annotation = annotation.replace('  ', ' ')
+    annotation = re.sub('\n', ' ', annotation)
+    annotation = re.sub(' +', ' ', annotation)
     return annotation
 
 
@@ -434,7 +434,9 @@ class AnnotationCollection:
         """Creates csv file to add propertiy values to existing annotations.
         The added property values can be imported with the `read_annotation_csv()` method.
 
-        [See the example below.](https://gitma.readthedocs.io/en/latest/class_annotation_collection.html#add-property-values-via-csv-table)
+        [See the example below.](
+            https://gitma.readthedocs.io/en/latest/class_annotation_collection.html#add-property-values-via-csv-table
+        )
 
 
         Args:
@@ -475,6 +477,7 @@ class AnnotationCollection:
                                     'id': an.uuid,
                                     'annotation_collection': self.name,
                                     'tag': an.tag.name,
+                                    'text': clean_text_in_ac_df(an.text),
                                     'property': prop,
                                     'values': ''
                                 }
@@ -484,14 +487,14 @@ class AnnotationCollection:
                             {
                                 'id': an.uuid,
                                 'annotation_collection': self.name,
-                                'text': an.text,
+                                'text': clean_text_in_ac_df(an.text),
                                 'tag': an.tag.name,
                                 'property': prop,
                                 'values': ','.join(an.properties[prop])
                             }
                         )
         annotation_df = pd.DataFrame(annotation_output)
-        annotation_df.to_csv(f'{filename}.csv', encoding='utf-8', index=None)
+        annotation_df.to_csv(f'{filename}.csv', encoding='utf-8', index=None, sep=";")
 
     def read_annotation_csv(
         self,
@@ -508,7 +511,7 @@ class AnnotationCollection:
                 Defaults to 'PropertyAnnotationTable.csv'.
             push_to_gitlab (bool, optional): Whether to push the annotations to gitlab. Defaults to False.
         """
-        annotation_table = pd.read_csv(filename)
+        annotation_table = pd.read_csv(filename, sep=";")
         an_dict = self.annotation_dict()
 
         
