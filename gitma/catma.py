@@ -1,20 +1,3 @@
-"""
-Module that defines the Catma class including all Projects.
-
-
-Usage Example:
-
-my_catma = Catma(gitlab_access_token='')
-print(my_catma.project_list)
-
-project_direction = ''
-my_local_project = my_catma.load_local_project(
-    project_directory=project_direction,
-    project_name=''
-)
-print(my_local_project.stats())
-"""
-
 from typing import List, Dict
 import gitlab
 from gitma.project import CatmaProject
