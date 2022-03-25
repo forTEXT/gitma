@@ -232,6 +232,7 @@ def get_node_data(
 
 class Network:
     """Class to draw annotation coocurrence network graphs.
+    
     Args:
             annotation_collections (List[AnnotationCollection]): List of included annotation collections.
             character_distance (int, optional): Cooccurrence span. Defaults to 100.

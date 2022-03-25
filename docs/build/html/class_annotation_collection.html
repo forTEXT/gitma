@@ -152,7 +152,7 @@
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
           <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">GitMA 1.5.1 documentation</a></li>
-          <li class="md-tabs__item"><a href="gitma.html" class="md-tabs__link">GitMA classes</a></li>
+          <li class="md-tabs__item"><a href="gitma.html" class="md-tabs__link">GitMA API References</a></li>
       </ul>
     </div>
   </nav>
@@ -193,7 +193,12 @@
     <li class="md-nav__item">
     
     
-      <a href="gitma.html" class="md-nav__link">GitMA classes</a>
+      <a href="gitma.html" class="md-nav__link">GitMA API References</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="gitma.html#classes" class="md-nav__link">Classes</a>
       <ul class="md-nav__list"> 
     <li class="md-nav__item">
     
@@ -250,14 +255,7 @@
 
   </ul>
 </nav>
-      <ul class="md-nav__list"> 
-    <li class="md-nav__item">
-    
-    
-      <a href="#examples" class="md-nav__link">Examples</a>
       
-    
-    </li></ul>
     
     </li>
     <li class="md-nav__item">
@@ -278,6 +276,15 @@
     
     
       <a href="class_property.html" class="md-nav__link">Property</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="gitma.html#additional-modules-and-classes" class="md-nav__link">Additional Modules and Classes</a>
       
     
     </li></ul>
@@ -723,11 +730,12 @@ get imported in the CATMA Gitlab backend.</p>
 </table>
 <p><strong>Step 2:</strong> Add property values:</p>
 <p>For every property per annotation a table row will be created.</p>
-<dl class="simple">
-<dt>..caution::</dt><dd><p>In these tables only the values column is editable!</p>
-</dd>
-</dl>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>In these tables only the values column is editable!</p>
+</div>
 <p>If you want to add multiple values for a property seperate the values by a comma.
+It is recommended to use a csv editor like <a class="reference external" href="https://edit-csv.net/">https://edit-csv.net/</a>.
 Finish your annotations by saving the csv file.</p>
 <p><strong>Step 3:</strong> Load the added property values in your CATMA project</p>
 <p>After you finished the property annotations within the csv file you can load the annotations to the CATMA gitlab.</p>

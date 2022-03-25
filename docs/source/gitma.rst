@@ -1,6 +1,14 @@
-=============
-GitMA classes
-=============
+====================
+GitMA API References
+====================
+
+The GitMA main classes represent instances that are used in the CATMA App.
+See the :doc:`introduction <intro>`, the documentation of the :doc:`CatmaProject class<class_project>`
+and the documentation of the :doc:`AnnotationCollection class <class_annotation_collection>` for 
+examples.
+
+Classes
+=======
 
 .. toctree::
    :maxdepth: 3
@@ -13,11 +21,13 @@ GitMA classes
    class_annotation
    class_tag
    class_property
-   
-.. Module contents
-.. ---------------
 
-.. .. automodule:: gitma
-..    :members:
-..    :undoc-members:
-..    :show-inheritance:
+Additional Modules and Classes
+==============================
+
+.. toctree::
+   :maxdepth: 3
+
+   module_metrics
+   module_network
+   module_vizualize

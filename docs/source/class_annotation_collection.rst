@@ -48,6 +48,7 @@ For every property per annotation a table row will be created.
    In these tables only the values column is editable!
 
 If you want to add multiple values for a property seperate the values by a comma.
+It is recommended to use a csv editor like https://edit-csv.net/.
 Finish your annotations by saving the csv file.
 
 

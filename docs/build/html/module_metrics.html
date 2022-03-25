@@ -1,0 +1,401 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#093658">
+  <script src="_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Metrics &#8212; GitMA 1.5.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/material.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Network" href="module_network.html" />
+    <link rel="prev" title="Property" href="class_property.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=blue-grey data-md-color-accent=blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#module_metrics" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="index.html" title="GitMA 1.5.1 documentation"
+           class="md-header-nav__button md-logo">
+          
+              <img src="_static/catma-gitlab-combo-favicon.png" height="26"
+                   alt="GitMA 1.5.1 documentation logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">GitMA 1.5.1 documentation</span>
+          <span class="md-header-nav__topic"> Metrics </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+      
+  
+  <script src="_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = ""versions.json"",
+        target_loc = "../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">GitMA 1.5.1 documentation</a></li>
+          <li class="md-tabs__item"><a href="gitma.html" class="md-tabs__link">GitMA API References</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="index.html" title="GitMA 1.5.1 documentation" class="md-nav__button md-logo">
+      
+        <img src="_static/catma-gitlab-combo-favicon.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="index.html"
+       title="GitMA 1.5.1 documentation">GitMA 1.5.1 documentation</a>
+  </label>
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+    
+      <a href="intro.html" class="md-nav__link">Introduction</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="installation.html" class="md-nav__link">Installation</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="gitma.html" class="md-nav__link">GitMA API References</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="cite_as.html" class="md-nav__link">How to cite</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="_sources/module_metrics.rst.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="metrics">
+<h1 id="module-metrics--page-root">Metrics<a class="headerlink" href="#module-metrics--page-root" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This module provides methods to compute inter annotator agreement metrics.
+The are integrated in the <code class="docutils literal notranslate"><span class="pre">CatmaProject</span></code> class.</p>
+</div>
+<span class="target" id="module-gitma._metrics"></span><dl class="py function">
+<dt class="sig sig-object py" id="gitma._metrics.filter_ac_by_tag">
+<span class="sig-name descname"><span class="pre">filter_ac_by_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ac1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="class_annotation_collection.html#gitma.AnnotationCollection" title="gitma.annotation_collection.AnnotationCollection"><span class="pre">gitma.annotation_collection.AnnotationCollection</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="class_annotation_collection.html#gitma.AnnotationCollection" title="gitma.annotation_collection.AnnotationCollection"><span class="pre">gitma.annotation_collection.AnnotationCollection</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_both_ac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._metrics.filter_ac_by_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns list of filtered annotations.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="gitma._metrics.get_same_text">
+<span class="sig-name descname"><span class="pre">get_same_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_list1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotation_list2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._metrics.get_same_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>All text parts only annotate by one coder get excluded.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="gitma._metrics.test_max_overlap">
+<span class="sig-name descname"><span class="pre">test_max_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">silver_annotation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="class_annotation.html#gitma.Annotation" title="gitma.annotation.Annotation"><span class="pre">gitma.annotation.Annotation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">second_annotator_annotations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="class_annotation.html#gitma.Annotation" title="gitma.annotation.Annotation"><span class="pre">gitma.annotation.Annotation</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="class_annotation.html#gitma.Annotation" title="gitma.annotation.Annotation"><span class="pre">gitma.annotation.Annotation</span></a></span></span><a class="headerlink" href="#gitma._metrics.test_max_overlap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Looks for best matching Annotation in second annotator annotations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>silver_annotation</strong> (<a class="reference internal" href="class_annotation.html#gitma.Annotation" title="gitma.Annotation"><em>Annotation</em></a>) – Annotation that will be matched</p></li>
+<li><p><strong>second_annotator_annotations</strong> (<em>list</em>) – List of Annotations</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Annotation Object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="class_annotation.html#gitma.Annotation" title="gitma.Annotation">Annotation</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="gitma._metrics.test_overlap">
+<span class="sig-name descname"><span class="pre">test_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">an1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="class_annotation.html#gitma.Annotation" title="gitma.annotation.Annotation"><span class="pre">gitma.annotation.Annotation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">an2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="class_annotation.html#gitma.Annotation" title="gitma.annotation.Annotation"><span class="pre">gitma.annotation.Annotation</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._metrics.test_overlap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if annotation 2 starts or ends within annotations 1 span.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="gitma._metrics.get_overlap_percentage">
+<span class="sig-name descname"><span class="pre">get_overlap_percentage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">an_pair</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#gitma._metrics.get_overlap_percentage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the overlap percentage of two annotations.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="gitma._metrics.get_confusion_matrix">
+<span class="sig-name descname"><span class="pre">get_confusion_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pair_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tag'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#gitma._metrics.get_confusion_matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="gitma._metrics.EmptyTag">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EmptyTag</span></span><a class="headerlink" href="#gitma._metrics.EmptyTag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="gitma._metrics.EmptyAnnotation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EmptyAnnotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._metrics.EmptyAnnotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="gitma._metrics.get_annotation_pairs">
+<span class="sig-name descname"><span class="pre">get_annotation_pairs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ac1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="class_annotation_collection.html#gitma.AnnotationCollection" title="gitma.annotation_collection.AnnotationCollection"><span class="pre">gitma.annotation_collection.AnnotationCollection</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="class_annotation_collection.html#gitma.AnnotationCollection" title="gitma.annotation_collection.AnnotationCollection"><span class="pre">gitma.annotation_collection.AnnotationCollection</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_filter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_both_ac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property_filter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#gitma._metrics.get_annotation_pairs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns list of all overlapping annotations in two annotation collections.
+tag_filter can be defined as list of tag names if not all annotations are included.
+To avoid pairing of embedded annotations in case of discontinuous annotations
+only the first overlapping annotation by second annotator gets paired.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="gitma._metrics.get_iaa_data">
+<span class="sig-name descname"><span class="pre">get_iaa_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_pairs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tag'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._metrics.get_iaa_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Yields 3-tuples (Coder, Item, Label) for nltk.AnnotationTask data input.
+If level is not “tag” it has to be a property name, which exists in all annotations.
+an_list = [</p>
+<p>(Annotation(), Annotation()),
+(Annotation(), Annotation()),
+(Annotation(), Annotation()),
+(Annotation(), Annotation())
+]</p>
+<p>— to —</p>
+<p>aTask_data = [
+(1, 1, ‘non_event’),
+(2, 1, ‘non_event’),
+(1, 2, ‘non_event’),
+(2, 2, ‘non_event’),
+(3, 3, ‘non_event’),
+(3, 3, ‘stative_event’),
+]</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="gitma._metrics.get_iaa">
+<span class="sig-name descname"><span class="pre">get_iaa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac1_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac2_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_filter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_both_ac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tag'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'binary'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._metrics.get_iaa" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes Inter Annotator Agreement for 2 Annotation Collections.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project</strong> (<a class="reference internal" href="class_project.html#gitma.CatmaProject" title="gitma.CatmaProject"><em>CatmaProject</em></a>) – CatmaProject object</p></li>
+<li><p><strong>ac1_name</strong> (<em>str</em>) – AnnotationCollection name to be compared</p></li>
+<li><p><strong>ac2_name</strong> (<em>str</em>) – AnnotationCollection name to be compared with</p></li>
+<li><p><strong>tag_filter</strong> (<em>list</em><em>, </em><em>optional</em>) – Which Tags should be included. If None all are included. Default to None.</p></li>
+<li><p><strong>filter_both_ac</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the tag filter shall be aplied to both annotation collections. Default to False.</p></li>
+<li><p><strong>level</strong> (<em>str</em><em>, </em><em>optional</em>) – Whether the Annotation Tag or a specified Property should be compared.</p></li>
+<li><p><strong>distance</strong> (<em>str</em><em>, </em><em>optional</em>) – The IAA distance function. Either ‘binary’ or ‘interval’. See <a class="reference external" href="https://www.nltk.org/api/nltk.metrics.html">https://www.nltk.org/api/nltk.metrics.html</a>. Default to ‘binary’.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="class_property.html" title="Property"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> Property </span>
+              </div>
+            </a>
+          
+          
+            <a href="module_network.html" title="Network"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> Network </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2022, Michael Vauth.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>
