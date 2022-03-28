@@ -11,7 +11,9 @@ Examples
 
 For details see the `demo notebook <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/load_project_from_gitlab.ipynb>`_.
 
-Load your account informations::
+Load your account informations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
 
    >>> from gitma import Catma
 
@@ -21,7 +23,9 @@ Load your account informations::
    ['<project1>', '<project2>', '<project3>']
 
 
-Load a project from the CATMA gitlab::
+Load a project from the CATMA gitlab
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
 
    >>> my_catma.load_project_from_gitlab(
    ...   project_name='<insert your project name here>',
@@ -42,7 +46,9 @@ Load a project from the CATMA gitlab::
          Annotations: 67/67
 
 
-Access your project data::
+Access your project data
+~~~~~~~~~~~~~~~~~~~~~~~~
+::
 
    >>> my_catma.project_dict['project1'].plot_annotation_progression()
 
