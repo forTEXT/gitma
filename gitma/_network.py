@@ -255,13 +255,13 @@ class Network:
             level: str = 'tag',
             network_layout: callable = nx.drawing.layout.kamada_kawai_layout):
         #: The edge function.
-        self.edge_func = edge_func
+        self.edge_func: callable = edge_func
         
         #: The annotation level.
-        self.level = level
+        self.level: str = level
         
         #: Merged annotationd dataframe
-        self.df = pd.concat(
+        self.df: pd.DataFrame = pd.concat(
             [ac.df for ac in annotation_collections]
         )
         if level != 'tag':
@@ -296,13 +296,13 @@ class Network:
 
         # create networkx graph
         #: List of edge objects.
-        self.edges = list(edge_generator(tag_dict=tag_dict))
+        self.edges: List[Edge] = list(edge_generator(tag_dict=tag_dict))
         
         #: The networkX graph object.
-        self.network_graph = create_network_from_edges(edge_list=self.edges)
+        self.network_graph: nx.Graph = create_network_from_edges(edge_list=self.edges)
 
         #: The node position
-        self.pos = network_layout(self.network_graph, weight='weight')
+        self.pos: dict = network_layout(self.network_graph, weight='weight')
 
     def to_gexf(self, filename: str = 'catma_network', directory: str = './') -> None:
         """Writes Network Graph to a GEPHI xml file.
@@ -419,8 +419,8 @@ class Network:
                    'showgrid': False, 'visible': False},
             yaxis={'ticks': '', 'showticklabels': False,
                    'showgrid': False, 'visible': False},
-            height=600,
-            width=1000,
+            # height=600,
+            # width=1000,
             title=f'{title} Network for {self.level.upper()}'
         )
 
@@ -434,7 +434,7 @@ class Network:
             fig.update_yaxes(
                 range=[
                     min(node_data['y_pos']) - 0.5 * max(node_data['y_pos']),
-                    max(node_data['y_pos']) + 0.5 * max(node_data['y_pos'])
+                    max(node_data['y_pos']) + 0.7 * max(node_data['y_pos'])
                 ]
             )
 

@@ -4,12 +4,17 @@ import json
 import gitlab
 import pygit2
 import pandas as pd
+import plotly.graph_objects as go
 from typing import Dict, List, Tuple, Union, Generator
 from gitma.text import Text
 from gitma.tagset import Tagset
 from gitma.annotation_collection import AnnotationCollection
 from gitma.annotation import Annotation
 from gitma.tag import Tag
+from gitma._write_annotation import write_annotation_json
+from gitma._gold_annotation import create_gold_annotations
+from gitma._vizualize import plot_interactive, plot_annotation_progression
+from gitma._metrics import get_iaa, gamma_agreement
 
 
 def load_gitlab_project(
@@ -348,19 +353,34 @@ class CatmaProject:
         acs = [ac.name for ac in self.annotation_collections]
         return f"CatmaProject(\n\tName: {self.uuid[43:-5]},\n\tDocuments: {documents},\n\tTagsets: {tagsets},\n\tAnnotationCollections: {acs})"
 
-    from gitma._gold_annotation import create_gold_annotations
+    def update(self) -> None:
+        """Updates local git folder and reloads CatmaProject.
 
-    from gitma._write_annotation import write_annotation_json
+        Warning: This method can only be used if you have [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) installed.
+        """
+        cwd = os.getcwd()
+        os.chdir(f'{self.project_directory}{self.uuid}/')
 
-    from gitma._vizualize import plot_annotation_progression
+        subprocess.run(['git', 'pull'])
+        subprocess.run(['git', 'submodule', 'update',
+                       '--recursive', '--remote'])
 
-    from gitma._vizualize import plot_interactive
-    
-    from gitma._vizualize import compare_annotation_collections
+        os.chdir('../')
+        # Load Tagsets
+        self.tagsets, self.tagset_dict = load_tagsets(project_uuid=self.uuid)
 
-    from gitma._metrics import get_iaa
+        # Load Texts
+        self.texts, self.text_dict = load_texts(project_uuid=self.uuid)
 
-    from gitma._gamma import gamma_agreement
+        # Load Annotation Collections
+        self.annotation_collections, self.ac_dict = load_annotation_collections(
+            catma_project=self,
+            included_acs=list(self.ac_dict)
+        )
+
+        print('Updated the CATMA Project')
+
+        os.chdir(cwd)
 
     def all_annotations(self) -> Generator[Annotation, None, None]:
         """Generator that yields all annotations as gitma.annotation.Annotation objects.
@@ -381,27 +401,102 @@ class CatmaProject:
         for tagset in self.tagsets:
             for tag in tagset.tags:
                 yield tag
-    
-    def pygamma_table(self, annotation_collections: Union[str, list] = 'all') -> pd.DataFrame:
-        """Concatenates annotation collections to pygamma table.
 
-        Args:
-            annotation_collections (Union[str, list], optional): List of annotation collections. Defaults to 'all'.
+    def stats(self) -> pd.DataFrame:
+        """Shows some CATMA Project stats.
 
         Returns:
-            pd.DataFrame: Concatenated annotation collections as pd.DataFrame in pygamma format.
+            pd.DataFrame: DataFrame with projects stats sorted by the Annotation Collection names.
         """
-        if annotation_collections == 'all':
-            return pd.concat(
-                [ac.to_pygamma_table() for ac in self.annotation_collections]
-            )
-        else:
-            return pd.concat(
-                [
-                    ac.to_pygamma_table() for ac in self.annotation_collections
-                    if ac.name in annotation_collections
-                ]
-            )
+        ac_stats = [
+            {
+                'annotation collection': ac.name,
+                'document': ac.text.title,
+                'annotations': len(ac.annotations),
+                'annotator': set([an.author for an in ac.annotations]),
+                'tag': set([an.tag.name for an in ac.annotations]),
+                'first_annotation': min([an.date for an in ac.annotations]),
+                'last_annotation': max([an.date for an in ac.annotations]),
+                'uuid': ac.uuid,
+            } for ac in self.annotation_collections
+            if len(ac.annotations) > 0
+        ]
+
+        df = pd.DataFrame(ac_stats).sort_values(
+            by=['annotation collection']).reset_index(drop=True)
+        return df
+
+    def write_annotation_json(
+        self,
+        annotation_collection_name: str,
+        tagset_name: str,
+        text_title: str,
+        tag_name: str,
+        start_points: list,
+        end_points: list,
+        property_annotations: dict,
+        author: str):
+        """Function to write a new annotation into a given CatmaProject.
+
+        Args:
+            project (CatmaProject): A CatmaProject object.
+            annotation_collection_name (str): The annotation collections name
+            tagset_name (str): The tagsets name
+            text_title (str): The text title
+            tag_name (str): The tags name
+            start_points (list): The annotation span start point
+            end_points (list): The annotation span end point
+            property_annotations (dict): dictionary with property annotations
+            author (str): the annotations author
+        """
+        write_annotation_json(
+            project=self,
+            annotation_collection_name=annotation_collection_name,
+            tagset_name=tagset_name,
+            text_title=text_title,
+            tag_name=tag_name,
+            start_points=start_points,
+            end_points=end_points,
+            property_annotations=property_annotations,
+            author=author
+        )
+
+    def create_gold_annotation(
+            self,
+            ac_1_name: str,
+            ac_2_name: str,
+            gold_ac_name: str,
+            excluded_tags: list = None,
+            min_overlap: float = 1.0,
+            same_tag: bool = True,
+            property_values: str = 'none',
+            push_to_gitlab: bool = False):
+        
+        """Searches for matching annotations in 2 AnnotationCollections and copies all matches in a third AnnotationCollection.
+        By default only matching Property Values get copied.
+
+        Args:
+            ac_1_name (str): AnnotationCollection 1 Name.
+            ac_2_name (str): AnnnotationCollection 2 Name.
+            gold_ac_name (str): AnnotationCollection Name for Gold Annotations.
+            excluded_tags (list, optional): Annotations with this Tags will not be included in the Gold Annotations. Defaults to None.
+            min_overlap (float, optional): The minimal overlap to genereate a gold annotation. Defaults to 1.0.
+            same_tag (bool, optional): Whether both annotations need to be the same tag. Defaults to True.
+            property_values (str, optional): Whether only matching Property Values from AnnonationCollection 1 shall be copied.\
+                Default to 'matching'. Further options: 'none'.
+            push_to_gitlab (bool, optional): Whether the gold annotations shall be uploaded to the CATMA GitLab. Default to False.
+        """
+        create_gold_annotations(
+            project=self,
+            ac_1_name=ac_1_name,
+            ac_2_name=ac_2_name,
+            gold_ac_name=gold_ac_name,
+            excluded_tags=excluded_tags,
+            min_overlap=min_overlap,
+            same_tag=same_tag,
+            property_values=property_values,
+            push_to_gitlab=push_to_gitlab
+        )
 
     def merge_annotations(self) -> pd.DataFrame:
         """Concatenes all annotation collections to one pandas data frame and resets index.
@@ -429,29 +524,26 @@ class CatmaProject:
 
         return document_acs
 
-    def stats(self) -> pd.DataFrame:
-        """Shows some CATMA Project stats.
+    def plot_annotation_progression(self) -> go.Figure:
+        """Plot the annotation progression for every annotator in a CATMA project.
 
         Returns:
-            pd.DataFrame: DataFrame with projects stats sorted by the Annotation Collection names.
+            go.Figure: Plotly scatter plot.
         """
-        ac_stats = [
-            {
-                'annotation collection': ac.name,
-                'document': ac.text.title,
-                'annotations': len(ac.annotations),
-                'annotator': set([an.author for an in ac.annotations]),
-                'tag': set([an.tag.name for an in ac.annotations]),
-                'first_annotation': min([an.date for an in ac.annotations]),
-                'last_annotation': max([an.date for an in ac.annotations]),
-                'uuid': ac.uuid,
-            } for ac in self.annotation_collections
-            if len(ac.annotations) > 0
-        ]
+        return plot_annotation_progression(project=self)
 
-        df = pd.DataFrame(ac_stats).sort_values(
-            by=['annotation collection']).reset_index(drop=True)
-        return df
+    def plot_interactive(self, color_col: str = 'annotation collections') -> go.Figure:
+        """This function generates one Plotly scatter plot per annotated document in a CATMA project.
+        By default the colors represent the annotation collections.
+        By that they can be deactivated with the interactive legend.
+
+        Args:
+            color_col (str, optional): 'annotation collection', 'annotator', 'tag' or any property with the prefix 'prop:'. Defaults to 'annotation collection'.
+
+        Returns:
+            go.Figure: Plotly scatter plot.
+        """
+        return plot_interactive(catma_project=self, color_col=color_col)
 
     def cooccurrence_network(
         self,
@@ -547,35 +639,100 @@ class CatmaProject:
 
         return nw.plot(plot_stats=plot_stats)
 
+    def compare_annotation_collections(
+        self,
+        annotation_collections: List[str],
+        color_col: str = 'tag') -> go.Figure:
+        """Plots annotations of multiple annotation collections of the same texts as line plot.
 
-    def update(self) -> None:
-        """Updates local git folder and reloads CatmaProject.
+        Args:
+            annotation_collections (list): A list of annotation collection names. 
+            color_col (str, optional): Either 'tag' or one property name with prefix 'prop:'. Defaults to 'tag'.
 
-        Warning: This method can only be used if you have [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) installed.
+        Raises:
+            ValueError: If one of the annotation collection's names does not exist.
+
+        Returns:
+            go.Figure: Plotly Line Plot.
         """
-        cwd = os.getcwd()
-        os.chdir(f'{self.project_directory}{self.uuid}/')
-
-        subprocess.run(['git', 'pull'])
-        subprocess.run(['git', 'submodule', 'update',
-                       '--recursive', '--remote'])
-
-        os.chdir('../')
-        # Load Tagsets
-        self.tagsets, self.tagset_dict = load_tagsets(project_uuid=self.uuid)
-
-        # Load Texts
-        self.texts, self.text_dict = load_texts(project_uuid=self.uuid)
-
-        # Load Annotation Collections
-        self.annotation_collections, self.ac_dict = load_annotation_collections(
+        from gitma._vizualize import compare_annotation_collections
+        compare_annotation_collections(
             catma_project=self,
-            included_acs=list(self.ac_dict)
+            annotation_collections=annotation_collections,
+            color_col=color_col
         )
 
-        print('Updated the CATMA Project')
+    def get_iaa(
+        self,
+        ac1_name: str,
+        ac2_name: str,
+        tag_filter: list = None,
+        filter_both_ac: bool = False,
+        level: str = 'tag',
+        distance: str = 'binary') -> None:
+        """Computes Inter Annotator Agreement for 2 Annotation Collections.
+        See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo_notebooks/inter_annotator_agreement.ipynb)
+        for details.
 
-        os.chdir(cwd)
+        Args:
+            ac1_name (str): AnnotationCollection name to be compared.
+            ac2_name (str): AnnotationCollection name to be compared with.
+            tag_filter (list, optional): Which Tags should be included. If None all are included. Default to None.
+            filter_both_ac (bool, optional): Whether the tag filter shall be aplied to both annotation collections.\
+                Defaults to False.
+            level (str, optional): Whether the Annotation Tag or a specified Property should be compared.\
+                Defaults to 'tag'.
+            distance (str, optional): The IAA distance function. Either 'binary' or 'interval'.\
+            See the [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further informations. Defaults to 'binary'.
+        """
+        get_iaa(
+            project=self,
+            ac1_name=ac1_name,
+            ac2_name=ac2_name,
+            tag_filter=tag_filter,
+            filter_both_ac=filter_both_ac,
+            level=level,
+            distance=distance
+        )
+
+    def gamma_agreement(
+        self,
+        annotation_collections: List[AnnotationCollection],
+        alpha: int = 3,
+        beta: int = 1,
+        delta_empty: float = 0.01,
+        n_samples: int = 30,
+        precision_level: int = 0.01):
+        gamma_agreement(
+            project=self,
+            annotation_collections=annotation_collections,
+            alpha=alpha,
+            beta=beta,
+            delta_empty=delta_empty,
+            n_samples=n_samples,
+            precision_level=precision_level
+        )
+
+    def pygamma_table(self, annotation_collections: Union[str, list] = 'all') -> pd.DataFrame:
+        """Concatenates annotation collections to pygamma table.
+
+        Args:
+            annotation_collections (Union[str, list], optional): List of annotation collections. Defaults to 'all'.
+
+        Returns:
+            pd.DataFrame: Concatenated annotation collections as pd.DataFrame in pygamma format.
+        """
+        if annotation_collections == 'all':
+            return pd.concat(
+                [ac.to_pygamma_table() for ac in self.annotation_collections]
+            )
+        else:
+            return pd.concat(
+                [
+                    ac.to_pygamma_table() for ac in self.annotation_collections
+                    if ac.name in annotation_collections
+                ]
+            )
 
 
 if __name__ == '__main__':

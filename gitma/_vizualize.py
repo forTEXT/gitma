@@ -1,18 +1,75 @@
+from email.generator import Generator
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-from gitma.annotation_collection import duplicate_rows
+from typing import Dict, Generator
+
+
+def duplicate_generator(df: pd.DataFrame, property_col: str) -> Generator[pd.Series, None, None]:
+    """Yields for each value in property col a copy of the given data frame row.
+
+    Args:
+        df (pd.DataFrame): Annotation collection as data frame.
+        property_col (str): The property's name.
+
+    Yields:
+        Generator[pd.Series, None, None]: The data frame row
+    """
+    for _, row in df.iterrows():
+        if isinstance(row[property_col], list) and len(row[property_col]) > 0:
+            for item in row[property_col]:
+                row_dict = dict(row)
+                row_dict[property_col] = item
+                yield row_dict
+        elif isinstance(row[property_col], str) and len(row[property_col]) > 0:
+            yield dict(row)
+        elif isinstance(row[property_col], int) or isinstance(row[property_col], float):
+            yield dict(row)
+        else:
+            row_dict = dict(row)
+            row_dict[property_col] = 'NOT ANNOTATED'
+            yield dict(row_dict)
+
+
+def duplicate_rows(ac_df: pd.DataFrame, property_col: str) -> pd.DataFrame:
+    """ Duplicates rows in AnnotationCollection DataFrame if multiple property values exist in defined porperty column.
+
+    Args:
+        ac_df (pd.DataFrame): Annotation collection data frame.
+        property_col (str): The property name with the prefix 'prop:'.
+    Raises:
+        ValueError: If the property does not exist in the annotation collection.
+
+    Returns:
+        pd.DataFrame: The new dataframe with duplicated rows.
+    """
+    if 'prop:' not in property_col:
+        property_col = f'prop:{property_col}'
+
+    if property_col not in ac_df.columns:
+        raise ValueError(
+            f'{property_col} is not a valid value in the given annotation collections.\
+                Choose any of these: {list(ac_df.columns)}')
+
+    df_new = pd.DataFrame(
+        list(duplicate_generator(
+            df=ac_df,
+            property_col=property_col
+        ))
+    )
+    return df_new
 
 
 # list of catma related colors
-colors = [
+COLORS = [
     '#093658', '#A64B21', '#A68500', '#843AF2', '#F92F6A',
     '#5A98A1', '#EDA99D', '#EDC56D', '#274E54'
 ] * 100
 
 
-def get_color_dict(annotation_df: pd.DataFrame, color_col: str, colors: list = colors):
+def get_color_dict(annotation_df: pd.DataFrame, color_col: str, colors: list = None) -> Dict[str, str]:
+    if not colors:
+        colors = COLORS
     color_dict = {
         prop: colors[index] for index, prop
         in enumerate(list(annotation_df[color_col].unique()))
@@ -20,7 +77,15 @@ def get_color_dict(annotation_df: pd.DataFrame, color_col: str, colors: list = c
     return color_dict
 
 
-def update_figure(fig: go.Figure):
+def update_figure(fig: go.Figure) -> go.Figure:
+    """Default plotly template for GitMA.
+
+    Args:
+        fig (go.Figure): The figure to be updated.
+
+    Returns:
+        go.Figure: The updated figure.
+    """
     fig.update_layout(
         template="plotly_white",
         legend=dict(
@@ -34,7 +99,6 @@ def update_figure(fig: go.Figure):
                 size=10
             )
         ),
-        # legend_title_text=None,
     )
     return fig
 
@@ -43,10 +107,10 @@ def format_annotation_text(text: str) -> str:
     """Format the text of an annotation for plotting.
 
     Args:
-        text (str): annotation_string
+        text (str): Annotation string.
 
     Returns:
-        str: html formatted string
+        str: html formatted string.
     """
     while '  ' in text:
         text = text.replace('  ', ' ')

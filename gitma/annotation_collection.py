@@ -10,6 +10,8 @@ from collections import Counter
 from gitma.text import Text
 from gitma.annotation import Annotation
 from gitma.tag import Tag
+from gitma._export_annotations import to_stanford_tsv
+from gitma._vizualize import plot_annotations, plot_scaled_annotations
 
 
 def split_property_dict_to_column(ac_df):
@@ -124,7 +126,6 @@ def load_annotations(catma_project, ac, context: int):
         if index + 1 in steps:
             sys.stdout.write('\r')
             sys.stdout.write(f"\t\tAnnotations: {index + 1}/{file_count}")
-            # sys.stdout.flush()
         yield Annotation(
                 directory=f'{catma_project.uuid}/collections/{ac.uuid}/annotations/{annotation_dir}',
                 plain_text=ac.text.plain_text,
@@ -208,7 +209,7 @@ class AnnotationCollection:
         self.text_version: str = self.header['sourceDocumentVersion']
 
         
-        print(f"\tAnnotation Collection {self.name.upper()} for {self.text.title.upper()}")
+        print(f"\tAnnotation Collection {self.name} for {self.text.title.upper()}")
 
         if os.path.isdir(catma_project.uuid + '/collections/' + self.uuid + '/annotations/'):
             #: List of annotations in annotation collection as gitma.Annotation objects.
@@ -270,11 +271,35 @@ class AnnotationCollection:
             raise ValueError(
                 f"Given Property doesn't exist. Choose one of these: {prop_cols}")
 
-    from gitma._vizualize import plot_annotations
+    def plot_annotations(self, y_axis: str = 'tag', color_prop: str = None):
+        """Creates interactive [Plotly Scatter Plot](https://plotly.com/python/line-and-scatter/) to a explore a annotation collection.
 
-    from gitma._vizualize import plot_scaled_annotations
+        Args:
+            y_axis (str, optional): The columns in AnnotationCollection DataFrame used for y axis. Defaults to 'tag'.
+            color_prop (str, optional): A Property's name used in the AnnotationCollection . Defaults to None.
 
-    from gitma._export_annotations import to_stanford_tsv
+        Returns:
+            go.Figure: Plotly scatter plot.
+        """
+        return plot_annotations(ac=self, y_axis=y_axis, color_prop=color_prop)
+
+    def plot_scaled_annotations(
+            self,
+            tag_scale: dict = None,
+            bin_size: int = 50,
+            smoothing_window: int = 100):
+        """Plots a graph with scaled annotations.
+        This function is still under development.
+
+        Args:
+            tag_scale (dict, optional): _description_. Defaults to None.
+            bin_size (int, optional): _description_. Defaults to 50.
+            smoothing_window (int, optional): _description_. Defaults to 100.
+
+        Raises:
+            Exception: _description_
+        """
+        return plot_scaled_annotations(ac=self, tag_scale=tag_scale, bin_size=bin_size, smoothing_window=smoothing_window)
 
     def cooccurrence_network(
             self,
@@ -378,9 +403,6 @@ class AnnotationCollection:
         Args:
             tag_name (str): The searched tag's name.
 
-        Args:
-            tag_name (str): _description_
-
         Returns:
             List[Annotation]: List of annotations as gitma.Annotation objects.
         """
@@ -425,6 +447,22 @@ class AnnotationCollection:
         for an in self.annotations:
             an.delete_property(tag=tag, prop=prop)
 
+    def to_stanford_tsv(
+        self,
+        tags: Union[list, str] = 'all',
+        file_name: str = 'tsv_annotation_export',
+        spacy_model: str = 'de_core_news_sm'):
+        """Takes a CATMA `AnnotationCollection` and writes a tsv-file which can be used to train a stanford NER model.
+        Every token in the collection's text gets a tag if it lays in an annotated text segment. 
+
+        Args:
+            tags (Union[list, str], optional): List of tags, that should be considered. If set to 'all' all annotations are included.\
+                Defaults to 'all'.
+            file_name (str, optional): name of the tsv-file. Defaults to 'tsv_annotation_export'.
+            spacy_model (str, optional): a spacy model as listed in https://spacy.io/usage/models. Default to 'de_core_news_sm'.
+        """
+        to_stanford_tsv(ac=self, tags=tags, file_name=file_name, spacy_model=spacy_model)
+    
     def write_annotation_csv(
         self,
         tags: Union[str, list] = 'all',
