@@ -1,5 +1,5 @@
-Network
-=======
+GitMA Network
+=============
 
 .. note::
     This class is integrated in the ``CatmaProject`` and ``AnnotationCollection`` class.

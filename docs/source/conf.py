@@ -13,8 +13,6 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../../'))
 
-print(sys.path)
-
 # -- Use commonmark for markdown in docstrings
 import commonmark
 def docstring(app, what, name, obj, options, lines):
@@ -56,7 +54,8 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.autodoc',
     'myst_parser',
-    'sphinx.ext.githubpages'
+    # 'sphinx.ext.githubpages',
+    'sphinx_autodoc_typehints'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -74,24 +73,37 @@ add_module_names = False
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_material'
+html_theme = 'pydata_sphinx_theme'
 html_logo = "catma-gitlab-combo-favicon.png"
 
 html_theme_options = {
-    'globaltoc_depth': 3,
-    'theme_color': '#093658'
-    # "light_css_variables": {
-    #     "color-brand-primary": '#093658',
-    #     "color-brand-content": '#5A98A1',
-    # },
-    # "dark_css_variables": {
-    #     "color-brand-primary": '#fc6d26',
-    #     "color-brand-content": '#fbb14a',
-    # },
+    "icon_links": [
+        {
+            # Label for this link
+            "name": "GitHub",
+            # URL where the link will redirect
+            "url": "https://github.com/forTEXT/gitma",  # required
+            # Icon class (if "type": "fontawesome"), or path to local image (if "type": "local")
+            "icon": "fab fa-github-square",
+            # Whether icon should be a FontAwesome class, or a local file
+        }
+    ],
+    "favicons": [
+      {
+         "rel": "icon",
+         "sizes": "16x16",
+         "href": "catma-gitlab-combo-favicon.png",
+      }
+    ]
 }
 
 html_sidebars = {
-    "**": ["logo-text.html", "globaltoc.html", "localtoc.html", "searchbox.html"]
+    "**": [
+        # "logo-text.html",
+        "globaltoc.html",
+        # "localtoc.html",
+        "searchbox.html"
+    ]
 }
 
 
