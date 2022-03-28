@@ -100,9 +100,10 @@ html_theme_options = {
 html_sidebars = {
     "**": [
         # "logo-text.html",
-        "globaltoc.html",
+        "searchbox.html",
+        "sidebar-nav-bs.html",
+        # "globaltoc.html",
         # "localtoc.html",
-        "searchbox.html"
     ]
 }
 

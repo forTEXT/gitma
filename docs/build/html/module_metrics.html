@@ -126,15 +126,11 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar">
-              <div class="sidebar-start-items">
-<h3><a href="index.html">Table of Contents</a></h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gitma.html">GitMA API References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cite_as.html">How to cite</a></li>
-</ul>
-
+              <div class="sidebar-start-items"><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
@@ -214,7 +210,7 @@ If <code class="docutils literal notranslate"><span class="pre">filter_both_ac=F
 <dl class="py function">
 <dt class="sig sig-object py" id="gitma._metrics.get_same_text">
 <span class="sig-name descname"><span class="pre">get_same_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_list1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotation_list2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._metrics.get_same_text" title="Permalink to this definition">#</a></dt>
-<dd><p>All text parts only annotate by one coder get excluded.</p>
+<dd><p>All text parts annotated only by one annotator get excluded.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
