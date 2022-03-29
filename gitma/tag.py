@@ -1,4 +1,5 @@
 import json
+from typing import List, Dict
 from gitma.property import Property
 
 
@@ -66,7 +67,7 @@ class Tag:
     """
 
     def __init__(self, json_file_directory: str):
-        #: The tag' directory.
+        #: The tag's directory.
         self.directory: str = json_file_directory.replace('\\', '/')
         try:
             with open(json_file_directory) as json_input:
@@ -76,7 +77,7 @@ class Tag:
                 f'The Tag file in this directory could not be found:\n{self.directory}\n\
                     --> Make sure the CATMA Project clone did work properly.')
 
-        #: The tag's name
+        #: The tag's name.
         self.name: str = self.json['name']
 
         #: The tag's UUID.
@@ -89,7 +90,7 @@ class Tag:
         self.properties: dict = self.json['userDefinedPropertyDefinitions']
 
         #: The tag's properties as list of gitma.Property objects.
-        self.properties_list: list = [
+        self.properties_list: List[Property] = [
             Property(
                 uuid=item,
                 name=self.properties[item]['name'],
@@ -98,7 +99,7 @@ class Tag:
         ]
 
         #: Dictionary with the names of properties as keys and gitma.Propety objects as values.
-        self.properties_dict: dict = {
+        self.properties_dict: Dict[str, Property] = {
             prop.name: prop for prop in self.properties_list
         }
 
@@ -107,11 +108,14 @@ class Tag:
 
         #: List of child tags as gitma.Tag objects.
         #: Is an empy list until gitma.Tag.get_child_tags will be used.
-        self.child_tags: list = []
+        self.child_tags: List[Tag] = []
 
         #: Parent tag as gitma.Tag objects.
         #: Is None until gitma.Tag.get_child_tags will be used.
-        self.parent: str = None
+        self.parent: Tag = None
+
+        #: The full tag path within the tagset.
+        self.full_path: str = None
 
         #: The tag's time UUID.
         self.time_property: str = get_time_uuid(self.json)
@@ -139,6 +143,16 @@ class Tag:
         for tag in tags:
             if tag.parent_id == self.id:
                 self.child_tags.append(tag)
+
+    def full_tag_path(self) -> None:
+        tag_path = f'/{self.name}'
+        new_tag = self
+
+        while new_tag.parent:
+            new_tag = new_tag.parent
+            tag_path = f'/{new_tag.name}{tag_path}'
+
+        self.full_path = tag_path
 
     def rename_property(self, old_prop: str, new_prop: str) -> None:
         """Renames a property of the tag by overwriting it's json.

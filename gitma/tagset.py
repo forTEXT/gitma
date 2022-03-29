@@ -54,6 +54,9 @@ class Tagset:
             tag.get_parent_tag(self.tag_dict)
             tag.get_child_tags(self.tags)
 
+        for tag in self.tags:
+            tag.full_tag_path()
+
     def __repr__(self) -> str:
         return f'Tagset(Name: {self.name}, Tags: {self.tags})'
 

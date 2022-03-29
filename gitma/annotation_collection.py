@@ -137,7 +137,7 @@ def load_annotations(catma_project, ac, context: int):
 
 df_columns = [
     'document', 'annotation collection', 'annotator',
-    'tag', 'properties', 'left_context', 'annotation',
+    'tag', 'tag_path', 'properties', 'left_context', 'annotation',
     'right_context', 'start_point', 'end_point', 'date'
 ]
 
@@ -146,9 +146,11 @@ def ac_to_df(annotations: List[Annotation], text_title, ac_name) -> pd.DataFrame
     # create df
     df = pd.DataFrame(
         [
-            (text_title, ac_name, a.author, a.tag.name, a.properties, a.pretext,
-                a.text, a.posttext, a.start_point, a.end_point, a.date)
-            for a in annotations
+            (
+                text_title, ac_name, a.author, a.tag.name, a.tag.full_path,
+                a.properties, a.pretext, a.text, a.posttext, a.start_point,
+                a.end_point, a.date
+            ) for a in annotations
         ], columns=df_columns
     )
 
