@@ -285,6 +285,9 @@ class AnnotationCollection:
         """
         return plot_annotations(ac=self, y_axis=y_axis, color_prop=color_prop)
 
+    def filter_by_tag_path(self, path_element: str) -> pd.DataFrame:
+        return self.df[self.df.tag_path.str.contains(path_element)]
+    
     def plot_scaled_annotations(
             self,
             tag_scale: dict = None,
