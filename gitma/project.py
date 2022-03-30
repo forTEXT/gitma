@@ -340,12 +340,11 @@ class CatmaProject:
             self.ac_dict: Dict[str,
                                AnnotationCollection] = annotation_collections[1]
 
-            os.chdir(cwd)
         except FileNotFoundError:
-            os.chdir(cwd)
             raise FileNotFoundError(
                 f"Some components of your CATMA project could not be loaded."
             )
+        os.chdir(cwd)
 
     def __repr__(self):
         documents = [text.title for text in self.texts]
@@ -669,7 +668,8 @@ class CatmaProject:
         tag_filter: list = None,
         filter_both_ac: bool = False,
         level: str = 'tag',
-        distance: str = 'binary') -> None:
+        distance: str = 'binary',
+        return_as_dict: bool = False) -> None:
         """Computes Inter Annotator Agreement for 2 Annotation Collections.
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo_notebooks/inter_annotator_agreement.ipynb)
         for details.
@@ -685,14 +685,15 @@ class CatmaProject:
             distance (str, optional): The IAA distance function. Either 'binary' or 'interval'.\
             See the [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further informations. Defaults to 'binary'.
         """
-        get_iaa(
+        return get_iaa(
             project=self,
             ac1_name=ac1_name,
             ac2_name=ac2_name,
             tag_filter=tag_filter,
             filter_both_ac=filter_both_ac,
             level=level,
-            distance=distance
+            distance=distance,
+            return_as_dict=return_as_dict
         )
 
     def gamma_agreement(
