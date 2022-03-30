@@ -150,6 +150,8 @@ class Annotation:
     """
 
     def __init__(self, directory: str, plain_text: str, catma_project, context: int = 50):
+        self.project_direcory = catma_project.project_directory
+        
         #: The annotation's directory.
         self.directory = directory
         try:
@@ -204,7 +206,7 @@ class Annotation:
         #: The annotation's properties as a dictionary with property names as keys
         #: and the property values as list.
         self.properties = {
-            self.tag.properties[prop]['name']: user_properties[prop] for prop in user_properties
+            self.tag.properties_data[prop]['name']: user_properties[prop] for prop in user_properties
         }
 
     def __len__(self) -> int:
@@ -219,6 +221,20 @@ class Annotation:
     def __repr__(self):
         return f"Annotation(Author: {self.author}, Tag: {self.tag}, Properties: {self.properties}, Start Point: {self.start_point}, )"
 
+    def modify_start_point(self, new_start_point: int, relative: bool = False):
+        if relative:
+            new_start_point = self.start_point + new_start_point
+        self.data['target']['items'][0]['selector']['start'] = new_start_point
+        with open(self.project_direcory + self.directory, 'w', encoding='utf-8') as json_output:
+            json_output.write(json.dumps(self.data))
+
+    def modify_end_point(self, new_end_point: int, relative: bool = False):
+        if relative:
+            new_end_point = self.end_point + new_end_point
+        self.data['target']['items'][-1]['selector']['end'] = new_end_point
+        with open(self.project_direcory + self.directory, 'w', encoding='utf-8') as json_output:
+            json_output.write(json.dumps(self.data))
+    
     def modify_property_value(self, tag: str, prop: str, old_value: str, new_value: str) -> None:
         """Modifies property values if the annotation is tagged by defined tag and property
         by rewriting the annotation's JSON file.
