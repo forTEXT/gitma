@@ -87,20 +87,20 @@ class Tag:
         self.parent_id: str = self.json['parentUuid'] if 'parentUuid' in self.json else None
 
         #: The tag's properties as a list of dictionaries.
-        self.properties: dict = self.json['userDefinedPropertyDefinitions']
+        self.properties_data: list = self.json['userDefinedPropertyDefinitions']
 
         #: The tag's properties as list of gitma.Property objects.
-        self.properties_list: List[Property] = [
+        self.properties: List[Property] = [
             Property(
                 uuid=item,
-                name=self.properties[item]['name'],
-                possible_values=self.properties[item]["possibleValueList"]
-            ) for item in self.properties
+                name=self.properties_data[item]['name'],
+                possible_values=self.properties_data[item]["possibleValueList"]
+            ) for item in self.properties_data
         ]
 
         #: Dictionary with the names of properties as keys and gitma.Propety objects as values.
         self.properties_dict: Dict[str, Property] = {
-            prop.name: prop for prop in self.properties_list
+            prop.name: prop for prop in self.properties
         }
 
         #: The color defined for the tag in the CATMA UI
@@ -124,7 +124,7 @@ class Tag:
         self.user_property: str = get_user_properties(self.json)
 
     def __repr__(self):
-        return f'Tag(Name: {self.name}, Properties: {self.properties_list})'
+        return f'Tag(Name: {self.name}, Properties: {self.properties})'
 
     def get_parent_tag(self, tagset_dict: dict) -> None:
         """Adds the the parent tag to self.parent.
@@ -161,7 +161,7 @@ class Tag:
             old_prop (str): The old property's name.
             new_prop (str): The new proeprty's name.
         """
-        for item in self.properties_list:
+        for item in self.properties:
             if item.name == old_prop:
                 self.json['userDefinedPropertyDefinitions'][item.uuid]['name'] = new_prop
         # write new tag json file
@@ -176,7 +176,7 @@ class Tag:
             old_value (str): The property value to be replaced.
             new_value (str): The new property value.
         """
-        for item in self.properties_list:
+        for item in self.properties:
             if item.name == prop:
                 pv = self.json['userDefinedPropertyDefinitions'][item.uuid]["possibleValueList"]
                 for index, v in enumerate(pv):
