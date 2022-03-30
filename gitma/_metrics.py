@@ -220,9 +220,15 @@ def get_annotation_pairs(
 
     if property_filter:
         ac1_annotations = [
-            an for an in ac1_annotations if property_filter in an.properties]
+            an for an in ac1_annotations
+            if property_filter in an.properties             # test if property exists
+            and len(an.properties[property_filter]) > 0     # test if property is annotated
+        ]
         ac2_annotations = [
-            an for an in ac2_annotations if property_filter in an.properties]
+            an for an in ac2_annotations
+            if property_filter in an.properties             # test if property exists
+            and len(an.properties[property_filter]) > 0     # test if property is annotated
+        ]
 
     pair_list = []
     missing_an2_annotations = 0
@@ -263,7 +269,11 @@ def get_annotation_pairs(
     print(
         textwrap.dedent(
             f"""
-            Finished search for overlapping annotations.
+            ==============================================
+            ==============================================
+            Finished search for overlapping annotations in:
+            - {ac1.name}
+            - {ac2.name}
             Could match {len(pair_list)} annotations.
             Average overlap is {round(string_difference, 2)} %.
             Couldn't match {missing_an2_annotations} annotation(s) in first annotation collection.
@@ -323,7 +333,8 @@ def get_iaa(
         tag_filter: list = None,
         filter_both_ac: bool = False,
         level: str = 'tag',
-        distance: str = 'binary'):
+        distance: str = 'binary',
+        return_as_dict: bool = False):
     """Computes Inter Annotator Agreement for 2 Annotation Collections.
 
     Args:
@@ -362,17 +373,29 @@ def get_iaa(
     annotation_task = AnnotationTask(data=data, distance=distance_function)
 
     print(textwrap.dedent(
-        f"""
-        Scott's Pi: {annotation_task.pi()}
-        Cohen's Kappa: {annotation_task.kappa()}
-        Krippendorf Alpha: {annotation_task.alpha()}
-        -------------------
-        -------------------
-        Confusion Matrix:
+        f"""Results for "{level}"
+        -------------{len(level) * '-'}-
+        Scott's Pi:          {annotation_task.pi()}
+        Cohen's Kappa:       {annotation_task.kappa()}
+        Krippendorf's Alpha: {annotation_task.alpha()}
+        ===============================================
         """
     ))
 
-    return get_confusion_matrix(pair_list=annotation_pairs, level=level)
+    if return_as_dict:
+        return {
+            "Scott's Pi": annotation_task.pi(),
+            "Cohen's Kappa": annotation_task.kappa(),
+            "Krippendorf's Alpha": annotation_task.alpha()
+        }
+    else:
+        print(textwrap.dedent(
+            f"""
+            Confusion Matrix
+            -------
+            """
+        ))
+        return get_confusion_matrix(pair_list=annotation_pairs, level=level)
 
 
 def gamma_agreement(
