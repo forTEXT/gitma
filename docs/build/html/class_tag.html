@@ -126,7 +126,17 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar">
-              <div class="sidebar-start-items"><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+              <div class="sidebar-start-items">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -190,16 +200,6 @@
 
   </div>
 </nav>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
               </div>
               <div class="sidebar-end-items">
               </div>
@@ -239,7 +239,7 @@
 <h1>Tag<a class="headerlink" href="#tag" title="Permalink to this headline">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="gitma.Tag">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.Tag" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.Tag" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class which represents a CATMA Tag.</p>
 <dl class="field-list simple">
@@ -326,35 +326,29 @@ Is None until gitma.Tag.get_child_tags will be used.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.Tag.get_parent_tag">
-<span class="sig-name descname"><span class="pre">get_parent_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tagset_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.Tag.get_parent_tag" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_parent_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tagset_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tag.get_parent_tag" title="Permalink to this definition">#</a></dt>
 <dd><p>Adds the the parent tag to self.parent.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>tagset_dict</strong> (<em>dict</em>) – The tagset as a gitma.Tagse.tag_dict.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>:py:obj:<code class="docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.Tag.get_child_tags">
-<span class="sig-name descname"><span class="pre">get_child_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.Tag.get_child_tags" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_child_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tag.get_child_tags" title="Permalink to this definition">#</a></dt>
 <dd><p>Adds all child tags to the tag’s tags</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>tags</strong> (<em>list</em>) – A list of gitma.Tag objects.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>:py:obj:<code class="docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.Tag.rename_property">
-<span class="sig-name descname"><span class="pre">rename_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_prop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_prop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.Tag.rename_property" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">rename_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tag.rename_property" title="Permalink to this definition">#</a></dt>
 <dd><p>Renames a property of the tag by overwriting it’s json.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -363,15 +357,12 @@ Is None until gitma.Tag.get_child_tags will be used.</p>
 <li><p><strong>new_prop</strong> (<em>str</em>) – The new proeprty’s name.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>:py:obj:<code class="docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.Tag.rename_possible_property_value">
-<span class="sig-name descname"><span class="pre">rename_possible_property_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.Tag.rename_possible_property_value" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">rename_possible_property_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.Tag.rename_possible_property_value" title="Permalink to this definition">#</a></dt>
 <dd><p>Renames as specified property value in the list of possible property values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -380,9 +371,6 @@ Is None until gitma.Tag.get_child_tags will be used.</p>
 <li><p><strong>old_value</strong> (<em>str</em>) – The property value to be replaced.</p></li>
 <li><p><strong>new_value</strong> (<em>str</em>) – The new property value.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>:py:obj:<code class="docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>

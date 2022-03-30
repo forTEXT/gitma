@@ -126,11 +126,7 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar">
-              <div class="sidebar-start-items"><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
-  <div class="bd-toc-item active">
-    
-  </div>
-</nav>
+              <div class="sidebar-start-items">
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
@@ -140,7 +136,11 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
               </div>
               <div class="sidebar-end-items">
               </div>
@@ -184,7 +184,7 @@
 </div>
 <span class="target" id="module-gitma._vizualize"></span><dl class="py function">
 <dt class="sig sig-object py" id="gitma._vizualize.duplicate_generator">
-<span class="sig-name descname"><span class="pre">duplicate_generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property_col</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._vizualize.duplicate_generator" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">duplicate_generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gitma._vizualize.duplicate_generator" title="Permalink to this definition">#</a></dt>
 <dd><p>Yields for each value in property col a copy of the given data frame row.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -196,15 +196,12 @@
 <dt class="field-even">Yields</dt>
 <dd class="field-even"><p><em>Generator[pd.Series, None, None]</em> – The data frame row</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>:py:class:<code class="docutils literal notranslate"><span class="pre">~typing.Generator``[:py:class:``~pandas.core.series.Series</span></code>, :py:obj:<code class="docutils literal notranslate"><span class="pre">None</span></code>, :py:obj:<code class="docutils literal notranslate"><span class="pre">None</span></code>]</p>
-</dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gitma._vizualize.duplicate_rows">
-<span class="sig-name descname"><span class="pre">duplicate_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ac_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property_col</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._vizualize.duplicate_rows" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">duplicate_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ac_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#gitma._vizualize.duplicate_rows" title="Permalink to this definition">#</a></dt>
 <dd><p>Duplicates rows in AnnotationCollection DataFrame if multiple property values exist in defined porperty column.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -227,17 +224,12 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gitma._vizualize.get_color_dict">
-<span class="sig-name descname"><span class="pre">get_color_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._vizualize.get_color_dict" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>:py:class:<code class="docutils literal notranslate"><span class="pre">~typing.Dict``[:py:class:``str</span></code>, :py:class:<code class="docutils literal notranslate"><span class="pre">str</span></code>]</p>
-</dd>
-</dl>
-</dd></dl>
+<span class="sig-name descname"><span class="pre">get_color_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gitma._vizualize.get_color_dict" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gitma._vizualize.update_figure">
-<span class="sig-name descname"><span class="pre">update_figure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._vizualize.update_figure" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">update_figure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">plotly.graph_objs._figure.Figure</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#gitma._vizualize.update_figure" title="Permalink to this definition">#</a></dt>
 <dd><p>Default plotly template for GitMA.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -254,7 +246,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gitma._vizualize.format_annotation_text">
-<span class="sig-name descname"><span class="pre">format_annotation_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._vizualize.format_annotation_text" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">format_annotation_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#gitma._vizualize.format_annotation_text" title="Permalink to this definition">#</a></dt>
 <dd><p>Format the text of an annotation for plotting.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -271,7 +263,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gitma._vizualize.plot_annotations">
-<span class="sig-name descname"><span class="pre">plot_annotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tag'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tag'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._vizualize.plot_annotations" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">plot_annotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tag'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tag'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._vizualize.plot_annotations" title="Permalink to this definition">#</a></dt>
 <dd><p>Creates interactive <a class="reference external" href="https://plotly.com/python/line-and-scatter/">Plotly Scatter Plot</a> to a explore a annotation collection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -292,7 +284,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gitma._vizualize.plot_annotation_progression">
-<span class="sig-name descname"><span class="pre">plot_annotation_progression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._vizualize.plot_annotation_progression" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">plot_annotation_progression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#gitma._vizualize.plot_annotation_progression" title="Permalink to this definition">#</a></dt>
 <dd><p>Plot the annotation progression for every annotator in a CATMA project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -309,7 +301,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gitma._vizualize.plot_scaled_annotations">
-<span class="sig-name descname"><span class="pre">plot_scaled_annotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing_window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._vizualize.plot_scaled_annotations" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">plot_scaled_annotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ac</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing_window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma._vizualize.plot_scaled_annotations" title="Permalink to this definition">#</a></dt>
 <dd><p>Plots a graph with scaled annotations.
 This function is still under development.</p>
 <dl class="field-list simple">
@@ -324,15 +316,12 @@ This function is still under development.</p>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><strong>Exception</strong> – <em>description</em></p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>:py:obj:<code class="docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gitma._vizualize.plot_interactive">
-<span class="sig-name descname"><span class="pre">plot_interactive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">catma_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'annotation</span> <span class="pre">collection'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._vizualize.plot_interactive" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">plot_interactive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">catma_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'annotation</span> <span class="pre">collection'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#gitma._vizualize.plot_interactive" title="Permalink to this definition">#</a></dt>
 <dd><p>This function generates one Plotly scatter plot per annotated document in a CATMA project.
 By default the colors represent the annotation collections.
 By that they can’t be deactivated with the interactive legend.</p>
@@ -354,7 +343,7 @@ By that they can’t be deactivated with the interactive legend.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="gitma._vizualize.compare_annotation_collections">
-<span class="sig-name descname"><span class="pre">compare_annotation_collections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">catma_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotation_collections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tag'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma._vizualize.compare_annotation_collections" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compare_annotation_collections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">catma_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotation_collections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tag'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#gitma._vizualize.compare_annotation_collections" title="Permalink to this definition">#</a></dt>
 <dd><p>Plots annotations of multiple annotation collections of the same texts as line plot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

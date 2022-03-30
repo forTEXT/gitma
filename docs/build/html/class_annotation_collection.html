@@ -126,7 +126,17 @@
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar">
-              <div class="sidebar-start-items"><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+              <div class="sidebar-start-items">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
@@ -190,16 +200,6 @@
 
   </div>
 </nav>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
               </div>
               <div class="sidebar-end-items">
               </div>
@@ -256,7 +256,7 @@
 <h1>AnnotationCollection<a class="headerlink" href="#annotationcollection" title="Permalink to this headline">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="gitma.AnnotationCollection">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnnotationCollection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ac_uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catma_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnnotationCollection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ac_uuid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catma_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class which represents a CATMA annotation collection.</p>
 <dl class="field-list simple">
@@ -333,7 +333,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.AnnotationCollection.annotation_dict">
-<span class="sig-name descname"><span class="pre">annotation_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.annotation_dict" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">annotation_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="class_annotation.html#gitma.Annotation" title="gitma.annotation.Annotation"><span class="pre">gitma.annotation.Annotation</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gitma.AnnotationCollection.annotation_dict" title="Permalink to this definition">#</a></dt>
 <dd><p>Creates dictionary with UUIDs as keys an Annotation objects as values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -347,7 +347,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.AnnotationCollection.duplicate_by_prop">
-<span class="sig-name descname"><span class="pre">duplicate_by_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.duplicate_by_prop" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">duplicate_by_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#gitma.AnnotationCollection.duplicate_by_prop" title="Permalink to this definition">#</a></dt>
 <dd><p>Duplicates the rows in the annotation collection’s DataFrame if the given Property has multiple Property Values
 the annotations represented by a DataFrame row.</p>
 <dl class="field-list simple">
@@ -368,7 +368,7 @@ the annotations represented by a DataFrame row.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.AnnotationCollection.plot_annotations">
-<span class="sig-name descname"><span class="pre">plot_annotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tag'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.plot_annotations" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">plot_annotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tag'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.plot_annotations" title="Permalink to this definition">#</a></dt>
 <dd><p>Creates interactive <a class="reference external" href="https://plotly.com/python/line-and-scatter/">Plotly Scatter Plot</a> to a explore a annotation collection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -388,7 +388,7 @@ the annotations represented by a DataFrame row.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.AnnotationCollection.plot_scaled_annotations">
-<span class="sig-name descname"><span class="pre">plot_scaled_annotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing_window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.plot_scaled_annotations" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">plot_scaled_annotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing_window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.plot_scaled_annotations" title="Permalink to this definition">#</a></dt>
 <dd><p>Plots a graph with scaled annotations.
 This function is still under development.</p>
 <dl class="field-list simple">
@@ -407,7 +407,7 @@ This function is still under development.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.AnnotationCollection.cooccurrence_network">
-<span class="sig-name descname"><span class="pre">cooccurrence_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">character_distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">included_tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tag'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_stats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as_gexf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.cooccurrence_network" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">cooccurrence_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">character_distance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">included_tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tag'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_stats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_as_gexf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.cooccurrence_network" title="Permalink to this definition">#</a></dt>
 <dd><p>Draws cooccurrence network graph where every tag is a node and every edge represents two cooccurent tags.
 You can by the <code class="docutils literal notranslate"><span class="pre">character_distance</span></code> parameter when two annotations are considered cooccurent.
 If you set <code class="docutils literal notranslate"><span class="pre">character_distance=0</span></code> only the tags of overlapping annotations will be represented
@@ -428,7 +428,7 @@ as connected nodes.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.AnnotationCollection.to_pygamma_table">
-<span class="sig-name descname"><span class="pre">to_pygamma_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.to_pygamma_table" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">to_pygamma_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#gitma.AnnotationCollection.to_pygamma_table" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns the annotation collection’s DataFrame in the format pygamma takes as input.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -442,7 +442,7 @@ as connected nodes.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.AnnotationCollection.tag_stats">
-<span class="sig-name descname"><span class="pre">tag_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tag'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopwords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.tag_stats" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">tag_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tag'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopwords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranking</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#gitma.AnnotationCollection.tag_stats" title="Permalink to this definition">#</a></dt>
 <dd><p>Computes the following data for each tag in the annotation collection:</p>
 <ul class="simple">
 <li><p>the count of annotations with a tag</p></li>
@@ -469,7 +469,7 @@ as connected nodes.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.AnnotationCollection.property_stats">
-<span class="sig-name descname"><span class="pre">property_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.property_stats" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">property_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#gitma.AnnotationCollection.property_stats" title="Permalink to this definition">#</a></dt>
 <dd><p>Counts for each property the property values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -483,7 +483,7 @@ as connected nodes.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.AnnotationCollection.get_annotation_by_tag">
-<span class="sig-name descname"><span class="pre">get_annotation_by_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.get_annotation_by_tag" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_annotation_by_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="class_annotation.html#gitma.Annotation" title="gitma.annotation.Annotation"><span class="pre">gitma.annotation.Annotation</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#gitma.AnnotationCollection.get_annotation_by_tag" title="Permalink to this definition">#</a></dt>
 <dd><p>Creates list of all annotations with a given name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -500,7 +500,7 @@ as connected nodes.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.AnnotationCollection.annotate_properties">
-<span class="sig-name descname"><span class="pre">annotate_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.annotate_properties" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">annotate_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.annotate_properties" title="Permalink to this definition">#</a></dt>
 <dd><p>Set value for given property. This function uses the <code class="docutils literal notranslate"><span class="pre">gitma.Annotation.set_property_values()</span></code> method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -515,7 +515,7 @@ as connected nodes.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.AnnotationCollection.rename_property_value">
-<span class="sig-name descname"><span class="pre">rename_property_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.rename_property_value" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">rename_property_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.rename_property_value" title="Permalink to this definition">#</a></dt>
 <dd><p>Renames Property of all annotations with the given tag name.
 Replaces only the property value defined by the parameter <code class="docutils literal notranslate"><span class="pre">old_value</span></code>.</p>
 <dl class="field-list simple">
@@ -532,7 +532,7 @@ Replaces only the property value defined by the parameter <code class="docutils 
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.AnnotationCollection.delete_properties">
-<span class="sig-name descname"><span class="pre">delete_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.delete_properties" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">delete_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.delete_properties" title="Permalink to this definition">#</a></dt>
 <dd><p>Deletes a property from all annotations with a given tag name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -546,7 +546,7 @@ Replaces only the property value defined by the parameter <code class="docutils 
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.AnnotationCollection.to_stanford_tsv">
-<span class="sig-name descname"><span class="pre">to_stanford_tsv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tsv_annotation_export'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacy_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'de_core_news_sm'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.to_stanford_tsv" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">to_stanford_tsv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tsv_annotation_export'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacy_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'de_core_news_sm'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.to_stanford_tsv" title="Permalink to this definition">#</a></dt>
 <dd><p>Takes a CATMA <code class="docutils literal notranslate"><span class="pre">AnnotationCollection</span></code> and writes a tsv-file which can be used to train a stanford NER model.
 Every token in the collection’s text gets a tag if it lays in an annotated text segment.</p>
 <dl class="field-list simple">
@@ -562,7 +562,7 @@ Every token in the collection’s text gets a tag if it lays in an annotated tex
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.AnnotationCollection.write_annotation_csv">
-<span class="sig-name descname"><span class="pre">write_annotation_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_missing_prop_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PropertyAnnotationTable'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.write_annotation_csv" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">write_annotation_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_missing_prop_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'PropertyAnnotationTable'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.write_annotation_csv" title="Permalink to this definition">#</a></dt>
 <dd><p>Creates csv file to add propertiy values to existing annotations.
 The added property values can be imported with the <code class="docutils literal notranslate"><span class="pre">read_annotation_csv()</span></code> method.</p>
 <p><a class="reference external" href="https://gitma.readthedocs.io/en/latest/class_annotation_collection.html#add-property-values-via-csv-table">See the example below.</a></p>
@@ -580,7 +580,7 @@ The added property values can be imported with the <code class="docutils literal
 
 <dl class="py method">
 <dt class="sig sig-object py" id="gitma.AnnotationCollection.read_annotation_csv">
-<span class="sig-name descname"><span class="pre">read_annotation_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PropertyAnnotationTable.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">push_to_gitlab</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gitma.AnnotationCollection.read_annotation_csv" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">read_annotation_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'PropertyAnnotationTable.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">push_to_gitlab</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#gitma.AnnotationCollection.read_annotation_csv" title="Permalink to this definition">#</a></dt>
 <dd><p>Reads csv file created by the <code class="docutils literal notranslate"><span class="pre">write_annotation_csv()</span></code> method and updates
 the annotation json files. Additionally, if <code class="docutils literal notranslate"><span class="pre">push_to_gitlab=True</span></code> the annotations
 get imported in the CATMA Gitlab backend.</p>
@@ -591,9 +591,6 @@ get imported in the CATMA Gitlab backend.</p>
 <li><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – The annotation csv file’s name/directory.                Defaults to ‘PropertyAnnotationTable.csv’.</p></li>
 <li><p><strong>push_to_gitlab</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to push the annotations to gitlab. Defaults to False.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>:py:obj:<code class="docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>
