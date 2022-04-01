@@ -247,6 +247,23 @@ class AnnotationCollection:
         for an in self.annotations:
             yield an
 
+    def to_list(self, tags: Union[list, None] = None) -> List[dict]:
+        """Returns list of annotations as dictionaries using the `Annotation.to_dict()` method.
+
+        Args:
+            tags(Union[list, None]): Tags included in the annotations list. If `None` all tags are included. Defaults to None.
+
+        Returns:
+            List[dict]: List of annotations as dictionaries.
+        """
+        if not tags:
+            tags = self.df.tag.unique()
+        
+        return [
+            an.to_dict() for an in self.annotations
+            if an.tag.name in tags
+        ]
+    
     def annotation_dict(self) -> Dict[str, Annotation]:
         """Creates dictionary with UUIDs as keys an Annotation objects as values.
 
@@ -276,12 +293,20 @@ class AnnotationCollection:
             raise ValueError(
                 f"Given Property doesn't exist. Choose one of these: {prop_cols}")
 
-    def push_annotations(self, commit_message: str = 'new annotations'):
+    def push_annotations(self, commit_message: str = 'new annotations') -> None:
+        """Process `git add .`, `git commit` and `git push` for a single annotation collection.
+
+        *Note*: Works only if git is installed and the CATMA access token is stored in the **git
+        credential manager**.
+
+        Args:
+            commit_message (str, optional): Customize the commit message. Defaults to 'new annotations'.
+        """
         cwd = os.getcwd()
         os.chdir(f'{self.project_directory}{self.directory}')
         subprocess.run(['git', 'add', '.'])
         subprocess.run(['git', 'commit', '-m', commit_message])
-        subprocess.run(['git', 'push', 'origin', 'HEAD:master'])
+        subprocess.run(['git', 'push', 'origin', 'master'])
         os.chdir(cwd)
         print(f'Pushed annotations from collection {self.name}.')
     

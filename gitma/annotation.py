@@ -221,14 +221,42 @@ class Annotation:
     def __repr__(self):
         return f"Annotation(Author: {self.author}, Tag: {self.tag}, Properties: {self.properties}, Start Point: {self.start_point}, )"
 
-    def modify_start_point(self, new_start_point: int, relative: bool = False):
+    def to_dict(self) -> dict:
+        """Returns annotation core elements as keys
+
+        Returns:
+            dict: Annotation text, the tag, the properties as dictionary, start point and end point.
+        """
+        return {
+            'annotation': self.text,
+            'tag': self.tag.name,
+            'properties': self.properties,
+            'start_point': self.start_point,
+            'end_point': self.end_point
+        }
+
+    def modify_start_point(self, new_start_point: int, relative: bool = False) -> None:
+        """Rewrites annotation json file with new start point.
+
+        Args:
+            new_start_point (int): New end point.
+            relative (bool, optional): If true the `new_start_point` parameter is interpreted as relative to the old end point.\
+                Defaults to False.
+        """
         if relative:
             new_start_point = self.start_point + new_start_point
         self.data['target']['items'][0]['selector']['start'] = new_start_point
         with open(self.project_direcory + self.directory, 'w', encoding='utf-8') as json_output:
             json_output.write(json.dumps(self.data))
 
-    def modify_end_point(self, new_end_point: int, relative: bool = False):
+    def modify_end_point(self, new_end_point: int, relative: bool = False) -> None:
+        """Rewrites annotation json file with new end point.
+
+        Args:
+            new_end_point (int): New end point.
+            relative (bool, optional): If true the `new_end_point` parameter is interpreted as relative to the old end point.\
+                Defaults to False.
+        """
         if relative:
             new_end_point = self.end_point + new_end_point
         self.data['target']['items'][-1]['selector']['end'] = new_end_point

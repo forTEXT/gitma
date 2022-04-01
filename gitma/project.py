@@ -290,6 +290,9 @@ class CatmaProject:
         #: The project's directory.
         self.project_directory: str = project_directory
 
+        #: The project's name.
+        self.name: str = self.uuid[43:-5]
+
         try:
             os.chdir(self.project_directory)
         except FileNotFoundError:
@@ -350,8 +353,41 @@ class CatmaProject:
         documents = [text.title for text in self.texts]
         tagsets = [tagset.name for tagset in self.tagsets]
         acs = [ac.name for ac in self.annotation_collections]
-        return f"CatmaProject(\n\tName: {self.uuid[43:-5]},\n\tDocuments: {documents},\n\tTagsets: {tagsets},\n\tAnnotationCollections: {acs})"
+        return f"CatmaProject(\n\tName: {self.name},\n\tDocuments: {documents},\n\tTagsets: {tagsets},\n\tAnnotationCollections: {acs})"
 
+    def to_json(self,
+        annotation_collections: Union[List[str], str] = 'all',
+        rename_dict: Union[Dict[str, str], None] = None,
+        included_tags: Union[list, None] = None,
+        directory: str = './') -> None:
+        """Saves all annotations as JSON file.
+
+        Args:
+            annotation_collections (Union[List[str], str], optional): Parameter to define the exported annotation collections. Defaults to 'all'.
+            rename_dict (Union[Dict[str, str], None], optional): Dictionary to rename annotation collections. Defaults to None.
+            included_tags (Union[list, None]): Tags included in the annotations list. If `None` all tags are included. Defaults to None.
+            directory (str): Backup directory. Defaults to './'
+        """
+        
+        if annotation_collections == 'all':
+            annotation_collections = self.annotation_collections
+        else:
+            annotation_collections = [ac for ac in self.annotation_collections if ac.name in annotation_collections]
+
+        if not rename_dict:
+            rename_dict = {ac.name: ac.name for ac in annotation_collections}
+
+        output_dict = {}
+        for ac in annotation_collections:
+            if ac.text.title not in output_dict:
+                output_dict[ac.text.title] = {rename_dict[ac.name]: ac.to_list(tags=included_tags)}
+            else:
+                output_dict[ac.text.title][rename_dict[ac.name]] = ac.to_list(tags=included_tags)
+
+        with open(f'{directory}{self.name}.json', 'w', encoding='utf-8') as json_output:
+            json_output.write(json.dumps(output_dict))
+
+         
     def update(self) -> None:
         """Updates local git folder and reloads CatmaProject.
 
