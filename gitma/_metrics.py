@@ -1,4 +1,3 @@
-from ast import AnnAssign
 import os
 import numpy as np
 import pandas as pd
@@ -218,6 +217,7 @@ def get_annotation_pairs(
     ac1_annotations, ac2_annotations = get_same_text(
         ac1_annotations, ac2_annotations)
 
+    # removes all annotations without the given property
     if property_filter:
         ac1_annotations = [
             an for an in ac1_annotations
@@ -286,7 +286,8 @@ def get_annotation_pairs(
 
 def get_iaa_data(
     annotation_pairs: List[Tuple[Annotation]],
-    level='tag') -> List[Tuple[int, int, str]]:
+    level='tag',
+    include_empty_annotations: bool = True) -> List[Tuple[int, int, str]]:
     """Yields 3-tuples (Coder, Item, Label) for nltk.AnnotationTask data input.
     If level is not "tag" it has to be a property name, which exists in all annotations.
     ```
@@ -316,6 +317,12 @@ def get_iaa_data(
             the prefix 'prop:'.
 
     """
+    if not include_empty_annotations:       # remove annotation pairs including empty annotations
+        annotation_pairs = [
+            an_pair for an_pair in annotation_pairs
+            if an_pair[1].tag.name != '#None#'
+        ]
+    
     for index, pair in enumerate(annotation_pairs):
         for an_index, an in enumerate(pair):
             if level == 'tag':
@@ -324,78 +331,6 @@ def get_iaa_data(
                 yield an_index, index, an.properties[level.replace('prop:', '')][0]
             else:
                 yield an_index, index, an.properties[level.replace('prop:', '')][0]
-
-
-def get_iaa(
-        project,
-        ac1_name: str,
-        ac2_name: str,
-        tag_filter: list = None,
-        filter_both_ac: bool = False,
-        level: str = 'tag',
-        distance: str = 'binary',
-        return_as_dict: bool = False):
-    """Computes Inter Annotator Agreement for 2 Annotation Collections.
-
-    Args:
-        project (CatmaProject): CatmaProject object.
-        ac1_name (str): AnnotationCollection name to be compared.
-        ac2_name (str): AnnotationCollection name to be compared with.
-        tag_filter (list, optional): Which Tags should be included. If None all are included. Default to None.
-        filter_both_ac (bool, optional): Whether the tag filter shall be aplied to both annotation collections. Default to False.
-        level (str, optional): Whether the Annotation Tag or a specified Property should be compared.
-        distance (str, optional): The IAA distance function. Either 'binary' or 'interval'.\
-            See the [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further informations. Default to 'binary'.
-    """
-
-    from nltk.metrics.agreement import AnnotationTask
-    from nltk.metrics import interval_distance, binary_distance
-
-    if distance == 'inteval':
-        distance_function = interval_distance
-    else:
-        distance_function = binary_distance
-
-    ac1 = project.ac_dict[ac1_name]
-    ac2 = project.ac_dict[ac2_name]
-
-    annotation_pairs = get_annotation_pairs(
-        ac1=ac1,
-        ac2=ac2,
-        tag_filter=tag_filter,
-        filter_both_ac=filter_both_ac,
-        property_filter=level.replace(
-            'prop:', '') if 'prop:' in level else None
-    )
-
-    data = list(get_iaa_data(annotation_pairs, level=level))
-
-    annotation_task = AnnotationTask(data=data, distance=distance_function)
-
-    print(textwrap.dedent(
-        f"""Results for "{level}"
-        -------------{len(level) * '-'}-
-        Scott's Pi:          {annotation_task.pi()}
-        Cohen's Kappa:       {annotation_task.kappa()}
-        Krippendorf's Alpha: {annotation_task.alpha()}
-        ===============================================
-        """
-    ))
-
-    if return_as_dict:
-        return {
-            "Scott's Pi": annotation_task.pi(),
-            "Cohen's Kappa": annotation_task.kappa(),
-            "Krippendorf's Alpha": annotation_task.alpha()
-        }
-    else:
-        print(textwrap.dedent(
-            f"""
-            Confusion Matrix
-            -------
-            """
-        ))
-        return get_confusion_matrix(pair_list=annotation_pairs, level=level)
 
 
 def gamma_agreement(

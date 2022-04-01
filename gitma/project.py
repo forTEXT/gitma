@@ -1,6 +1,7 @@
 import subprocess
 import os
 import json
+import textwrap
 import gitlab
 import pygit2
 import pandas as pd
@@ -14,7 +15,7 @@ from gitma.tag import Tag
 from gitma._write_annotation import write_annotation_json
 from gitma._gold_annotation import create_gold_annotations
 from gitma._vizualize import plot_interactive, plot_annotation_progression
-from gitma._metrics import get_iaa, gamma_agreement
+from gitma._metrics import get_annotation_pairs, get_iaa_data, get_confusion_matrix, gamma_agreement
 
 
 def load_gitlab_project(
@@ -417,7 +418,7 @@ class CatmaProject:
 
         os.chdir(cwd)
 
-    def all_annotations(self) -> Generator[Annotation, None, None]:
+    def annotations(self) -> Generator[Annotation, None, None]:
         """Generator that yields all annotations as gitma.annotation.Annotation objects.
 
         Yields:
@@ -704,6 +705,7 @@ class CatmaProject:
         tag_filter: list = None,
         filter_both_ac: bool = False,
         level: str = 'tag',
+        include_empty_annotations: bool = True,
         distance: str = 'binary',
         return_as_dict: bool = False) -> None:
         """Computes Inter Annotator Agreement for 2 Annotation Collections.
@@ -718,19 +720,69 @@ class CatmaProject:
                 Defaults to False.
             level (str, optional): Whether the Annotation Tag or a specified Property should be compared.\
                 Defaults to 'tag'.
+            include_empty_annotations (bool, optionale): If `False` only annotations with a overlapping annotation in the second collection\
+                get included. Defaults to True.
             distance (str, optional): The IAA distance function. Either 'binary' or 'interval'.\
             See the [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further informations. Defaults to 'binary'.
         """
-        return get_iaa(
-            project=self,
-            ac1_name=ac1_name,
-            ac2_name=ac2_name,
+        from nltk.metrics.agreement import AnnotationTask
+        from nltk.metrics import interval_distance, binary_distance
+
+        if distance == 'inteval':
+            distance_function = interval_distance
+        else:
+            distance_function = binary_distance
+
+        ac1 = self.ac_dict[ac1_name]
+        ac2 = self.ac_dict[ac2_name]
+
+        # create pairs of best matching annotations
+        annotation_pairs = get_annotation_pairs(
+            ac1=ac1,
+            ac2=ac2,
             tag_filter=tag_filter,
             filter_both_ac=filter_both_ac,
-            level=level,
-            distance=distance,
-            return_as_dict=return_as_dict
+            property_filter=level.replace(
+                'prop:', '') if 'prop:' in level else None
         )
+
+        # transform annotation pairs to data format the nltk AnnotationTask class takes as input
+        data = list(get_iaa_data(annotation_pairs, level=level, include_empty_annotations=include_empty_annotations))
+
+        annotation_task = AnnotationTask(data=data, distance=distance_function)
+
+        try:
+            pi = annotation_task.pi()
+            kappa = annotation_task.kappa()
+            alpha = annotation_task.alpha()
+        except ZeroDivisionError:
+            print(f"Couldn't find compute IAA for {level} due to missing overlapping annotations with the given settings.")
+            pi, kappa, alpha = (0, 0, 0)
+
+        print(textwrap.dedent(
+            f"""
+            Results for "{level}"
+            -------------{len(level) * '-'}-
+            Scott's Pi:          {pi}
+            Cohen's Kappa:       {kappa}
+            Krippendorf's Alpha: {alpha}
+            ===============================================
+            """
+        ))
+
+        if return_as_dict:
+            return {
+                "Scott's Pi": pi,
+                "Cohen's Kappa": kappa,
+                "Krippendorf's Alpha": alpha
+            }
+        else:
+            print(textwrap.dedent(
+                f"""Confusion Matrix
+                -------
+                """
+            ))
+            return get_confusion_matrix(pair_list=annotation_pairs, level=level)
 
     def gamma_agreement(
         self,
