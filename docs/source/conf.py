@@ -34,7 +34,7 @@ copyright = '2022, Michael Vauth'
 author = 'Michael Vauth'
 
 # The full version, including alpha/beta/rc tags
-release = '1.5.1'
+release = '1.5.3'
 
 doctest_global_setup = "import gitma"
 autodoc_default_flags = ['members']
@@ -55,8 +55,13 @@ extensions = [
     'sphinx.ext.autodoc',
     'myst_parser',
     # 'sphinx.ext.githubpages',
-    # 'sphinx_autodoc_typehints'
+    'sphinx_autodoc_typehints'
 ]
+
+# Typehint settings
+typehints_fully_qualified = False
+typehints_document_rtype = False
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -77,6 +82,8 @@ html_theme = 'pydata_sphinx_theme'
 html_logo = "catma-gitlab-combo-favicon.png"
 
 html_theme_options = {
+    "show_nav_level": 4,
+    "collapse_navigation": False,
     "icon_links": [
         {
             # Label for this link
