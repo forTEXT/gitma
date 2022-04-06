@@ -511,6 +511,8 @@ class AnnotationCollection:
             file_name (str, optional): name of the tsv-file. Defaults to 'tsv_annotation_export'.
             spacy_model (str, optional): a spacy model as listed in https://spacy.io/usage/models. Default to 'de_core_news_sm'.
         """
+        if tags == 'all':
+            tags = list(self.df['tag'].unique())
         to_stanford_tsv(ac=self, tags=tags, file_name=file_name, spacy_model=spacy_model)
     
     def write_annotation_csv(

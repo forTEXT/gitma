@@ -133,7 +133,28 @@ def search_for_startpoints(selector_list: List[Selector]) -> list:
     end_points = [
         end_point for end_point in end_points if end_point not in start_points]
 
-    return zip(start_points, end_points)
+    return list(zip(start_points, end_points))
+
+
+def numeric_property_values_to_int(prop_dict: dict) -> dict:
+    """Transforms numeric property values to integers.
+
+    Args:
+        prop_dict (dict): Dictionary with Property names as keys and values as list.
+
+    Returns:
+        dict: Dictionary with Property names as keys and values as list.
+    """
+    output_dict = {}
+    for prop in prop_dict:
+        values = []
+        for value in prop_dict[prop]:
+            if value.isnumeric():
+                values.append(int(value))
+            else:
+                values.append(value)
+        output_dict[prop] = values
+    return output_dict
 
 
 class Annotation:
@@ -143,7 +164,8 @@ class Annotation:
         directory (str): The annotations directory within the project clone.
         plain_text (str): The plain text annotated by the annotation.
         catma_project (_type_): The parent CatmaProject .
-        context (int, optional): Size of the context that gets included in the data frame representation of annotation collections. Defaults to 50.
+        context (int, optional): Size of the context that gets included in the\
+            data frame representation of annotation collections. Defaults to 50.
 
     Raises:
         FileNotFoundError: If the directory of the annotation's JSON file does not exists.
@@ -230,9 +252,8 @@ class Annotation:
         return {
             'annotation': self.text,
             'tag': self.tag.name,
-            'properties': self.properties,
-            'start_point': self.start_point,
-            'end_point': self.end_point
+            'properties': numeric_property_values_to_int(self.properties),
+            'spans': search_for_startpoints(self.selectors)
         }
 
     def modify_start_point(self, new_start_point: int, relative: bool = False) -> None:
