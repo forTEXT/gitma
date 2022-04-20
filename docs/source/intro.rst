@@ -67,7 +67,7 @@ Load your CATMA project
 
 Explore your annotations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-You can plot in an annotation collection with the ``plot_annotations()`` method.
+You can plot an annotation collection with the ``plot_annotations()`` method.
 (`For customize options see the docs <https://gitma.readthedocs.io/en/latest/class_annotation_collection.html#gitma.AnnotationCollection.plot_annotations>`_):
 ::
 
