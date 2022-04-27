@@ -11,7 +11,7 @@ from gitma.text import Text
 from gitma.annotation import Annotation
 from gitma.tag import Tag
 from gitma._export_annotations import to_stanford_tsv
-from gitma._vizualize import plot_annotations, plot_scaled_annotations
+from gitma._vizualize import plot_annotations, plot_scaled_annotations, duplicate_rows
 
 
 def split_property_dict_to_column(ac_df):
@@ -37,37 +37,6 @@ def split_property_dict_to_column(ac_df):
         ac_df[f'prop:{prop}'] = properties_dict[prop]
 
     return ac_df.drop(columns='properties')
-
-
-def duplicate_rows(ac_df: pd.DataFrame, property_col: str) -> pd.DataFrame:
-    """
-    Duplicates rows in AnnotationCollection DataFrame if multiple property values exist in defined porperty column.
-    """
-    if 'prop:' not in property_col:
-        property_col = f'prop:{property_col}'
-
-    if property_col not in ac_df.columns:
-        raise ValueError(
-            f'{property_col} is not a valid value in the given annotation collections. Choose any of these: {list(ac_df.columns)}')
-
-    def duplicate_generator(df):
-        for _, row in df.iterrows():
-            if isinstance(row[property_col], list) and len(row[property_col]) > 0:
-                for item in row[property_col]:
-                    row_dict = dict(row)
-                    row_dict[property_col] = item
-                    yield row_dict
-            elif isinstance(row[property_col], str) and len(row[property_col]) > 0:
-                yield dict(row)
-            elif isinstance(row[property_col], int) or isinstance(row[property_col], float):
-                yield dict(row)
-            else:
-                row_dict = dict(row)
-                row_dict[property_col] = 'NOT ANNOTATED'
-                yield dict(row_dict)
-
-    df_new = pd.DataFrame(list(duplicate_generator(ac_df)))
-    return df_new
 
 
 def most_common_token(

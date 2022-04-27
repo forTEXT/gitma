@@ -47,9 +47,9 @@ def duplicate_rows(ac_df: pd.DataFrame, property_col: str) -> pd.DataFrame:
         property_col = f'prop:{property_col}'
 
     if property_col not in ac_df.columns:
+        possible_values_str = '\n\t- '.join(list(ac_df.columns))
         raise ValueError(
-            f'{property_col} is not a valid value in the given annotation collections.\
-                Choose any of these: {list(ac_df.columns)}')
+            f'"{property_col}" is not a valid value in the given annotation collections.\nChoose any of these: \n\t- {possible_values_str}')
 
     df_new = pd.DataFrame(
         list(duplicate_generator(

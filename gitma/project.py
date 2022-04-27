@@ -568,7 +568,20 @@ class CatmaProject:
         """
         return plot_annotation_progression(project=self)
 
-    def plot_interactive(self, color_col: str = 'annotation collections') -> go.Figure:
+    def plot_interactive(self, color_col: str = 'annotation collection') -> go.Figure:
+        """This function generates one Plotly scatter plot per annotated document in a CATMA project.
+        By default the colors represent the annotation collections.
+        By that they can be deactivated with the interactive legend.
+
+        Args:
+            color_col (str, optional): 'annotation collection', 'annotator', 'tag' or any property with the prefix 'prop:'. Defaults to 'annotation collection'.
+
+        Returns:
+            go.Figure: Plotly scatter plot.
+        """
+        return plot_interactive(catma_project=self, color_col=color_col)
+
+    def plot_annotations(self, color_col: str = 'annotation collection') -> go.Figure:
         """This function generates one Plotly scatter plot per annotated document in a CATMA project.
         By default the colors represent the annotation collections.
         By that they can be deactivated with the interactive legend.
