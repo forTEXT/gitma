@@ -497,7 +497,7 @@ class CatmaProject:
             author=author
         )
 
-    def create_gold_annotation(
+    def create_gold_annotations(
             self,
             ac_1_name: str,
             ac_2_name: str,
