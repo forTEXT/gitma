@@ -8,7 +8,7 @@
 Python Package to access and process CATMA Projects via the CATMA GitLab Backend.
 
 This package makes use of [CATMA's Git Access](https://catma.de/documentation/git-access/).
-For further infortmations see the [GitMA Documentation](https://gitma.readthedocs.io/en/latest/index.html).
+For further information see the [GitMA Documentation](https://gitma.readthedocs.io/en/latest/index.html).
 
 ## Installation
 
