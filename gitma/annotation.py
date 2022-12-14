@@ -128,12 +128,12 @@ def search_for_startpoints(selector_list: List[Selector]) -> list:
     end_points = [selector.end for selector in selector_list]
 
     # filter redundant start points
-    start_points = [
+    start_points_filtered = [
         start_point for start_point in start_points if start_point not in end_points]
-    end_points = [
+    end_points_filtered = [
         end_point for end_point in end_points if end_point not in start_points]
 
-    return list(zip(start_points, end_points))
+    return list(zip(start_points_filtered, end_points_filtered))
 
 
 def numeric_property_values_to_int(prop_dict: dict) -> dict:
