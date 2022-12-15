@@ -115,8 +115,8 @@ def get_selector_items(start_points: list, end_points: list, source_document_uui
     ]
 
 
-def search_for_startpoints(selector_list: List[Selector]) -> list:
-    """Searches annotation selector item for start and end points-
+def merge_adjacent_spans_forming_continuous_logical_span(selector_list: List[Selector]) -> list:
+    """Merges separate spans that cover a continuous logical span of text, e.g.: [(0, 17), (17, 35)] -> [(0, 35)]
 
     Args:
         selector_list (List[Selector]): _description_
@@ -127,7 +127,6 @@ def search_for_startpoints(selector_list: List[Selector]) -> list:
     start_points = [selector.start for selector in selector_list]
     end_points = [selector.end for selector in selector_list]
 
-    # filter redundant start points
     start_points_filtered = [
         start_point for start_point in start_points if start_point not in end_points]
     end_points_filtered = [
@@ -253,7 +252,7 @@ class Annotation:
             'annotation': self.text,
             'tag': self.tag.name,
             'properties': numeric_property_values_to_int(self.properties),
-            'spans': search_for_startpoints(self.selectors)
+            'spans': merge_adjacent_spans_forming_continuous_logical_span(self.selectors)
         }
 
     def modify_start_point(self, new_start_point: int, relative: bool = False) -> None:
