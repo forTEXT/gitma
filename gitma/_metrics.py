@@ -340,7 +340,7 @@ def gamma_agreement(
         beta: int = 1,
         delta_empty: float = 0.01,
         n_samples: int = 30,
-        precision_level: int = 0.01):
+        precision_level: float = 0.01):
     """Computes Gamma IAA based on Mathet et. al "The Unified and Holistic Method Gamma"
     using the `pygamma-agreement` library. For further installation steps of pygamma-agreement
     and different disagreement options see the [Github site](https://github.com/bootphon/pygamma-agreement).
@@ -352,7 +352,7 @@ def gamma_agreement(
         beta (int, optional): Coefficient weighting the categorical dissimilarity value. Defaults to 1.
         delta_empty (float, optional): _description_. Defaults to 0.01.
         n_samples (int, optional): Number of random continuum sampled from this continuum. Defaults to 30.
-        precision_level (int, optional): Optional float or "high", "medium", "low" error percentage of the gamma estimation. Defaults to 0.01.
+        precision_level (float, optional): Optional float or "high", "medium", "low" error percentage of the gamma estimation. Defaults to 0.01.
 
     Raises:
         ImportWarning: If pygamma has not been installed.
