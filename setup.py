@@ -19,8 +19,8 @@ setuptools.setup(
         "python-gitlab",
         "scipy",
         "spacy",
-        "tabulate"
-        "cvxopt==1.2.7"
-        "pygamma-agreement[CBC]"
+        "tabulate",
+        "cvxopt==1.2.7",
+        "pygamma-agreement[CBC]",
     ]
 )
