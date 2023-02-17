@@ -20,5 +20,7 @@ setuptools.setup(
         "scipy",
         "spacy",
         "tabulate"
+        "cvxopt==1.2.7"
+        "pygamma-agreement[CBC]"
     ]
 )
