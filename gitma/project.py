@@ -705,7 +705,7 @@ class CatmaProject:
             go.Figure: Plotly Line Plot.
         """
         from gitma._vizualize import compare_annotation_collections
-        compare_annotation_collections(
+        return compare_annotation_collections(
             catma_project=self,
             annotation_collections=annotation_collections,
             color_col=color_col
