@@ -741,7 +741,7 @@ class CatmaProject:
         from nltk.metrics.agreement import AnnotationTask
         from nltk.metrics import interval_distance, binary_distance
 
-        if distance == 'inteval':
+        if distance == 'interval':
             distance_function = interval_distance
         else:
             distance_function = binary_distance
