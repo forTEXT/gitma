@@ -170,19 +170,13 @@ class Annotation:
         FileNotFoundError: If the directory of the annotation's JSON file does not exists.
     """
 
-    def __init__(self, directory: str, plain_text: str, catma_project, context: int = 50):
+    def __init__(self, annotation_data: dict, plain_text: str, catma_project, context: int = 50):
         self.project_direcory = catma_project.project_directory
         
-        #: The annotation's directory.
-        self.directory = directory
-        try:
-            with open(directory, 'r', encoding='utf-8') as ip:  # load annotation json file as dict
-                #: The annotation's data as dictionary.
-                self.data: dict = json.load(ip)
-        except FileNotFoundError:
-            raise FileNotFoundError(
-                f'The Annotation in this directory could not be found:\n{self.directory}\n\
-                    --> Make sure the CATMA Project clone did work properly.')
+        #: The annotation in its json representation as a dict
+        self.data: dict = annotation_data
+
+        self.directory: str = self.data["ac_dir"]
 
         #: The annotation's uuid.
         self.uuid: str = get_uuid(self.data)
@@ -240,7 +234,7 @@ class Annotation:
         return True
 
     def __repr__(self):
-        return f"Annotation(Author: {self.author}, Tag: {self.tag}, Properties: {self.properties}, Start Point: {self.start_point}, )"
+        return f"Annotation(Author: {self.author}, Tag: {self.tag}, Properties: {self.properties}, Start Point: {self.start_point}, End Point: {self.end_point}, Text: {self.text}, )"
 
     def to_dict(self) -> dict:
         """Returns annotation core elements as keys

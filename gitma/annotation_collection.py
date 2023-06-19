@@ -85,18 +85,23 @@ def clean_text_in_ac_df(annotation: str) -> str:
 
 
 def load_annotations(catma_project, ac, context: int):
-    annotation_dirs = [
-        file for file in os.listdir(catma_project.uuid + '/collections/' + ac.uuid + '/annotations/')
-        if file.startswith('CATMA_')
-    ]
-    file_count = len(annotation_dirs)
-    steps = list(range(0, 10000, 50)) + [file_count]
-    for index, annotation_dir in enumerate(annotation_dirs):
-        if index + 1 in steps:
-            sys.stdout.write('\r')
-            sys.stdout.write(f"\t\tAnnotations: {index + 1}/{file_count}")
+    base_dir = catma_project.uuid + '/collections/' + ac.uuid + '/annotations/'
+    annotation_list = []
+    # load all annotation collection files
+    for file in os.listdir(base_dir):
+        with open(base_dir + file, "r") as ac_file:
+            # add annotations to annotation list
+            file_annotations = json.load(ac_file)
+            # add the ac file dir to every annotation dict
+            annotation_list = []
+            for a in file_annotations:
+                a["ac_dir"] = base_dir + file
+                annotation_list.append(a)
+            annotation_list.extend(annotation_list)
+
+    for _, annotation_dict in enumerate(annotation_list):
         yield Annotation(
-                directory=f'{catma_project.uuid}/collections/{ac.uuid}/annotations/{annotation_dir}',
+                annotation_data=annotation_dict,
                 plain_text=ac.text.plain_text,
                 catma_project=catma_project,
                 context=context
@@ -180,7 +185,7 @@ class AnnotationCollection:
         )
 
         #: The document's version.
-        self.text_version: str = self.header['sourceDocumentVersion']
+        self.text_version: str = self.header.get('sourceDocumentVersion')
 
         
         print(f"\tAnnotation Collection {self.name} for {self.text.title.upper()}")

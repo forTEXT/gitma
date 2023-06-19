@@ -21,8 +21,8 @@ class Text:
         #: The text's author.
         self.author: str = text_header['gitContentInfoSet']['author']
 
-        with open(project_uuid + '/documents/' + catma_id +
-                  '/' + catma_id + '.txt', 'r', encoding='utf-8') as document:
+        text_file_dir = f"{project_uuid}/documents/{catma_id}/{catma_id}.txt"
+        with open(text_file_dir, 'r', encoding='utf-8', newline="") as document:
             #: The text as a plain text. The offset annotation data refers to this plain text.
             self.plain_text: str = document.read()
 
