@@ -101,17 +101,17 @@ def get_local_project_uuid(
 
 
 def get_ac_name(project_uuid: str, directory: str) -> str:
-    """Gives Annotation Collection name.
+    """Gets an annotation collection's name.
 
     Args:
-        project_uuid (str): CATMA gitlab root project uuids
+        project_uuid (str): CATMA GitLab root project UUID
         directory (str): annotation collection directory
         test_positive (bool, optional): what should be returned if it is intrinsic markup. Defaults to True.
 
     Returns:
-        str: CATMA Annotation Collection
+        str: annotation collection name
     """
-    with open(f'{project_uuid}/collections/{directory}/header.json', 'r') as header_input:
+    with open(f'{project_uuid}/collections/{directory}/header.json', 'r', encoding='utf-8', newline='') as header_input:
         header_dict = json.load(header_input)
 
     return header_dict['name']
@@ -203,8 +203,8 @@ def load_tagsets(project_uuid: str) -> Tuple[List[Tagset], Dict[str, Tagset]]:
     tagsets_directory = project_uuid + '/tagsets/'
     tagsets = [
         Tagset(
-            project_uuid=project_uuid,
-            catma_id=directory
+            project_root_directory=project_uuid,
+            tagset_uuid=directory
         ) for directory in os.listdir(tagsets_directory)
         # ignore empty tagsets
         if test_tageset_directory(project_uuid, directory)
@@ -226,8 +226,8 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
     texts_directory = project_uuid + '/documents/'
     texts = [
         Text(
-            project_uuid=project_uuid,
-            catma_id=directory
+            project_root_directory=project_uuid,
+            document_uuid=directory
         ) for directory in os.listdir(texts_directory)
         if directory.startswith('D_')
     ]
@@ -237,27 +237,26 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
 
 
 class CatmaProject:
-    """Class that represents a CATMA Project including all Documents, Tagsets and Annotation Collections.
+    """Class that represents a CATMA project including all documents, tagsets and annotation collections.
     
-    You can eather load the Project from a local git clone or you load it directly
-    from GitLab after generating a gitlab_access_token in the CATMA GUI.
+    You can either load the project from a local Git clone or you can load it directly
+    from GitLab after generating an access token in the CATMA GUI.
     See the [examples in the docs](https://gitma.readthedocs.io/en/latest/class_project.html#examples) for details.
 
     Args:
 
-        project_name (str): The CATMA Project name. Defaults to None.
-        project_directory (str, optional): The directory where your CATMA Project(s) are located. Defaults to './'
-        included_acs (list, optional): All Annotation Collections that should get loaded. If neither any annotation collections are included nor excluded \
-            all Annotation Collections get loaded. Default to None.
-        excluded_acs (list, optional): All Annotation Collections that should not get loaded. Default to None.
-        ac_filter_keyword (str, bool): Only Annotation Collections with the given keyword get loaded.
-        load_from_gitlab (bool, optional): Whether the CATMA Project shall be loaded dircetly from the CATMA GitLab. Defaults to False.
-        gitlab_access_token (str, optional): The private CATMA GitLab Token. Defaults to None.
-        backup_directory (str, optional): The your Project clone should be located. Default to './'.
+        project_name (str): The CATMA project name. Defaults to None.
+        project_directory (str, optional): The directory where your CATMA projects are located. Defaults to './'
+        included_acs (list, optional): All annotation collections that should get loaded. If annotation collections are neither included nor excluded \
+            all annotation collections get loaded. Defaults to None.
+        excluded_acs (list, optional): Annotation collections that should not get loaded. Defaults to None.
+        ac_filter_keyword (str, bool): Only annotation collections with the given keyword get loaded.
+        load_from_gitlab (bool, optional): Whether the CATMA project should be loaded directly from CATMA's GitLab backend. Defaults to False.
+        gitlab_access_token (str, optional): The private CATMA GitLab access token. Defaults to None.
+        backup_directory (str, optional): The directory where your project clone should be located. Defaults to './'.
 
     Raises:
-        FileNotFoundError: If the CATMA Project was not found in the CATMA GitLab.
-        FileNotFoundError: If the local or remote CATMA Project were not found.
+        FileNotFoundError: If the local or remote CATMA project was not found.
     """
 
     def __init__(
@@ -270,10 +269,10 @@ class CatmaProject:
             load_from_gitlab: bool = False,
             gitlab_access_token: str = None,
             backup_directory: str = './'):
-        # get the current directory to return after loaded the project
+        # get the current directory, to return to after loading the project
         cwd = os.getcwd()
 
-        # Clone CATMA Project
+        # Clone the CATMA project
         if load_from_gitlab:
             #: The project's UUID.
             self.uuid: str = load_gitlab_project(
@@ -298,12 +297,12 @@ class CatmaProject:
             os.chdir(self.project_directory)
         except FileNotFoundError:
             raise FileNotFoundError(
-                f"The CATMA Project in this directory could not been found: \n{self.project_directory}\n\
-                    -> Make sure the CATMA Project clone did work properly and that the project directory is correct")
+                f"The CATMA project \"{self.name}\" could not been found in this directory: {self.project_directory}\n\
+                    -> Make sure the project clone worked properly and that the project directory is correct")
 
         try:
-            # Load Tagsets
-            print('Loading Tagsets ...')
+            # Load tagsets
+            print('Loading tagsets ...')
             if os.path.isdir(self.uuid + '/tagsets/'):
                 tagsets = load_tagsets(
                     project_uuid=self.uuid)
@@ -313,13 +312,13 @@ class CatmaProject:
 
                 #: Dictionary of the project's tagsets with the UUIDs as keys and gitma.Tagset objects as values.
                 self.tagset_dict: Dict[str, Tagset] = tagsets[1]
-                print(f'\t Found {len(self.tagsets)} Tagset(s).')
+                print(f'\t Found {len(self.tagsets)} tagset(s).')
             else:
                 self.tagsets, self.tagset_dict = None, None
-                print(f'\t Did not found any Tagsets.')
+                print(f'\t Did not find any tagsets.')
 
-            # Load Texts
-            print('Loading Documents ...')
+            # Load texts
+            print('Loading documents ...')
             texts = load_texts(project_uuid=self.uuid)
 
             #: List of the gitma.Text objects.
@@ -327,10 +326,10 @@ class CatmaProject:
 
             #: Dictionary of the project's texts with titles as keys and gitma.Text objects as values
             self.text_dict: Dict[str, Text] = texts[1]
-            print(f'\t Found {len(self.texts)} Document(s).')
+            print(f'\t Found {len(self.texts)} document(s).')
 
-            # Load Annotation Collections
-            print('Loading Annotation Collections ...')
+            # Load annotation collections
+            print('Loading annotation collections ...')
             annotation_collections = load_annotation_collections(
                 catma_project=self,
                 included_acs=included_acs,
@@ -361,7 +360,7 @@ class CatmaProject:
         rename_dict: Union[Dict[str, str], None] = None,
         included_tags: Union[list, None] = None,
         directory: str = './') -> None:
-        """Saves all annotations as JSON file.
+        """Saves all annotations as a single JSON file.
 
         Args:
             annotation_collections (Union[List[str], str], optional): Parameter to define the exported annotation collections. Defaults to 'all'.
@@ -385,10 +384,9 @@ class CatmaProject:
             else:
                 output_dict[ac.text.title][rename_dict[ac.name]] = ac.to_list(tags=included_tags)
 
-        with open(f'{directory}{self.name}.json', 'w', encoding='utf-8') as json_output:
+        with open(f'{directory}{self.name}.json', 'w', encoding='utf-8', newline='') as json_output:
             json_output.write(json.dumps(output_dict))
 
-         
     def update(self) -> None:
         """Updates local git folder and reloads CatmaProject.
 

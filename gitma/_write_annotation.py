@@ -13,8 +13,8 @@ def annotation_id(p_uuid, ac_uuid):
     import uuid
     uuid = str(uuid.uuid1()).upper()
     url = f'https://git.catma.de/{p_uuid}/collections/{ac_uuid}/annotations/CATMA_{uuid}.json'
-    directory = f'{p_uuid}/collections/{ac_uuid}/annotations/CATMA_{uuid}.json'
-    return url, directory
+    path = f'{p_uuid}/collections/{ac_uuid}/annotations/CATMA_{uuid}.json'
+    return url, path
 
 
 def get_target_list(start_points: list, end_points: list, text_uuid) -> list:
@@ -47,14 +47,14 @@ def write_annotation_json(
 
     Args:
         project (CatmaProject): A CatmaProject object.
-        annotation_collection_name (str): The annotation collections name
-        tagset_name (str): The tagsets name
+        annotation_collection_name (str): The annotation collection's name
+        tagset_name (str): The tagset's name
         text_title (str): The text title
-        tag_name (str): The tags name
+        tag_name (str): The tag's name
         start_points (list): The annotation span start point
         end_points (list): The annotation span end point
         property_annotations (dict): dictionary with property annotations
-        author (str): the annotations author
+        author (str): the annotation's author
     """
 
     cwd = os.getcwd()
@@ -68,7 +68,7 @@ def write_annotation_json(
         tag_name=tag_name
     )
 
-    annotation_url, annotation_directory = annotation_id(
+    annotation_url, annotation_path = annotation_id(
         project.uuid, ac.uuid)
     tag_directory = tag.file_directory
     tag_url = "https://git.catma.de/" + tag_directory
@@ -114,7 +114,7 @@ def write_annotation_json(
     }
 
     # write new annotation json file
-    with open(annotation_directory, 'w') as json_output:
+    with open(annotation_path, 'w', encoding='utf-8', newline='') as json_output:
         json_output.write(json.dumps(json_dict))
 
     os.chdir(cwd)
