@@ -171,11 +171,13 @@ class Annotation:
     """
 
     def __init__(self, annotation_data: dict, plain_text: str, catma_project, context: int = 50):
-        self.project_direcory = catma_project.project_directory
+        #: The annotation collection's directory
+        self.project_direcory: str = catma_project.project_directory
         
         #: The annotation in its json representation as a dict
         self.data: dict = annotation_data
 
+        #: The annotation collection's directory
         self.directory: str = self.data["ac_dir"]
 
         #: The annotation's uuid.
@@ -248,6 +250,18 @@ class Annotation:
             'properties': numeric_property_values_to_int(self.properties),
             'spans': merge_adjacent_spans_forming_continuous_logical_span(self.selectors)
         }
+    
+    def modify_annotation(self) -> None:
+        with open(self.directory, "r") as ac_input:
+            ac_data = json.load(ac_input)
+
+        for index, item in enumerate(ac_data):
+            if get_uuid(item) == self.uuid:
+                ac_data[index] = self.data
+
+        with open(self.directory, "w") as ac_output:
+            ac_output.write(json.dumps(self.data))
+            
 
     def modify_start_point(self, new_start_point: int, relative: bool = False) -> None:
         """Rewrites annotation json file with new start point.
