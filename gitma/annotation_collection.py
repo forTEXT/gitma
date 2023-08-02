@@ -85,27 +85,24 @@ def clean_text_in_ac_df(annotation: str) -> str:
 
 
 def load_annotations(catma_project, ac, context: int):
-    base_dir = catma_project.uuid + '/collections/' + ac.uuid + '/annotations/'
-    annotation_list = []
+    base_dir = f"{os.getcwd()}/{catma_project.uuid}/collections/{ac.uuid}/annotations/"
     # load all annotation collection files
     for file in os.listdir(base_dir):
+        # the annotation collection's directory
+        ac_dir = base_dir + file
         with open(base_dir + file, "r") as ac_file:
             # add annotations to annotation list
             file_annotations = json.load(ac_file)
-            # add the ac file dir to every annotation dict
-            annotation_list = []
-            for a in file_annotations:
-                a["ac_dir"] = base_dir + file
-                annotation_list.append(a)
-            annotation_list.extend(annotation_list)
 
-    for _, annotation_dict in enumerate(annotation_list):
-        yield Annotation(
-                annotation_data=annotation_dict,
-                plain_text=ac.text.plain_text,
-                catma_project=catma_project,
-                context=context
-        )
+        # load all annotations per file
+        for a in file_annotations:
+            yield Annotation(
+                    annotation_data=a,
+                    ac_dir=ac_dir,
+                    plain_text=ac.text.plain_text,
+                    catma_project=catma_project,
+                    context=context
+            )
     print('\n')
 
 

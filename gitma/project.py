@@ -128,7 +128,7 @@ def load_annotation_collections(
         project_uuid (str): CATMA Project UUID
         included_acs (list): All listed Annotation Collections get loaded.
         excluded_acs (list): All listed Annotations Collections don't get loaded.\
-            If neither icluded nor excluded Annotation Collections are defined, all Annotation Collections get loaded.
+            If neither included nor excluded Annotation Collections are defined, all Annotation Collections get loaded.
 
     Returns:
         Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]: List and Dict of Annotation Collections

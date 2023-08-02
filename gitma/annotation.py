@@ -170,7 +170,7 @@ class Annotation:
         FileNotFoundError: If the directory of the annotation's JSON file does not exists.
     """
 
-    def __init__(self, annotation_data: dict, plain_text: str, catma_project, context: int = 50):
+    def __init__(self, annotation_data: dict, ac_dir: str, plain_text: str, catma_project, context: int = 50):
         #: The annotation collection's directory
         self.project_direcory: str = catma_project.project_directory
         
@@ -178,7 +178,7 @@ class Annotation:
         self.data: dict = annotation_data
 
         #: The annotation collection's directory
-        self.directory: str = self.data["ac_dir"]
+        self.directory: str = ac_dir
 
         #: The annotation's uuid.
         self.uuid: str = get_uuid(self.data)
@@ -251,7 +251,24 @@ class Annotation:
             'spans': merge_adjacent_spans_forming_continuous_logical_span(self.selectors)
         }
     
+    
+    def remove(self) -> None:
+        """Removes the annotation from the annotation collection's json file.
+        """
+        with open(self.directory, "r") as ac_input:
+            ac_data = json.load(ac_input)
+
+        for item in ac_data:
+            if get_uuid(item) == self.uuid:
+                ac_data.remove(self.data)
+
+        with open(self.directory, "w") as ac_output:
+            ac_output.write(json.dumps(ac_data))
+    
     def modify_annotation(self) -> None:
+        """Overwrite annotation collection's json file with the updated
+        annotation data: `self.data`.
+        """
         with open(self.directory, "r") as ac_input:
             ac_data = json.load(ac_input)
 
@@ -260,8 +277,7 @@ class Annotation:
                 ac_data[index] = self.data
 
         with open(self.directory, "w") as ac_output:
-            ac_output.write(json.dumps(self.data))
-            
+            ac_output.write(json.dumps(ac_data))
 
     def modify_start_point(self, new_start_point: int, relative: bool = False) -> None:
         """Rewrites annotation json file with new start point.
@@ -274,8 +290,7 @@ class Annotation:
         if relative:
             new_start_point = self.start_point + new_start_point
         self.data['target']['items'][0]['selector']['start'] = new_start_point
-        with open(self.project_direcory + self.directory, 'w', encoding='utf-8') as json_output:
-            json_output.write(json.dumps(self.data))
+        self.modify_annotation()
 
     def modify_end_point(self, new_end_point: int, relative: bool = False) -> None:
         """Rewrites annotation json file with new end point.
@@ -288,8 +303,7 @@ class Annotation:
         if relative:
             new_end_point = self.end_point + new_end_point
         self.data['target']['items'][-1]['selector']['end'] = new_end_point
-        with open(self.project_direcory + self.directory, 'w', encoding='utf-8') as json_output:
-            json_output.write(json.dumps(self.data))
+        self.modify_annotation()
     
     def modify_property_value(self, tag: str, prop: str, old_value: str, new_value: str) -> None:
         """Modifies property values if the annotation is tagged by defined tag and property
@@ -302,22 +316,16 @@ class Annotation:
             new_value (str): The new property value.
         """
         if self.tag.name == tag and prop in self.properties:
-            # open annotation json file
-            with open(self.directory) as json_input:
-                json_dict = json.load(json_input)
-
             prop_uuid = self.tag.properties_dict[prop].uuid
 
             # set new property value
-            values = json_dict["body"]['properties']['user'][prop_uuid]
+            values = self.data["body"]['properties']['user'][prop_uuid]
             for index, value in enumerate(values):
                 if value == old_value:
                     values[index] = new_value
-            json_dict["body"]['properties']['user'][prop_uuid] = values
+            self.data["body"]['properties']['user'][prop_uuid] = values
 
-            # write new annotation json file
-            with open(self.directory, 'w') as json_output:
-                json_output.write(json.dumps(json_dict))
+            self.modify_annotation()
 
     def set_property_values(self, tag: str, prop: str, value: list) -> None:
         """Set property value of the given tag.
@@ -328,18 +336,13 @@ class Annotation:
             value (list): The list of new property values.
         """
         if self.tag.name == tag and prop in self.properties:
-            # open annotation json file
-            with open(self.directory) as json_input:
-                json_dict = json.load(json_input)
 
             prop_uuid = self.tag.properties_dict[prop].uuid
 
             # set new property value
-            json_dict["body"]['properties']['user'][prop_uuid] = value
+            self.data["body"]['properties']['user'][prop_uuid] = value
 
-            # write new annotation json file
-            with open(self.directory, 'w') as json_output:
-                json_output.write(json.dumps(json_dict))
+            self.modify_annotation()
 
     def delete_property(self, tag: str, prop: str) -> None:
         """Deletes property if the annotation is tagged by defined tag and property.
@@ -349,25 +352,18 @@ class Annotation:
             prop (str): The property to be deleted.
         """
         if self.tag.name == tag and prop in self.properties:
-            # open annotation json file
-            with open(self.directory) as json_input:
-                json_dict = json.load(json_input)
-
             prop_uuid = self.tag.properties_dict[prop].uuid
 
             # delete property
-            json_dict["body"]['properties']['user'].pop(prop_uuid)
+            self.data["body"]['properties']['user'].pop(prop_uuid)
 
-            # write new annotation json file
-            with open(self.directory, 'w') as json_output:
-                json_output.write(json.dumps(json_dict))
+            self.modify_annotation()
 
     def copy(
             self,
             annotation_collection: str,
             compare_annotation=None,
-            new_start_points: list = None,
-            new_end_points: list = None) -> None:
+            ) -> None:
         """Copies the Annotation into another Annotation Collection by creating a new Annotation UUID.
 
         Args:
@@ -408,11 +404,12 @@ class Annotation:
                 # remove all Property Values
                 new_annotation_data['body']['properties']['user'][prop] = []
 
-        new_directory = f'collections/{annotation_collection}/annotations/{new_uuid}.json'
-        with open(new_directory, 'w') as json_output:
-            json_output.write(json.dumps(new_annotation_data))
+        
+        with open(self.directory, "r") as ac_input:
+            ac_data = json.load(ac_input)
 
-    def remove(self) -> None:
-        """Removes the annotation from the annotation collection.
-        """
-        os.remove(self.directory)
+        ac_data.append(new_annotation_data)
+
+        with open(self.directory, "w") as ac_output:
+            ac_output.write(json.dumps(ac_data))
+
