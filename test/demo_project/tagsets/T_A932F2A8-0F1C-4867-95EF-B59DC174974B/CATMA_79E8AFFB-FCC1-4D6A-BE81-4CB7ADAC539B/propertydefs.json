@@ -1,0 +1,38 @@
+{
+  "name": "change_of_state",
+  "parentUuid": "",
+  "systemPropertyDefinitions": {
+    "CATMA_54A5F93F-5333-3F0D-92F7-7BD5930DB9E6": {
+      "name": "catma_markuptimestamp",
+      "possibleValueList": [],
+      "uuid": "CATMA_54A5F93F-5333-3F0D-92F7-7BD5930DB9E6"
+    },
+    "CATMA_A309D8FB-C5B8-33C9-A1B1-8CF7A5548C6A": {
+      "name": "catma_displaycolor",
+      "possibleValueList": [
+        "-15179441"
+      ],
+      "uuid": "CATMA_A309D8FB-C5B8-33C9-A1B1-8CF7A5548C6A"
+    },
+    "CATMA_AB27F1D4-303A-3622-BB2C-72C310D0C1BF": {
+      "name": "catma_markupauthor",
+      "possibleValueList": [
+        "MVauth"
+      ],
+      "uuid": "CATMA_AB27F1D4-303A-3622-BB2C-72C310D0C1BF"
+    }
+  },
+  "tagsetDefinitionUuid": "T_A932F2A8-0F1C-4867-95EF-B59DC174974B",
+  "userDefinedPropertyDefinitions": {
+    "CATMA_CF16B3CA-B987-4E36-BE32-D645953B0BDE": {
+      "name": "representation_type",
+      "possibleValueList": [
+        "narrator_speech",
+        "character_speech",
+        "thought_representation"
+      ],
+      "uuid": "CATMA_CF16B3CA-B987-4E36-BE32-D645953B0BDE"
+    }
+  },
+  "uuid": "CATMA_79E8AFFB-FCC1-4D6A-BE81-4CB7ADAC539B"
+}
