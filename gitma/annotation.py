@@ -160,25 +160,23 @@ class Annotation:
     """Class which represents a CATMA annotation.
 
     Args:
-        directory (str): The annotations directory within the project clone.
+        annotation_data (dict): The annotation data as a dict.
+        page_file_path (str): The path of the JSON annotation page file from which annotation_data was loaded.
         plain_text (str): The plain text annotated by the annotation.
         catma_project (_type_): The parent CatmaProject .
         context (int, optional): Size of the context that gets included in the\
             data frame representation of annotation collections. Defaults to 50.
-
-    Raises:
-        FileNotFoundError: If the directory of the annotation's JSON file does not exists.
     """
 
-    def __init__(self, annotation_data: dict, ac_dir: str, plain_text: str, catma_project, context: int = 50):
-        #: The annotation collection's directory
-        self.project_direcory: str = catma_project.project_directory
+    def __init__(self, annotation_data: dict, page_file_path: str, plain_text: str, catma_project, context: int = 50):
+        #: The project's directory
+        self.project_directory: str = catma_project.project_directory
         
         #: The annotation in its json representation as a dict
         self.data: dict = annotation_data
 
-        #: The annotation collection's directory
-        self.directory: str = ac_dir
+        #: The path of the annotation page file that this annotation was loaded from
+        self.page_file_path: str = page_file_path
 
         #: The annotation's uuid.
         self.uuid: str = get_uuid(self.data)
@@ -255,36 +253,36 @@ class Annotation:
     def remove(self) -> None:
         """Removes the annotation from the annotation collection's json file.
         """
-        with open(self.directory, "r") as ac_input:
+        with open(self.page_file_path, 'r', encoding='utf-8', newline='') as ac_input:
             ac_data = json.load(ac_input)
 
         for item in ac_data:
             if get_uuid(item) == self.uuid:
                 ac_data.remove(self.data)
 
-        with open(self.directory, "w") as ac_output:
+        with open(self.page_file_path, 'w', encoding='utf-8', newline='') as ac_output:
             ac_output.write(json.dumps(ac_data))
     
     def modify_annotation(self) -> None:
         """Overwrite annotation collection's json file with the updated
         annotation data: `self.data`.
         """
-        with open(self.directory, "r") as ac_input:
+        with open(self.page_file_path, 'r', encoding='utf-8', newline='') as ac_input:
             ac_data = json.load(ac_input)
 
         for index, item in enumerate(ac_data):
             if get_uuid(item) == self.uuid:
                 ac_data[index] = self.data
 
-        with open(self.directory, "w") as ac_output:
+        with open(self.page_file_path, 'w', encoding='utf-8', newline='') as ac_output:
             ac_output.write(json.dumps(ac_data))
 
     def modify_start_point(self, new_start_point: int, relative: bool = False) -> None:
         """Rewrites annotation json file with new start point.
 
         Args:
-            new_start_point (int): New end point.
-            relative (bool, optional): If true the `new_start_point` parameter is interpreted as relative to the old end point.\
+            new_start_point (int): New start point.
+            relative (bool, optional): If true the `new_start_point` parameter is interpreted as relative to the old start point.\
                 Defaults to False.
         """
         if relative:
@@ -310,7 +308,7 @@ class Annotation:
         by rewriting the annotation's JSON file.
 
         Args:
-            tag (str): The annotations tag.
+            tag (str): The annotation's tag.
             prop (str): The tag property to be modified.
             old_value (str): The old property value.
             new_value (str): The new property value.
@@ -364,14 +362,15 @@ class Annotation:
             annotation_collection: str,
             compare_annotation=None,
             ) -> None:
-        """Copies the Annotation into another Annotation Collection by creating a new Annotation UUID.
+        """Copies the annotation into another annotation collection by creating a new annotation UUID.
 
         Args:
             annotation_collection (str): The annotation collection UUID to get the directory the annotation should be copied to.
-            include_property_value (bool, optional): Whether the Property Values should be copied too. Defaults to True.
-            compare_annotation (Annotation, optional): An Annotation to compare Property Values. (For Gold Annotations). Defaults to True.
+            include_property_value (bool, optional): Whether the property values should be copied too. Defaults to True.
+            compare_annotation (Annotation, optional): An annotation to compare property values (for gold annotations). Defaults to True.
         """
 
+        # TODO: update to work with annotation page files
         new_uuid = "CATMA_" + str(uuid.uuid1()).upper()
 
         id_prefix = self.data['id'][:-98]
@@ -393,23 +392,21 @@ class Annotation:
         # copy all property values which are matching the compare annotation
         if compare_annotation:
             for prop in self.data['body']['properties']['user']:
-                # test for each user Property if the Property Values are matching
+                # test for each user property if the property values are matching
                 if self.data['body']['properties']['user'][prop] == compare_annotation.data['body']['properties']['user'][prop]:
                     new_annotation_data['body']['properties']['user'][prop] = self.data['body']['properties']['user'][prop]
                 else:
-                    new_annotation_data['body']['properties']['user'][prop] = [
-                    ]
+                    new_annotation_data['body']['properties']['user'][prop] = []
         else:
             for prop in self.data['body']['properties']['user']:
-                # remove all Property Values
+                # remove all property values
                 new_annotation_data['body']['properties']['user'][prop] = []
 
-        
-        with open(self.directory, "r") as ac_input:
+        with open(self.page_file_path, 'r', encoding='utf-8', newline='') as ac_input:
             ac_data = json.load(ac_input)
 
-        ac_data.append(new_annotation_data)
+        ac_data.append(new_annotation_data)  # TODO: assumes we can simply write into the same page file
 
-        with open(self.directory, "w") as ac_output:
+        with open(self.page_file_path, 'w', encoding='utf-8', newline='') as ac_output:
             ac_output.write(json.dumps(ac_data))
 

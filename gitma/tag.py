@@ -57,25 +57,25 @@ def get_user_uuid(tag_dict):
 
 
 class Tag:
-    """Class which represents a CATMA Tag.
+    """Class which represents a CATMA tag.
 
     Args:
-        json_file_directory (str): The directory ot the tag within the project's folder structure.
+        json_file_path (str): The path of the tag within the project's folder structure.
 
     Raises:
-        FileNotFoundError: If the json_file_directory could not be found.
+        FileNotFoundError: If the json_file_path could not be found.
     """
 
-    def __init__(self, json_file_directory: str):
-        #: The tag's directory.
-        self.directory: str = json_file_directory.replace('\\', '/')
+    def __init__(self, json_file_path: str):
+        #: The tag's path.
+        self.path: str = json_file_path.replace('\\', '/')
         try:
-            with open(json_file_directory) as json_input:
+            with open(json_file_path, 'r', encoding='utf-8', newline='') as json_input:
                 self.json = json.load(json_input)
         except FileNotFoundError:
             raise FileNotFoundError(
-                f'The Tag file in this directory could not be found:\n{self.directory}\n\
-                    --> Make sure the CATMA Project clone did work properly.')
+                f'The tag at this path could not be found: {self.path}\n\
+                    --> Make sure the CATMA project clone worked properly.')
 
         #: The tag's name.
         self.name: str = self.json['name']
@@ -107,11 +107,11 @@ class Tag:
         self.color = get_tag_color(self.json)
 
         #: List of child tags as gitma.Tag objects.
-        #: Is an empy list until gitma.Tag.get_child_tags will be used.
+        #: Is an empty list until gitma.Tag.get_child_tags is used.
         self.child_tags: List[Tag] = []
 
-        #: Parent tag as gitma.Tag objects.
-        #: Is None until gitma.Tag.get_child_tags will be used.
+        #: Parent tag as a gitma.Tag object.
+        #: Is None until gitma.Tag.get_parent_tag is used.
         self.parent: Tag = None
 
         #: The full tag path within the tagset.
@@ -127,15 +127,15 @@ class Tag:
         return f'Tag(Name: {self.name}, Properties: {self.properties})'
 
     def get_parent_tag(self, tagset_dict: dict) -> None:
-        """Adds the the parent tag to self.parent.
+        """Adds the parent tag to self.parent.
 
         Args:
-            tagset_dict (dict): The tagset as a gitma.Tagse.tag_dict.
+            tagset_dict (dict): The tagset as a gitma.Tagset.tag_dict.
         """
         self.parent = tagset_dict[self.parent_id] if self.parent_id in tagset_dict else None
 
     def get_child_tags(self, tags: list) -> None:
-        """Adds all child tags to the tag's tags
+        """Adds all child tags to self.child_tags.
 
         Args:
             tags (list): A list of gitma.Tag objects.
@@ -155,7 +155,7 @@ class Tag:
         self.full_path = tag_path
 
     def rename_property(self, old_prop: str, new_prop: str) -> None:
-        """Renames a property of the tag by overwriting it's json.
+        """Renames a property of the tag by overwriting its JSON.
 
         Args:
             old_prop (str): The old property's name.
@@ -165,11 +165,11 @@ class Tag:
             if item.name == old_prop:
                 self.json['userDefinedPropertyDefinitions'][item.uuid]['name'] = new_prop
         # write new tag json file
-        with open(self.file_directory, 'w') as json_output:
+        with open(self.path, 'w', encoding='utf-8', newline='') as json_output:
             json_output.write(json.dumps(self.json))
 
     def rename_possible_property_value(self, prop: str, old_value: str, new_value: str) -> None:
-        """Renames as specified property value in the list of possible property values.
+        """Renames a specified property value in the list of possible property values.
 
         Args:
             prop (str): The property's name.
@@ -184,5 +184,5 @@ class Tag:
                         pv[index] = new_value
                 self.json['userDefinedPropertyDefinitions'][item.uuid]["possibleValueList"] = pv
         # write new tag json file
-        with open(self.file_directory, 'w') as json_output:
+        with open(self.path, 'w', encoding='utf-8', newline='') as json_output:
             json_output.write(json.dumps(self.json))

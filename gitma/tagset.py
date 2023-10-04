@@ -5,30 +5,29 @@ from gitma.tag import Tag
 
 
 class Tagset:
-    """Class which represents a CATMA Tagset.
+    """Class which represents a CATMA tagset.
 
     Args:
-        project_uuid (str): Name of a CATMA project root folder.
-        catma_id (str): UUID of the tagset which corresponds with the folder name in the "tagsets" directory.
+        project_root_directory (str): Name of a CATMA project root directory.
+        tagset_uuid (str): UUID of the tagset which corresponds to the directory name in the "tagsets" directory.
     Raises:
-        FileNotFoundError: _description_
-
+        FileNotFoundError: If the path of the tagset's header.json does not exist.
     """
 
-    def __init__(self, project_uuid: str, catma_id: str):
+    def __init__(self, project_root_directory: str, tagset_uuid: str):
         #: The tagsets UUID.
-        self.uuid: str = catma_id
+        self.uuid: str = tagset_uuid
 
-        #: The tagsets directory within the project folder structure.
-        self.directory: str = project_uuid + '/tagsets/' + catma_id
+        #: The path of the tagset within the project's folder structure.
+        self.path: str = project_root_directory + '/tagsets/' + tagset_uuid
 
         try:
-            with open(self.directory + '/header.json') as header_input:
+            with open(self.path + '/header.json', 'r', encoding='utf-8', newline='') as header_input:
                 header = json.load(header_input)
         except FileNotFoundError:
             raise FileNotFoundError(
-                f'The Tagset in this directory could not be found:\n{self.directory}\n\
-                    --> Make sure the CATMA Project clone did work properly.')
+                f'The tagset at this path could not be found: {self.path}\n\
+                    --> Make sure the CATMA project clone worked properly.')
 
         #: The tagset's name
         self.name: str = header['name']
@@ -39,11 +38,11 @@ class Tagset:
         #: Dictionary of tags with UUIDs as keys and gitma.Tag objects as values.
         self.tag_dict: Dict[str, Tag] = {}
 
-        # walks through tagsets directory
-        for dirpath, _, filenames in os.walk(self.directory):
+        # walks through tagset directory
+        for dirpath, _, filenames in os.walk(self.path):
             for file in filenames:
-                if file == 'propertydefs.json':             # if a subdirectory is a Tag json file
-                    # create a Tag Class object
+                if file == 'propertydefs.json':             # if a file is a tag JSON file
+                    # create a Tag object
                     new_tag = Tag(dirpath + '/' + file)
                     # and store it in a list
                     self.tags.append(new_tag)
@@ -61,7 +60,7 @@ class Tagset:
         return f'Tagset(Name: {self.name}, Tags: {self.tags})'
 
     def edit_property_names(self, tag_names: list, old_prop: str, new_prop: str) -> None:
-        """Renames Property for all Tags given as tag_names.
+        """Renames a property for all tags given as tag_names.
 
         Args:
             tag_names (list): List of names of the tags that hold the property to be renamed.

@@ -1,6 +1,5 @@
 import json
 import os
-import sys
 import string
 import subprocess
 import re
@@ -85,20 +84,19 @@ def clean_text_in_ac_df(annotation: str) -> str:
 
 
 def load_annotations(catma_project, ac, context: int):
-    base_dir = f"{os.getcwd()}/{catma_project.uuid}/collections/{ac.uuid}/annotations/"
-    # load all annotation collection files
-    for file in os.listdir(base_dir):
-        # the annotation collection's directory
-        ac_dir = base_dir + file
-        with open(base_dir + file, "r") as ac_file:
-            # add annotations to annotation list
-            file_annotations = json.load(ac_file)
+    base_dir = f'{os.getcwd()}/{catma_project.uuid}/collections/{ac.uuid}/annotations/'
+    # load all annotation collection page files
+    for filename in os.listdir(base_dir):
+        page_file_path = base_dir + filename
+        with open(page_file_path, 'r', encoding='utf-8', newline='') as page_file:
+            # load all annotations
+            page_file_annotations = json.load(page_file)
 
-        # load all annotations per file
-        for a in file_annotations:
+        # construct Annotation objects
+        for annotation_data in page_file_annotations:
             yield Annotation(
-                    annotation_data=a,
-                    ac_dir=ac_dir,
+                    annotation_data=annotation_data,
+                    page_file_path=page_file_path,
                     plain_text=ac.text.plain_text,
                     catma_project=catma_project,
                     context=context
@@ -141,11 +139,11 @@ class AnnotationCollection:
 
     Args:
         ac_uuid (str): The annotation collection's UUID
-        catma_project (CatmaProject): The parent Catma Project
+        catma_project (CatmaProject): The parent CatmaProject
         context (int, optional): The text span to be considered for the annotation context. Defaults to 50.
 
     Raises:
-        FileNotFoundError: If the directory of the Annotation Collection header.json does not exists.
+        FileNotFoundError: If the path of the annotation collection's header.json does not exist.
     """
 
     def __init__(self, ac_uuid: str, catma_project, context: int = 50):
@@ -155,19 +153,19 @@ class AnnotationCollection:
         #: The parent project's directory
         self.project_directory: str = catma_project.project_directory
 
-        #: The parent projet's uuid
+        #: The parent project's uuid
         self.project_uuid: str = catma_project.uuid
 
         #: The annotation collection's directory
         self.directory: str = f'{catma_project.uuid}/collections/{self.uuid}/'
 
         try:
-            with open(catma_project.uuid + '/collections/' + self.uuid + '/header.json') as header_json:
+            with open(self.directory + 'header.json', 'r', encoding='utf-8', newline='') as header_json:
                 self.header: str = json.load(header_json)
         except FileNotFoundError:
             raise FileNotFoundError(
-                f"The Annotation Collection in this directory could not be found:\n{self.directory}\n\
-                    --> Make sure the CATMA Project clone did work properly.")
+                f"The annotation collection at this path could not be found: {self.directory}\n\
+                    --> Make sure the CATMA project clone worked properly.")
 
         #: The annotation collection's name.
         self.name: str = self.header['name']
@@ -177,17 +175,16 @@ class AnnotationCollection:
 
         #: The document of the annotation collection as a gitma.Text object.
         self.text: Text = Text(
-            project_uuid=catma_project.uuid,
-            catma_id=self.plain_text_id
+            project_root_directory=catma_project.uuid,
+            document_uuid=self.plain_text_id
         )
 
         #: The document's version.
         self.text_version: str = self.header.get('sourceDocumentVersion')
 
-        
-        print(f"\tAnnotation Collection {self.name} for {self.text.title.upper()}")
+        print(f"\tAnnotation collection \"{self.name}\" for \"{self.text.title}\"")
 
-        if os.path.isdir(catma_project.uuid + '/collections/' + self.uuid + '/annotations/'):
+        if os.path.isdir(self.directory + 'annotations/'):
             #: List of annotations in annotation collection as gitma.Annotation objects.
             self.annotations: List[Annotation] = sorted(list(load_annotations(
                 catma_project=catma_project,
