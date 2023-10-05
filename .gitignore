@@ -1,6 +1,6 @@
 .git
 .idea
-projects
+user_projects
 __pycache__
 *.egg-info
 own_work.py
