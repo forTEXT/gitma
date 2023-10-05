@@ -53,15 +53,12 @@ def load_gitlab_project(
     # clone the project in the defined directory
     creds = pygit2.UserPass('none', gitlab_access_token)
     callbacks = pygit2.RemoteCallbacks(credentials=creds)
-    repo = pygit2.clone_repository(
+    pygit2.clone_repository(
         url=project_url,
         path=backup_directory + project_uuid,
         bare=False,
         callbacks=callbacks
     )
-    submodules = repo.listall_submodules()
-    repo.init_submodules(submodules=submodules)
-    repo.update_submodules(submodules=submodules, callbacks=callbacks)
 
     return project_uuid
 
@@ -396,8 +393,6 @@ class CatmaProject:
         os.chdir(f'{self.project_directory}{self.uuid}/')
 
         subprocess.run(['git', 'pull'])
-        subprocess.run(['git', 'submodule', 'update',
-                       '--recursive', '--remote'])
 
         os.chdir('../')
         # Load Tagsets
