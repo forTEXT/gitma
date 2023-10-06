@@ -36,26 +36,6 @@ def get_user_properties(tag_dict):
     return tag_dict['userDefinedPropertyDefinitions']
 
 
-def get_time_uuid(tag_dict):
-    system_properties = tag_dict['systemPropertyDefinitions']
-    time_prop = [item for item in system_properties if system_properties[item]
-                 ['name'] == "catma_markuptimestamp"]
-    if len(time_prop) > 0:
-        return time_prop[0]
-    else:
-        return None
-
-
-def get_user_uuid(tag_dict):
-    system_properties = tag_dict['systemPropertyDefinitions']
-    time_prop = [item for item in system_properties if system_properties[item]
-                 ['name'] == "catma_markupauthor"]
-    if len(time_prop) > 0:
-        return time_prop[0]
-    else:
-        return None
-
-
 class Tag:
     """Class which represents a CATMA tag.
 
@@ -65,6 +45,9 @@ class Tag:
     Raises:
         FileNotFoundError: If the json_file_path could not be found.
     """
+
+    SYSTEM_PROPERTY_UUID_CATMA_MARKUPTIMESTAMP = 'CATMA_54A5F93F-5333-3F0D-92F7-7BD5930DB9E6'
+    SYSTEM_PROPERTY_UUID_CATMA_MARKUPAUTHOR = 'CATMA_AB27F1D4-303A-3622-BB2C-72C310D0C1BF'
 
     def __init__(self, json_file_path: str):
         #: The tag's path.
@@ -116,12 +99,6 @@ class Tag:
 
         #: The full tag path within the tagset.
         self.full_path: str = None
-
-        #: The tag's time UUID.
-        self.time_property: str = get_time_uuid(self.json)
-
-        #: The tag's user property.
-        self.user_property: str = get_user_properties(self.json)
 
     def __repr__(self):
         return f'Tag(Name: {self.name}, Properties: {self.properties})'

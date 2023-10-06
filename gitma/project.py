@@ -459,32 +459,32 @@ class CatmaProject:
 
     def write_annotation_json(
         self,
+        text_title: str,
         annotation_collection_name: str,
         tagset_name: str,
-        text_title: str,
         tag_name: str,
         start_points: list,
         end_points: list,
         property_annotations: dict,
         author: str):
-        """Function to write a new annotation into a given CatmaProject.
+        """
+        Function to write a new annotation into this project.
 
         Args:
-            project (CatmaProject): A CatmaProject object.
-            annotation_collection_name (str): The annotation collections name
-            tagset_name (str): The tagsets name
-            text_title (str): The text title
-            tag_name (str): The tags name
-            start_points (list): The annotation span start point
-            end_points (list): The annotation span end point
-            property_annotations (dict): dictionary with property annotations
-            author (str): the annotations author
+            text_title (str): The text title.
+            annotation_collection_name (str): The name of the target annotation collection.
+            tagset_name (str): The tagset's name.
+            tag_name (str): The tag's name.
+            start_points (list): The start points of the annotation spans.
+            end_points (list): The end points of the annotation spans.
+            property_annotations (dict): A dictionary with property names mapped to value lists.
+            author (str): The annotation's author.
         """
         write_annotation_json(
             project=self,
+            text_title=text_title,
             annotation_collection_name=annotation_collection_name,
             tagset_name=tagset_name,
-            text_title=text_title,
             tag_name=tag_name,
             start_points=start_points,
             end_points=end_points,
