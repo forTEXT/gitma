@@ -101,7 +101,6 @@ def load_annotations(catma_project, ac, context: int):
                     catma_project=catma_project,
                     context=context
             )
-    print('\n')
 
 
 df_columns = [
@@ -181,8 +180,6 @@ class AnnotationCollection:
 
         #: The document's version.
         self.text_version: str = self.header.get('sourceDocumentVersion')
-
-        print(f"\tAnnotation collection \"{self.name}\" for \"{self.text.title}\"")
 
         if os.path.isdir(self.directory + 'annotations/'):
             #: List of annotations in annotation collection as gitma.Annotation objects.

@@ -301,18 +301,17 @@ class CatmaProject:
             # Load tagsets
             print('Loading tagsets ...')
             if os.path.isdir(self.uuid + '/tagsets/'):
-                tagsets = load_tagsets(
-                    project_uuid=self.uuid)
+                tagsets = load_tagsets(project_uuid=self.uuid)
 
                 #: List of gitma.Tagset objects.
                 self.tagsets: List[Tagset] = tagsets[0]
 
                 #: Dictionary of the project's tagsets with the UUIDs as keys and gitma.Tagset objects as values.
                 self.tagset_dict: Dict[str, Tagset] = tagsets[1]
-                print(f'\t Found {len(self.tagsets)} tagset(s).')
             else:
-                self.tagsets, self.tagset_dict = None, None
-                print(f'\t Did not find any tagsets.')
+                self.tagsets = []
+                self.tagset_dict = {}
+            print(f'\tFound {len(self.tagsets)} tagset(s).')
 
             # Load texts
             print('Loading documents ...')
@@ -323,7 +322,7 @@ class CatmaProject:
 
             #: Dictionary of the project's texts with titles as keys and gitma.Text objects as values
             self.text_dict: Dict[str, Text] = texts[1]
-            print(f'\t Found {len(self.texts)} document(s).')
+            print(f'\tFound {len(self.texts)} document(s).')
 
             # Load annotation collections
             print('Loading annotation collections ...')
@@ -337,8 +336,11 @@ class CatmaProject:
             self.annotation_collections: List[AnnotationCollection] = annotation_collections[0]
 
             #: Dictionary of the project's annotation collections with their name as keys and gitma.AnnotationCollection objects as values
-            self.ac_dict: Dict[str,
-                               AnnotationCollection] = annotation_collections[1]
+            self.ac_dict: Dict[str, AnnotationCollection] = annotation_collections[1]
+            print(f'\tFound {len(self.annotation_collections)} annotation collection(s).')
+            for ac in self.annotation_collections:
+                print(f'\tAnnotation collection "{ac.name}" for document "{ac.text.title}"')
+                print(f'\t\tAnnotations: {len(ac.annotations)}')
 
         except FileNotFoundError:
             raise FileNotFoundError(
@@ -835,4 +837,5 @@ if __name__ == '__main__':
         project_directory='../demo/projects/',
         project_name='CATMA_9385E190-13CD-44BE-8A06-32FA95B7EEFA_GitMA_Demo_Project'
     )
+    print('\n')
     print(project.stats())
