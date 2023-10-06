@@ -9,7 +9,7 @@ Catma
 Examples
 --------
 
-For details see the `demo notebook <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/load_project_from_gitlab.ipynb>`_.
+For details see the `demo notebook <https://github.com/forTEXT/gitma/blob/main/demo/notebooks/load_project_from_gitlab.ipynb>`_.
 
 Load your account informations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

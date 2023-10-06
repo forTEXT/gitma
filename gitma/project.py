@@ -715,7 +715,7 @@ class CatmaProject:
         distance: str = 'binary',
         return_as_dict: bool = False) -> None:
         """Computes Inter Annotator Agreement for 2 Annotation Collections.
-        See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo_notebooks/inter_annotator_agreement.ipynb)
+        See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb)
         for details.
 
         Args:
@@ -831,9 +831,8 @@ class CatmaProject:
 
 
 if __name__ == '__main__':
-
     project = CatmaProject(
-        project_directory='gitma/test/demo_project/',
-        project_uuid='test_corpus_root'
+        project_directory='../demo/projects/',
+        project_name='CATMA_9385E190-13CD-44BE-8A06-32FA95B7EEFA_GitMA_Demo_Project'
     )
     print(project.stats())
