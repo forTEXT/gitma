@@ -3,6 +3,7 @@
 user_projects
 __pycache__
 *.egg-info
+*.csv
 own_work.py
 own_notebook.ipynb
 _gamma_own.py
