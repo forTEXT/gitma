@@ -259,7 +259,7 @@ class CatmaProject:
     def __init__(
             self,
             project_name: str,
-            project_directory: str = './',
+            project_directory: str = './',  # TODO: rename to projects_directory (plural)
             included_acs: list = None,
             excluded_acs: list = None,
             ac_filter_keyword: str = None,
@@ -288,10 +288,10 @@ class CatmaProject:
         self.project_directory: str = project_directory
 
         #: The project's name.
-        self.name: str = self.uuid[43:-5]
+        self.name: str = self.uuid[43:-5]  # TODO: this assumes '_root' suffix, also the actual name can be different
 
         try:
-            os.chdir(self.project_directory)
+            os.chdir(self.project_directory)  # TODO: fix, this is testing the wrong directory
         except FileNotFoundError:
             raise FileNotFoundError(
                 f"The CATMA project \"{self.name}\" could not been found in this directory: {self.project_directory}\n\
