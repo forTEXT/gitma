@@ -1,8 +1,9 @@
 import json
-import os
-import uuid
-from typing import List
+from copy import deepcopy
 from datetime import datetime
+from typing import List
+
+from gitma._write_annotation import write_annotation_json
 from gitma.selector import Selector
 
 
@@ -163,14 +164,13 @@ class Annotation:
         annotation_data (dict): The annotation data as a dict.
         page_file_path (str): The path of the JSON annotation page file from which annotation_data was loaded.
         plain_text (str): The plain text annotated by the annotation.
-        catma_project (_type_): The parent CatmaProject .
+        project (CatmaProject): The parent CatmaProject.
         context (int, optional): Size of the context that gets included in the\
             data frame representation of annotation collections. Defaults to 50.
     """
-
-    def __init__(self, annotation_data: dict, page_file_path: str, plain_text: str, catma_project, context: int = 50):
-        #: The project's directory
-        self.project_directory: str = catma_project.project_directory
+    def __init__(self, annotation_data: dict, page_file_path: str, plain_text: str, project, context: int = 50):
+        #: The parent CatmaProject
+        self.project = project
         
         #: The annotation in its json representation as a dict
         self.data: dict = annotation_data
@@ -214,7 +214,7 @@ class Annotation:
         tag_uuid = get_tag_uuid(self.data)
 
         #: The annotation's tag as a gitma.Tag object.
-        self.tag = catma_project.tagset_dict[tagset_uuid].tag_dict[tag_uuid]
+        self.tag = project.tagset_dict[tagset_uuid].tag_dict[tag_uuid]
 
         user_properties = get_user_properties(self.data)
 
@@ -357,56 +357,49 @@ class Annotation:
 
             self.modify_annotation()
 
+    def _copy(
+            self,
+            annotation_collection_name: str,
+            compare_annotation: 'Annotation' = None,
+            uuid_override: str = None,
+            timestamp_override: str = None
+    ) -> str:
+        new_properties = deepcopy(self.properties)
+
+        # remove property values from new_properties unless we have a compare_annotation whose corresponding property values match
+        for property_name in new_properties.keys():
+            if compare_annotation is None or new_properties.get(property_name) != compare_annotation.properties.get(property_name, []):
+                new_properties[property_name] = []
+
+        document_uuid = self.data['target']['items'][0]['source']
+        document_title = [text for text in self.project.texts if text.uuid == document_uuid][0].title
+
+        start_points = [item['selector']['start'] for item in self.data['target']['items']]
+        end_points = [item['selector']['end'] for item in self.data['target']['items']]
+
+        return write_annotation_json(
+            self.project,
+            document_title,
+            annotation_collection_name,
+            self.project.tagset_dict[get_tagset_uuid(self.data)].name,
+            self.tag.name,
+            start_points,
+            end_points,
+            new_properties,
+            'auto_gold',
+            uuid_override=uuid_override,
+            timestamp_override=timestamp_override
+        )
+
     def copy(
             self,
-            annotation_collection: str,
-            compare_annotation=None,
-            ) -> None:
-        """Copies the annotation into another annotation collection by creating a new annotation UUID.
+            annotation_collection_name: str,
+            compare_annotation: 'Annotation' = None
+    ) -> None:
+        """Copies this annotation into another annotation collection, giving it a new UUID.
 
         Args:
-            annotation_collection (str): The annotation collection UUID to get the directory the annotation should be copied to.
-            include_property_value (bool, optional): Whether the property values should be copied too. Defaults to True.
-            compare_annotation (Annotation, optional): An annotation to compare property values (for gold annotations). Defaults to True.
+            annotation_collection_name (str): The name of the annotation collection that the annotation should be copied to.
+            compare_annotation (Annotation, optional): An annotation to compare property values (for gold annotations). Defaults to None.
         """
-
-        # TODO: update to work with annotation page files
-        new_uuid = "CATMA_" + str(uuid.uuid1()).upper()
-
-        id_prefix = self.data['id'][:-98]
-        new_id = f"{id_prefix}{annotation_collection}/annotations/{new_uuid}"
-
-        new_annotation_data = self.data
-        new_annotation_data['id'] = new_id
-
-        sys_props = list(self.data['body']['properties']['system'])
-        # new annotation time property value
-        new_annotation_data['body']['properties']['system'][sys_props[0]] = [
-            str(datetime.today().strftime('%Y-%m-%dT%H:%M:%S'))
-        ]
-        # new annotation author name
-        new_annotation_data['body']['properties']['system'][sys_props[1]] = [
-            'auto_gold'
-        ]
-
-        # copy all property values which are matching the compare annotation
-        if compare_annotation:
-            for prop in self.data['body']['properties']['user']:
-                # test for each user property if the property values are matching
-                if self.data['body']['properties']['user'][prop] == compare_annotation.data['body']['properties']['user'][prop]:
-                    new_annotation_data['body']['properties']['user'][prop] = self.data['body']['properties']['user'][prop]
-                else:
-                    new_annotation_data['body']['properties']['user'][prop] = []
-        else:
-            for prop in self.data['body']['properties']['user']:
-                # remove all property values
-                new_annotation_data['body']['properties']['user'][prop] = []
-
-        with open(self.page_file_path, 'r', encoding='utf-8', newline='') as ac_input:
-            ac_data = json.load(ac_input)
-
-        ac_data.append(new_annotation_data)  # TODO: assumes we can simply write into the same page file
-
-        with open(self.page_file_path, 'w', encoding='utf-8', newline='') as ac_output:
-            ac_output.write(json.dumps(ac_data))
-
+        self._copy(annotation_collection_name, compare_annotation)

@@ -98,7 +98,7 @@ def load_annotations(catma_project, ac, context: int):
                     annotation_data=annotation_data,
                     page_file_path=page_file_path,
                     plain_text=ac.text.plain_text,
-                    catma_project=catma_project,
+                    project=catma_project,
                     context=context
             )
 

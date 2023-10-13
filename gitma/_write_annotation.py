@@ -89,8 +89,8 @@ def write_annotation_json(
         end_points (list): The end points of the annotation spans.
         property_annotations (dict): A dictionary with property names mapped to value lists.
         author (str): The annotation's author.
-        uuid_override (str): If supplied, overrides the internally generated annotation UUID for testing purposes.
-        timestamp_override (str): If supplied, overrides the internally generated annotation timestamp for testing purposes.
+        uuid_override (str, optional): If supplied, overrides the internally generated annotation UUID for testing purposes. Defaults to None.
+        timestamp_override (str, optional): If supplied, overrides the internally generated annotation timestamp for testing purposes. Defaults to None.
 
     Returns:
         str: The project-relative path of the page file that the annotation was written to.

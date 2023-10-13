@@ -114,8 +114,9 @@ def create_gold_annotations(
 
                 # copy annotation
                 an.copy(
-                    annotation_collection=gold_uuid,
-                    compare_annotation=compare_annotation)
+                    annotation_collection_name=gold_ac_name,
+                    compare_annotation=compare_annotation
+                )
 
     if push_to_gitlab:
         # upload gold annotations via git
