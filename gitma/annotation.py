@@ -3,15 +3,13 @@ from copy import deepcopy
 from datetime import datetime
 from typing import List
 
+from gitma import Tag
 from gitma._write_annotation import write_annotation_json
 from gitma.selector import Selector
 
 
 def get_uuid(annotation_dict: dict) -> str:
-    full_id = annotation_dict['id']
-    filename = full_id.split('/')[-1]
-    uuid = filename.replace('.json', '')
-    return uuid
+    return annotation_dict['id'].split('/')[-1]
 
 
 def get_start_point(annotation_dict: dict) -> int:
@@ -30,25 +28,18 @@ def get_tag_uuid(annotation_dict: dict) -> str:
     return annotation_dict['body']['tag'].split('/')[-1]
 
 
-def get_tag_directory(annotation_dict: dict) -> str:
-    tag_url = annotation_dict['body']['tag']
-    tag_directory = tag_url.replace(
-        'https://git.catma.de/', '') + '/propertydefs.json'
-    return tag_directory
-
-
 def get_system_properties(annotation_dict: dict) -> str:
     return annotation_dict['body']['properties']['system']
 
 
-def get_date(annotation_dict: dict) -> str:
-    annotation_time = list(get_system_properties(annotation_dict).values())[0]
-    annotation_date = annotation_time[0][:19]
-    return datetime.strptime(annotation_date, '%Y-%m-%dT%H:%M:%S')
+def get_date(annotation_dict: dict) -> datetime:
+    annotation_iso_datetime = get_system_properties(annotation_dict)[Tag.SYSTEM_PROPERTY_UUID_CATMA_MARKUPTIMESTAMP][0]
+    # not using datetime.fromisoformat here because it doesn't handle a timezone component without a colon separator
+    return datetime.strptime(annotation_iso_datetime, '%Y-%m-%dT%H:%M:%S.%f%z')
 
 
 def get_author(annotation_dict: dict):
-    return list(get_system_properties(annotation_dict).values())[1][0]
+    return get_system_properties(annotation_dict)[Tag.SYSTEM_PROPERTY_UUID_CATMA_MARKUPAUTHOR][0]
 
 
 def get_user_properties(annotation_dict: dict) -> str:
@@ -61,10 +52,6 @@ def get_annotated_text(json_data: str, plain_text: str) -> tuple:
     json_data['target'][items]
     """
     return (selector.covered_text for selector in build_selectors(json_data, plain_text))
-
-
-def get_project_uuid(annotation_dict: dict) -> str:
-    return annotation_dict['id'][21:-111]
 
 
 def build_selectors(json_data: dict, plain_text: str):
@@ -181,8 +168,8 @@ class Annotation:
         #: The annotation's uuid.
         self.uuid: str = get_uuid(self.data)
         
-        #: The date the annotation has been created.
-        self.date: str = get_date(self.data)
+        #: The date & time the annotation was created.
+        self.date: datetime = get_date(self.data)
 
         #: The annotation's author.
         self.author: str = get_author(self.data)
