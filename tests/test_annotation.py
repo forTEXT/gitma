@@ -8,7 +8,7 @@ class TestAnnotation(unittest.TestCase):
     def test__copy_without_compare_annotation(self):
         # test copying an annotation by opening the demo project and copying an existing one
         project = CatmaProject(
-            project_directory='../demo/projects/',
+            projects_directory='../demo/projects/',
             project_name='CATMA_9385E190-13CD-44BE-8A06-32FA95B7EEFA_GitMA_Demo_Project'
         )
 
@@ -34,7 +34,7 @@ class TestAnnotation(unittest.TestCase):
     def test__copy_with_compare_annotation(self):
         # test copying an annotation by opening the demo project and copying an existing one, also supplying compare_annotation
         project = CatmaProject(
-            project_directory='../demo/projects/',
+            projects_directory='../demo/projects/',
             project_name='CATMA_9385E190-13CD-44BE-8A06-32FA95B7EEFA_GitMA_Demo_Project'
         )
 

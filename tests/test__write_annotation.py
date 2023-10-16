@@ -10,7 +10,7 @@ class TestWriteAnnotation(unittest.TestCase):
     def test_write_annotation_json(self):
         # test writing an annotation by opening the demo project and copying an existing one
         project = CatmaProject(
-            project_directory='../demo/projects/',
+            projects_directory='../demo/projects/',
             project_name='CATMA_9385E190-13CD-44BE-8A06-32FA95B7EEFA_GitMA_Demo_Project'
         )
 

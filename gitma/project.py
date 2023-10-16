@@ -64,34 +64,34 @@ def load_gitlab_project(
 
 
 def get_local_project_uuid(
-        project_directory: str,
+        projects_directory: str,
         project_name: str) -> str:
-    """Returns project uuid identified by name.
+    """Returns project UUID identified by name.
 
     Args:
-        project_directory (str): The directory where the project clone is located.
+        projects_directory (str): The directory where the project clone is located.
         project_name (str): The project's name.
 
     Raises:
-        FileNotFoundError: If none of the projects in the project_directory is named as the given project name.
-        ValueError: If more then one project with the given project name exist.
+        FileNotFoundError: If none of the projects in the projects_directory has the given project name.
+        ValueError: If more than one project with the given project name exists.
 
     Returns:
         str: Project UUID.
     """
     project_uuids = [
-        item for item in os.listdir(project_directory)
+        item for item in os.listdir(projects_directory)
         if project_name in item
     ]
     if len(project_uuids) < 1:
         raise FileNotFoundError(
-            f'The project "{project_name}" name does not exist in directory "{project_directory}".\
-                Select one of these: {[item[43:-5] for item in os.listdir(project_directory)]}!'
+            f'A project named "{project_name}" does not exist in directory "{projects_directory}". '
+            f'Select one of these: {[item[43:] for item in os.listdir(projects_directory)]}'
         )
     elif len(project_uuids) > 1:
         raise ValueError(
-            f'In "{project_directory}" exist multiple projects named "{project_name}".\
-            Specifiy which project to load by one of the full UUIDs as project name: {project_uuids}'
+            f'Multiple projects named "{project_name}" exist in directory "{projects_directory}". '
+            f'Specify which project to load by using one of the full UUIDs as project name: {project_uuids}'
         )
     else:
         return project_uuids[0]
@@ -243,7 +243,7 @@ class CatmaProject:
     Args:
 
         project_name (str): The CATMA project name. Defaults to None.
-        project_directory (str, optional): The directory where your CATMA projects are located. Defaults to './'
+        projects_directory (str, optional): The directory where your CATMA projects are located. Defaults to './'.
         included_acs (list, optional): All annotation collections that should get loaded. If annotation collections are neither included nor excluded \
             all annotation collections get loaded. Defaults to None.
         excluded_acs (list, optional): Annotation collections that should not get loaded. Defaults to None.
@@ -255,11 +255,10 @@ class CatmaProject:
     Raises:
         FileNotFoundError: If the local or remote CATMA project was not found.
     """
-
     def __init__(
             self,
             project_name: str,
-            project_directory: str = './',  # TODO: rename to projects_directory (plural)
+            projects_directory: str = './',
             included_acs: list = None,
             excluded_acs: list = None,
             ac_filter_keyword: str = None,
@@ -269,33 +268,36 @@ class CatmaProject:
         # get the current directory, to return to after loading the project
         cwd = os.getcwd()
 
-        # Clone the CATMA project
+        # TODO: what we're calling UUID here is actually the full GitLab project name, which is unlikely to change and contains a UUID
+        #       the CATMA project name is stored in the GitLab project description field and can change
         if load_from_gitlab:
             #: The project's UUID.
-            self.uuid: str = load_gitlab_project(
+            self.uuid: str = load_gitlab_project(  # clones the CATMA project
                 gitlab_access_token=gitlab_access_token,
                 project_name=project_name,
                 backup_directory=backup_directory
             )
-            project_directory = backup_directory
+            projects_directory = backup_directory
         else:
+            #: The project's UUID.
             self.uuid: str = get_local_project_uuid(
-                project_directory=project_directory,
+                projects_directory=projects_directory,
                 project_name=project_name
             )
 
-        #: The project's directory.
-        self.project_directory: str = project_directory
+        #: The directory where the project is located.
+        self.projects_directory: str = projects_directory
 
         #: The project's name.
-        self.name: str = self.uuid[43:-5]  # TODO: this assumes '_root' suffix, also the actual name can be different
+        self.name: str = self.uuid[43:]  # NB: the actual name can be different if the project is renamed or the name contains whitespace or special characters
 
-        try:
-            os.chdir(self.project_directory)  # TODO: fix, this is testing the wrong directory
-        except FileNotFoundError:
+        if not os.path.isdir(self.projects_directory) or not os.path.isdir(f'{self.projects_directory}/{self.uuid}'):
             raise FileNotFoundError(
-                f"The CATMA project \"{self.name}\" could not been found in this directory: {self.project_directory}\n\
-                    -> Make sure the project clone worked properly and that the project directory is correct")
+                f'The CATMA project "{self.uuid}" could not been found in this directory: {self.projects_directory}. '
+                f'Make sure the project clone worked properly and that the projects_directory parameter is correct.'
+            )
+
+        os.chdir(self.projects_directory)  # everything following is relative to this directory
 
         try:
             # Load tagsets
@@ -320,7 +322,7 @@ class CatmaProject:
             #: List of the gitma.Text objects.
             self.texts: List[Text] = texts[0]
 
-            #: Dictionary of the project's texts with titles as keys and gitma.Text objects as values
+            #: Dictionary of the project's texts with titles as keys and gitma.Text objects as values.
             self.text_dict: Dict[str, Text] = texts[1]
             print(f'\tFound {len(self.texts)} document(s).')
 
@@ -335,7 +337,7 @@ class CatmaProject:
             #: List of gitma.AnnotationCollection objects.
             self.annotation_collections: List[AnnotationCollection] = annotation_collections[0]
 
-            #: Dictionary of the project's annotation collections with their name as keys and gitma.AnnotationCollection objects as values
+            #: Dictionary of the project's annotation collections with names as keys and gitma.AnnotationCollection objects as values.
             self.ac_dict: Dict[str, AnnotationCollection] = annotation_collections[1]
             print(f'\tFound {len(self.annotation_collections)} annotation collection(s).')
             for ac in self.annotation_collections:
@@ -346,6 +348,7 @@ class CatmaProject:
             raise FileNotFoundError(
                 f"Some components of your CATMA project could not be loaded."
             )
+
         os.chdir(cwd)
 
     def __repr__(self):
@@ -365,7 +368,7 @@ class CatmaProject:
             annotation_collections (Union[List[str], str], optional): Parameter to define the exported annotation collections. Defaults to 'all'.
             rename_dict (Union[Dict[str, str], None], optional): Dictionary to rename annotation collections. Defaults to None.
             included_tags (Union[list, None]): Tags included in the annotations list. If `None` all tags are included. Defaults to None.
-            directory (str): Backup directory. Defaults to './'
+            directory (str): Backup directory. Defaults to './'.
         """
         
         if annotation_collections == 'all':
@@ -392,7 +395,7 @@ class CatmaProject:
         Warning: This method can only be used if you have [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) installed.
         """
         cwd = os.getcwd()
-        os.chdir(f'{self.project_directory}{self.uuid}/')
+        os.chdir(f'{self.projects_directory}{self.uuid}/')
 
         subprocess.run(['git', 'pull'])
 
@@ -834,7 +837,7 @@ class CatmaProject:
 
 if __name__ == '__main__':
     project = CatmaProject(
-        project_directory='../demo/projects/',
+        projects_directory='../demo/projects/',
         project_name='CATMA_9385E190-13CD-44BE-8A06-32FA95B7EEFA_GitMA_Demo_Project'
     )
     print('\n')

@@ -97,7 +97,7 @@ def write_annotation_json(
     """
 
     cwd = os.getcwd()
-    os.chdir(project.project_directory + project.uuid)
+    os.chdir(project.projects_directory + project.uuid)
 
     text = project.text_dict[text_title]
     annotation_collection = project.ac_dict[annotation_collection_name]

@@ -150,7 +150,7 @@ class AnnotationCollection:
         self.uuid: str = ac_uuid
 
         #: The parent project's directory
-        self.project_directory: str = catma_project.project_directory
+        self.project_directory: str = catma_project.projects_directory
 
         #: The parent project's uuid
         self.project_uuid: str = catma_project.uuid

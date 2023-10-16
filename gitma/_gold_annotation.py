@@ -71,7 +71,7 @@ def create_gold_annotations(
         push_to_gitlab (bool, optional): Whether the gold annotations shall be uploaded to the CATMA GitLab. Default to False.
     """
     cwd = os.getcwd()
-    os.chdir(f'{project.project_directory}{project.uuid}/')
+    os.chdir(f'{project.projects_directory}{project.uuid}/')
 
     ac1 = project.ac_dict[ac_1_name]
     ac2 = project.ac_dict[ac_2_name]
