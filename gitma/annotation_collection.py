@@ -149,13 +149,13 @@ class AnnotationCollection:
         #: The annotation collection's UUID.
         self.uuid: str = ac_uuid
 
-        #: The parent project's directory
-        self.project_directory: str = catma_project.projects_directory
+        #: The directory where the parent project is located.
+        self.projects_directory: str = catma_project.projects_directory
 
-        #: The parent project's uuid
+        #: The parent project's UUID.
         self.project_uuid: str = catma_project.uuid
 
-        #: The annotation collection's directory
+        #: The annotation collection's directory.
         self.directory: str = f'{catma_project.uuid}/collections/{self.uuid}/'
 
         try:
@@ -268,7 +268,7 @@ class AnnotationCollection:
             commit_message (str, optional): Customize the commit message. Defaults to 'new annotations'.
         """
         cwd = os.getcwd()
-        os.chdir(f'{self.project_directory}{self.directory}')
+        os.chdir(f'{self.projects_directory}{self.directory}')
         subprocess.run(['git', 'add', '.'])
         subprocess.run(['git', 'commit', '-m', commit_message])
         subprocess.run(['git', 'push', 'origin', 'master'])
@@ -571,7 +571,7 @@ class AnnotationCollection:
 
         
         cwd = os.getcwd()
-        os.chdir(self.project_directory)
+        os.chdir(self.projects_directory)
         annotation_counter = 0
         missed_annotation_counter = 0
         for _, row in annotation_table.iterrows():
