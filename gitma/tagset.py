@@ -8,18 +8,17 @@ class Tagset:
     """Class which represents a CATMA tagset.
 
     Args:
-        project_root_directory (str): Name of a CATMA project root directory.
-        tagset_uuid (str): UUID of the tagset which corresponds to the directory name in the "tagsets" directory.
+        project_uuid (str): Name of a CATMA project directory.
+        tagset_uuid (str): Tagset UUID. Corresponds to the directory name in the "tagsets" directory.
     Raises:
         FileNotFoundError: If the path of the tagset's header.json does not exist.
     """
-
-    def __init__(self, project_root_directory: str, tagset_uuid: str):
+    def __init__(self, project_uuid: str, tagset_uuid: str):
         #: The tagsets UUID.
         self.uuid: str = tagset_uuid
 
         #: The path of the tagset within the project's folder structure.
-        self.path: str = project_root_directory + '/tagsets/' + tagset_uuid
+        self.path: str = project_uuid + '/tagsets/' + tagset_uuid
 
         try:
             with open(self.path + '/header.json', 'r', encoding='utf-8', newline='') as header_input:

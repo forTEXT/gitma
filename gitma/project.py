@@ -98,7 +98,7 @@ def get_ac_name(project_uuid: str, directory: str) -> str:
     """Gets an annotation collection's name.
 
     Args:
-        project_uuid (str): CATMA GitLab root project UUID
+        project_uuid (str): CATMA project UUID
         directory (str): annotation collection directory
         test_positive (bool, optional): what should be returned if it is intrinsic markup. Defaults to True.
 
@@ -197,7 +197,7 @@ def load_tagsets(project_uuid: str) -> Tuple[List[Tagset], Dict[str, Tagset]]:
     tagsets_directory = project_uuid + '/tagsets/'
     tagsets = [
         Tagset(
-            project_root_directory=project_uuid,
+            project_uuid=project_uuid,
             tagset_uuid=directory
         ) for directory in os.listdir(tagsets_directory)
         # ignore empty tagsets
@@ -220,7 +220,7 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
     texts_directory = project_uuid + '/documents/'
     texts = [
         Text(
-            project_root_directory=project_uuid,
+            project_uuid=project_uuid,
             document_uuid=directory
         ) for directory in os.listdir(texts_directory)
         if directory.startswith('D_')

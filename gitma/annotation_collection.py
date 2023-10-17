@@ -174,7 +174,7 @@ class AnnotationCollection:
 
         #: The document of the annotation collection as a gitma.Text object.
         self.text: Text = Text(
-            project_root_directory=catma_project.uuid,
+            project_uuid=catma_project.uuid,
             document_uuid=self.plain_text_id
         )
 
