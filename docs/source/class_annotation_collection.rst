@@ -22,7 +22,7 @@ The ``AnnotationCollection`` class can be used to add property values to existin
 
    project = gitma.CatmaProject(
       project_name='<your_project_name>',
-      project_directory='<your_backup_folder>'
+      projects_directory='<your_projects_directory>'
    )
 
    project.ac_dict['<your_annotation_collection_name>'].write_annotation_csv(
