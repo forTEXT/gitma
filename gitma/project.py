@@ -22,45 +22,42 @@ def load_gitlab_project(
         gitlab_access_token: str,
         project_name: str,
         backup_directory: str = './') -> str:
-    """Downloads a CATMA Project using git.
+    """Loads a CATMA project from the GitLab backend.
 
     Args:
-        gitlab_access_token (str): GitLab Access Token.
-        project_name (str): The CATMA Project name.
-        project_dir (str): Where to locate the CATMA Project.
+        gitlab_access_token (str): A valid access token for CATMA's GitLab backend.
+        project_name (str): The CATMA project name (or a part thereof - a search is performed in the GitLab backend using this value).
+        backup_directory (str, optional): Where to clone the CATMA project. Defaults to './'.
 
     Raises:
-        Exception: If no CATMA Project with the given name could be found.
+        Exception: If no CATMA project with the given name could be found.
 
     Returns:
-        str: The CATMA Project UUID.
+        str: The GitLab project name.
     """
-    # cwd = os.getcwd()
-    # os.chdir(backup_directory)
     gl = gitlab.Gitlab(
         url='https://git.catma.de/',
         private_token=gitlab_access_token
     )
 
     try:
-        project_gitlab_id = gl.projects.list(search=project_name)[0].id
+        gitlab_project_id = gl.projects.list(search=project_name)[0].id
     except IndexError:
-        raise Exception("Couldn't find the given CATMA Project!")
+        raise Exception("Couldn't find the given CATMA project!")
 
-    project_uuid = gl.projects.get(id=project_gitlab_id).name
-    project_url = f"https://git.catma.de/{project_uuid[:-5]}/{project_uuid}.git"
+    gitlab_project = gl.projects.get(id=gitlab_project_id)
 
     # clone the project in the defined directory
     creds = pygit2.UserPass('none', gitlab_access_token)
     callbacks = pygit2.RemoteCallbacks(credentials=creds)
     pygit2.clone_repository(
-        url=project_url,
-        path=backup_directory + project_uuid,
+        url=gitlab_project.http_url_to_repo,
+        path=backup_directory + gitlab_project.name,
         bare=False,
         callbacks=callbacks
     )
 
-    return project_uuid
+    return gitlab_project.name
 
 
 def get_local_project_uuid(
