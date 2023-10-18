@@ -19,7 +19,10 @@ class Catma:
             private_token=gitlab_access_token
         )
 
-        self._gitlab_projects = gl.projects.list()  # NB: returns only the first 20 by default
+        self._gitlab_projects = [
+            project for project in gl.projects.list()  # NB: returns only the first 20 by default, prints a warning if there are more
+            if project.name.startswith('CATMA') and not project.name.endswith('_root')  # filter out most CATMA 6 projects
+        ]
 
         #: List of all projects that the CATMA account has access to.
         self.project_name_list: List[str] = [
