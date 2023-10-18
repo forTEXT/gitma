@@ -9,6 +9,7 @@ setuptools.setup(
     url="https://github.com/forTEXT/gitma",
     python_requires=">=3.7",
     install_requires=[
+        "cvxopt==1.2.7",
         "jupyter",
         "networkx",
         "nltk",
@@ -19,8 +20,6 @@ setuptools.setup(
         "python-gitlab",
         "scipy",
         "spacy",
-        "tabulate",
-        "cvxopt==1.2.7",
-        "pygamma-agreement[CBC]",
+        "tabulate"
     ]
 )
