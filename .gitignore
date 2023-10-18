@@ -1,5 +1,6 @@
 .git
 .idea
+.ipynb_checkpoints
 user_projects
 __pycache__
 *.egg-info
