@@ -71,15 +71,14 @@ def create_gold_annotations(
         push_to_gitlab (bool, optional): Whether the gold annotations shall be uploaded to the CATMA GitLab. Default to False.
     """
     cwd = os.getcwd()
-    os.chdir(f'{project.projects_directory}{project.uuid}/')
 
     ac1 = project.ac_dict[ac_1_name]
     ac2 = project.ac_dict[ac_2_name]
 
     gold_uuid = project.ac_dict[gold_ac_name].uuid
 
-    if not os.path.isdir(f'collections/{gold_uuid}/annotations/'):
-        os.mkdir(f'collections/{gold_uuid}/annotations/')
+    if not os.path.isdir(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}/annotations/'):
+        os.mkdir(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}/annotations/')
     else:
         for f in os.listdir(f'collections/{gold_uuid}/annotations/'):
             # removes all files in gold annotation collection to prevent double gold annotations:
@@ -120,7 +119,7 @@ def create_gold_annotations(
 
     if push_to_gitlab:
         # upload gold annotations via git
-        os.chdir(f'collections/{gold_uuid}')
+        os.chdir(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}')
         subprocess.run(['git', 'add', '.'])
         subprocess.run(['git', 'commit', '-m', 'new gold annotations'])
         subprocess.run(['git', 'push', 'origin', 'HEAD:master'])
