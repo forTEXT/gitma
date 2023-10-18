@@ -119,9 +119,8 @@ def write_annotation_json(
 
     property_dict = {
         'system': {
-            # closest to what we're getting out of Java, except that a colon separator is added for the timezone offset
+            # closest to what we're getting out of CATMA/Java, except that a colon separator is added for the timezone offset
             # alternatively `.strftime('%Y-%m-%dT%H:%M:%S.%f%z')` omits the colon separator but has microsecond precision
-            # TODO: check if this matters when parsed in Java (and how we're formatting there)
             Tag.SYSTEM_PROPERTY_UUID_CATMA_MARKUPTIMESTAMP: [datetime.now().astimezone().isoformat(timespec='milliseconds')],
             Tag.SYSTEM_PROPERTY_UUID_CATMA_MARKUPAUTHOR: [author]
         },
