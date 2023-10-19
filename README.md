@@ -1,7 +1,7 @@
 # GitMA
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6330464.svg)](https://doi.org/10.5281/zenodo.6330464)
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/forTEXT/gitma/HEAD?labpath=demo_notebooks%2Fexplore_annotations.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/forTEXT/gitma/HEAD?labpath=demo%2Fnotebooks%2Fexplore_annotations.ipynb)
 
 ## Description
 
@@ -18,12 +18,12 @@ To install locally for development use: `pip install -e .`
 
 ## Demo
 
-You'll find 4 Jupyter Notebooks in the demo_notebooks directory:
+You'll find 4 Jupyter Notebooks in the demo/notebooks directory:
 
-- [Cloning and loading your CATMA Project with the package](https://github.com/forTEXT/gitma/blob/main/demo_notebooks/load_project_from_gitlab.ipynb)
-- [Exploring your annotations](https://github.com/forTEXT/gitma/blob/main/demo_notebooks/explore_annotations.ipynb)
-- [Gold Annotation Support](https://github.com/forTEXT/gitma/blob/main/demo_notebooks/gold_annotation_support.ipynb)
-- [Inter Annotator Agreement](https://github.com/forTEXT/gitma/blob/main/demo_notebooks/inter_annotator_agreement.ipynb)
+- [Cloning and loading your CATMA Project with the package](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/load_project_from_gitlab.ipynb)
+- [Exploring your annotations](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/explore_annotations.ipynb)
+- [Gold Annotation Support](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/gold_annotation_support.ipynb)
+- [Inter Annotator Agreement](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb)
 
 ## Additional Notes
 

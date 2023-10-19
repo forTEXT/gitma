@@ -31,7 +31,7 @@ run_jupyter() {
  echo "$(color_blue 'Starting jupyter')"
  echo ""
  jupyter lab \
-   --notebook-dir=./src/demo_notebooks/ \
+   --notebook-dir=./src/demo/notebooks/ \
    --ip='*' \
    --port=8888 \
    --no-browser \

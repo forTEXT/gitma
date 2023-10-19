@@ -41,10 +41,10 @@ and should not get loaded separately!
 
 The most important functionalities get introduced in the demo Jupyter Notebooks:
 
-- `Load Annotation Data <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/load_project_from_gitlab.ipynb>`_
-- `Explore Annotation <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/explore_annotations.ipynb>`_
-- `Inter Annotator Agreement <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/inter_annotator_agreement.ipynb>`_
-- `Gold Annotation Support <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/gold_annotation_support.ipynb>`_
+- `Load Annotation Data <https://github.com/forTEXT/gitma/blob/main/demo/notebooks/load_project_from_gitlab.ipynb>`_
+- `Explore Annotation <https://github.com/forTEXT/gitma/blob/main/demo/notebooks/explore_annotations.ipynb>`_
+- `Inter Annotator Agreement <https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb>`_
+- `Gold Annotation Support <https://github.com/forTEXT/gitma/blob/main/demo/notebooks/gold_annotation_support.ipynb>`_
 
 ---------------------------------------------------------
 Examples

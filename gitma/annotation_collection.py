@@ -1,6 +1,5 @@
 import json
 import os
-import sys
 import string
 import subprocess
 import re
@@ -85,23 +84,23 @@ def clean_text_in_ac_df(annotation: str) -> str:
 
 
 def load_annotations(catma_project, ac, context: int):
-    annotation_files = [
-        file for file in os.listdir(catma_project.uuid + '/collections/' + ac.uuid + '/annotations/')
-        if file.startswith('CATMA_')
-    ]
-    file_count = len(annotation_files)
-    steps = list(range(0, 10000, 50)) + [file_count]
-    for index, annotation_file in enumerate(annotation_files):
-        if index + 1 in steps:
-            sys.stdout.write('\n')
-            sys.stdout.write(f"\t\tAnnotations: {index + 1}/{file_count}")
-        yield Annotation(
-                path=f'{catma_project.uuid}/collections/{ac.uuid}/annotations/{annotation_file}',
-                plain_text=ac.text.plain_text,
-                catma_project=catma_project,
-                context=context
-        )
-    print('\n')
+    base_dir = f'{os.getcwd()}/{catma_project.uuid}/collections/{ac.uuid}/annotations/'
+    # load all annotation collection page files
+    for filename in os.listdir(base_dir):
+        page_file_path = base_dir + filename
+        with open(page_file_path, 'r', encoding='utf-8', newline='') as page_file:
+            # load all annotations
+            page_file_annotations = json.load(page_file)
+
+        # construct Annotation objects
+        for annotation_data in page_file_annotations:
+            yield Annotation(
+                    annotation_data=annotation_data,
+                    page_file_path=page_file_path,
+                    plain_text=ac.text.plain_text,
+                    project=catma_project,
+                    context=context
+            )
 
 
 df_columns = [
@@ -150,13 +149,13 @@ class AnnotationCollection:
         #: The annotation collection's UUID.
         self.uuid: str = ac_uuid
 
-        #: The parent project's directory
-        self.project_directory: str = catma_project.project_directory
+        #: The directory where the parent project is located.
+        self.projects_directory: str = catma_project.projects_directory
 
-        #: The parent project's uuid
+        #: The parent project's UUID.
         self.project_uuid: str = catma_project.uuid
 
-        #: The annotation collection's directory
+        #: The annotation collection's directory.
         self.directory: str = f'{catma_project.uuid}/collections/{self.uuid}/'
 
         try:
@@ -175,14 +174,12 @@ class AnnotationCollection:
 
         #: The document of the annotation collection as a gitma.Text object.
         self.text: Text = Text(
-            project_root_directory=catma_project.uuid,
+            project_uuid=catma_project.uuid,
             document_uuid=self.plain_text_id
         )
 
         #: The document's version.
-        self.text_version: str = self.header['sourceDocumentVersion']
-
-        print(f"\tAnnotation collection \"{self.name}\" for \"{self.text.title}\"")
+        self.text_version: str = self.header.get('sourceDocumentVersion')
 
         if os.path.isdir(self.directory + 'annotations/'):
             #: List of annotations in annotation collection as gitma.Annotation objects.
@@ -271,7 +268,7 @@ class AnnotationCollection:
             commit_message (str, optional): Customize the commit message. Defaults to 'new annotations'.
         """
         cwd = os.getcwd()
-        os.chdir(f'{self.project_directory}{self.directory}')
+        os.chdir(f'{self.projects_directory}{self.directory}')
         subprocess.run(['git', 'add', '.'])
         subprocess.run(['git', 'commit', '-m', commit_message])
         subprocess.run(['git', 'push', 'origin', 'master'])
@@ -574,7 +571,7 @@ class AnnotationCollection:
 
         
         cwd = os.getcwd()
-        os.chdir(self.project_directory)
+        os.chdir(self.projects_directory)
         annotation_counter = 0
         missed_annotation_counter = 0
         for _, row in annotation_table.iterrows():

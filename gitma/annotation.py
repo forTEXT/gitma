@@ -1,16 +1,15 @@
 import json
-import os
-import uuid
-from typing import List
+from copy import deepcopy
 from datetime import datetime
+from typing import List
+
+from gitma import Tag
+from gitma._write_annotation import write_annotation_json
 from gitma.selector import Selector
 
 
 def get_uuid(annotation_dict: dict) -> str:
-    full_id = annotation_dict['id']
-    filename = full_id.split('/')[-1]
-    uuid = filename.replace('.json', '')
-    return uuid
+    return annotation_dict['id'].split('/')[-1]
 
 
 def get_start_point(annotation_dict: dict) -> int:
@@ -29,25 +28,18 @@ def get_tag_uuid(annotation_dict: dict) -> str:
     return annotation_dict['body']['tag'].split('/')[-1]
 
 
-def get_tag_directory(annotation_dict: dict) -> str:
-    tag_url = annotation_dict['body']['tag']
-    tag_directory = tag_url.replace(
-        'https://git.catma.de/', '') + '/propertydefs.json'
-    return tag_directory
-
-
 def get_system_properties(annotation_dict: dict) -> str:
     return annotation_dict['body']['properties']['system']
 
 
-def get_date(annotation_dict: dict) -> str:
-    annotation_time = list(get_system_properties(annotation_dict).values())[0]
-    annotation_date = annotation_time[0][:19]
-    return datetime.strptime(annotation_date, '%Y-%m-%dT%H:%M:%S')
+def get_date(annotation_dict: dict) -> datetime:
+    annotation_iso_datetime = get_system_properties(annotation_dict)[Tag.SYSTEM_PROPERTY_UUID_CATMA_MARKUPTIMESTAMP][0]
+    # not using datetime.fromisoformat here because it doesn't handle a timezone component without a colon separator
+    return datetime.strptime(annotation_iso_datetime, '%Y-%m-%dT%H:%M:%S.%f%z')
 
 
 def get_author(annotation_dict: dict):
-    return list(get_system_properties(annotation_dict).values())[1][0]
+    return get_system_properties(annotation_dict)[Tag.SYSTEM_PROPERTY_UUID_CATMA_MARKUPAUTHOR][0]
 
 
 def get_user_properties(annotation_dict: dict) -> str:
@@ -60,10 +52,6 @@ def get_annotated_text(json_data: str, plain_text: str) -> tuple:
     json_data['target'][items]
     """
     return (selector.covered_text for selector in build_selectors(json_data, plain_text))
-
-
-def get_project_uuid(annotation_dict: dict) -> str:
-    return annotation_dict['id'][21:-111]
 
 
 def build_selectors(json_data: dict, plain_text: str):
@@ -160,35 +148,28 @@ class Annotation:
     """Class which represents a CATMA annotation.
 
     Args:
-        path (str): The path of the annotation JSON file within the project clone.
+        annotation_data (dict): The annotation data as a dict.
+        page_file_path (str): The path of the JSON annotation page file from which annotation_data was loaded.
         plain_text (str): The plain text annotated by the annotation.
-        catma_project (_type_): The parent CatmaProject .
+        project (CatmaProject): The parent CatmaProject.
         context (int, optional): Size of the context that gets included in the\
             data frame representation of annotation collections. Defaults to 50.
-
-    Raises:
-        FileNotFoundError: If the path of the annotation JSON file does not exist.
     """
-
-    def __init__(self, path: str, plain_text: str, catma_project, context: int = 50):
-        self.project_directory = catma_project.project_directory
+    def __init__(self, annotation_data: dict, page_file_path: str, plain_text: str, project, context: int = 50):
+        #: The parent CatmaProject
+        self.project = project
         
-        #: The annotation's path.
-        self.path = path
-        try:
-            with open(path, 'r', encoding='utf-8', newline='') as file:  # load annotation json file as dict
-                #: The annotation's data as dictionary.
-                self.data: dict = json.load(file)
-        except FileNotFoundError:
-            raise FileNotFoundError(
-                f'The annotation at this path could not be found: {self.path}\n\
-                    --> Make sure the CATMA project clone worked properly.')
+        #: The annotation in its json representation as a dict
+        self.data: dict = annotation_data
+
+        #: The path of the annotation page file that this annotation was loaded from
+        self.page_file_path: str = page_file_path
 
         #: The annotation's uuid.
         self.uuid: str = get_uuid(self.data)
         
-        #: The date the annotation has been created.
-        self.date: str = get_date(self.data)
+        #: The date & time the annotation was created.
+        self.date: datetime = get_date(self.data)
 
         #: The annotation's author.
         self.author: str = get_author(self.data)
@@ -220,7 +201,7 @@ class Annotation:
         tag_uuid = get_tag_uuid(self.data)
 
         #: The annotation's tag as a gitma.Tag object.
-        self.tag = catma_project.tagset_dict[tagset_uuid].tag_dict[tag_uuid]
+        self.tag = project.tagset_dict[tagset_uuid].tag_dict[tag_uuid]
 
         user_properties = get_user_properties(self.data)
 
@@ -240,7 +221,7 @@ class Annotation:
         return True
 
     def __repr__(self):
-        return f"Annotation(Author: {self.author}, Tag: {self.tag}, Properties: {self.properties}, Start Point: {self.start_point}, )"
+        return f"Annotation(Author: {self.author}, Tag: {self.tag}, Properties: {self.properties}, Start Point: {self.start_point}, End Point: {self.end_point}, Text: {self.text}, )"
 
     def to_dict(self) -> dict:
         """Returns annotation core elements as keys
@@ -254,6 +235,34 @@ class Annotation:
             'properties': numeric_property_values_to_int(self.properties),
             'spans': merge_adjacent_spans_forming_continuous_logical_span(self.selectors)
         }
+    
+    
+    def remove(self) -> None:
+        """Removes the annotation from the annotation collection's json file.
+        """
+        with open(self.page_file_path, 'r', encoding='utf-8', newline='') as ac_input:
+            ac_data = json.load(ac_input)
+
+        for item in ac_data:
+            if get_uuid(item) == self.uuid:
+                ac_data.remove(self.data)
+
+        with open(self.page_file_path, 'w', encoding='utf-8', newline='') as ac_output:
+            ac_output.write(json.dumps(ac_data))
+    
+    def modify_annotation(self) -> None:
+        """Overwrite annotation collection's json file with the updated
+        annotation data: `self.data`.
+        """
+        with open(self.page_file_path, 'r', encoding='utf-8', newline='') as ac_input:
+            ac_data = json.load(ac_input)
+
+        for index, item in enumerate(ac_data):
+            if get_uuid(item) == self.uuid:
+                ac_data[index] = self.data
+
+        with open(self.page_file_path, 'w', encoding='utf-8', newline='') as ac_output:
+            ac_output.write(json.dumps(ac_data))
 
     def modify_start_point(self, new_start_point: int, relative: bool = False) -> None:
         """Rewrites annotation json file with new start point.
@@ -266,8 +275,7 @@ class Annotation:
         if relative:
             new_start_point = self.start_point + new_start_point
         self.data['target']['items'][0]['selector']['start'] = new_start_point
-        with open(self.path, 'w', encoding='utf-8', newline='') as json_output:
-            json_output.write(json.dumps(self.data))
+        self.modify_annotation()
 
     def modify_end_point(self, new_end_point: int, relative: bool = False) -> None:
         """Rewrites annotation json file with new end point.
@@ -280,8 +288,7 @@ class Annotation:
         if relative:
             new_end_point = self.end_point + new_end_point
         self.data['target']['items'][-1]['selector']['end'] = new_end_point
-        with open(self.path, 'w', encoding='utf-8', newline='') as json_output:
-            json_output.write(json.dumps(self.data))
+        self.modify_annotation()
     
     def modify_property_value(self, tag: str, prop: str, old_value: str, new_value: str) -> None:
         """Modifies property values if the annotation is tagged by defined tag and property
@@ -294,22 +301,16 @@ class Annotation:
             new_value (str): The new property value.
         """
         if self.tag.name == tag and prop in self.properties:
-            # open annotation json file
-            with open(self.path, 'r', encoding='utf-8', newline='') as json_input:
-                json_dict = json.load(json_input)
-
             prop_uuid = self.tag.properties_dict[prop].uuid
 
             # set new property value
-            values = json_dict["body"]['properties']['user'][prop_uuid]
+            values = self.data["body"]['properties']['user'][prop_uuid]
             for index, value in enumerate(values):
                 if value == old_value:
                     values[index] = new_value
-            json_dict["body"]['properties']['user'][prop_uuid] = values
+            self.data["body"]['properties']['user'][prop_uuid] = values
 
-            # write new annotation json file
-            with open(self.path, 'w', encoding='utf-8', newline='') as json_output:
-                json_output.write(json.dumps(json_dict))
+            self.modify_annotation()
 
     def set_property_values(self, tag: str, prop: str, value: list) -> None:
         """Set property value of the given tag.
@@ -320,18 +321,13 @@ class Annotation:
             value (list): The list of new property values.
         """
         if self.tag.name == tag and prop in self.properties:
-            # open annotation json file
-            with open(self.path, 'r', encoding='utf-8', newline='') as json_input:
-                json_dict = json.load(json_input)
 
             prop_uuid = self.tag.properties_dict[prop].uuid
 
             # set new property value
-            json_dict["body"]['properties']['user'][prop_uuid] = value
+            self.data["body"]['properties']['user'][prop_uuid] = value
 
-            # write new annotation json file
-            with open(self.path, 'w', encoding='utf-8', newline='') as json_output:
-                json_output.write(json.dumps(json_dict))
+            self.modify_annotation()
 
     def delete_property(self, tag: str, prop: str) -> None:
         """Deletes property if the annotation is tagged by defined tag and property.
@@ -341,69 +337,56 @@ class Annotation:
             prop (str): The property to be deleted.
         """
         if self.tag.name == tag and prop in self.properties:
-            # open annotation json file
-            with open(self.path, 'r', encoding='utf-8', newline='') as json_input:
-                json_dict = json.load(json_input)
-
             prop_uuid = self.tag.properties_dict[prop].uuid
 
             # delete property
-            json_dict["body"]['properties']['user'].pop(prop_uuid)
+            self.data["body"]['properties']['user'].pop(prop_uuid)
 
-            # write new annotation json file
-            with open(self.path, 'w', encoding='utf-8', newline='') as json_output:
-                json_output.write(json.dumps(json_dict))
+            self.modify_annotation()
+
+    def _copy(
+            self,
+            annotation_collection_name: str,
+            compare_annotation: 'Annotation' = None,
+            uuid_override: str = None,
+            timestamp_override: str = None
+    ) -> str:
+        new_properties = deepcopy(self.properties)
+
+        # remove property values from new_properties unless we have a compare_annotation whose corresponding property values match
+        for property_name in new_properties.keys():
+            if compare_annotation is None or new_properties.get(property_name) != compare_annotation.properties.get(property_name, []):
+                new_properties[property_name] = []
+
+        document_uuid = self.data['target']['items'][0]['source']
+        document_title = [text for text in self.project.texts if text.uuid == document_uuid][0].title
+
+        start_points = [item['selector']['start'] for item in self.data['target']['items']]
+        end_points = [item['selector']['end'] for item in self.data['target']['items']]
+
+        return write_annotation_json(
+            self.project,
+            document_title,
+            annotation_collection_name,
+            self.project.tagset_dict[get_tagset_uuid(self.data)].name,
+            self.tag.name,
+            start_points,
+            end_points,
+            new_properties,
+            'auto_gold',
+            uuid_override=uuid_override,
+            timestamp_override=timestamp_override
+        )
 
     def copy(
             self,
-            annotation_collection: str,
-            compare_annotation=None,
-            new_start_points: list = None,
-            new_end_points: list = None) -> None:
-        """Copies the annotation into another annotation collection by creating a new annotation UUID.
+            annotation_collection_name: str,
+            compare_annotation: 'Annotation' = None
+    ) -> None:
+        """Copies this annotation into another annotation collection, giving it a new UUID.
 
         Args:
-            annotation_collection (str): The annotation collection UUID to get the directory the annotation should be copied to.
-            include_property_value (bool, optional): Whether the property values should be copied too. Defaults to True.
-            compare_annotation (Annotation, optional): An annotation to compare property values (for gold annotations). Defaults to True.
+            annotation_collection_name (str): The name of the annotation collection that the annotation should be copied to.
+            compare_annotation (Annotation, optional): An annotation to compare property values (for gold annotations). Defaults to None.
         """
-
-        new_uuid = "CATMA_" + str(uuid.uuid1()).upper()
-
-        id_prefix = self.data['id'][:-98]
-        new_id = f"{id_prefix}{annotation_collection}/annotations/{new_uuid}"
-
-        new_annotation_data = self.data
-        new_annotation_data['id'] = new_id
-
-        sys_props = list(self.data['body']['properties']['system'])
-        # new annotation time property value
-        new_annotation_data['body']['properties']['system'][sys_props[0]] = [
-            str(datetime.today().strftime('%Y-%m-%dT%H:%M:%S'))
-        ]
-        # new annotation author name
-        new_annotation_data['body']['properties']['system'][sys_props[1]] = [
-            'auto_gold'
-        ]
-
-        # copy all property values which are matching the compare annotation
-        if compare_annotation:
-            for prop in self.data['body']['properties']['user']:
-                # test for each user property if the property values are matching
-                if self.data['body']['properties']['user'][prop] == compare_annotation.data['body']['properties']['user'][prop]:
-                    new_annotation_data['body']['properties']['user'][prop] = self.data['body']['properties']['user'][prop]
-                else:
-                    new_annotation_data['body']['properties']['user'][prop] = []
-        else:
-            for prop in self.data['body']['properties']['user']:
-                # remove all property values
-                new_annotation_data['body']['properties']['user'][prop] = []
-
-        new_file = f'collections/{annotation_collection}/annotations/{new_uuid}.json'
-        with open(new_file, 'w', encoding='utf-8', newline='') as json_output:
-            json_output.write(json.dumps(new_annotation_data))
-
-    def remove(self) -> None:
-        """Removes the annotation from the annotation collection.
-        """
-        os.remove(self.path)
+        self._copy(annotation_collection_name, compare_annotation)

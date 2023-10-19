@@ -1,0 +1,22 @@
+{
+  "gitContentInfoSet": {
+    "author": "Franz Kafka",
+    "description": "",
+    "publisher": "",
+    "title": "The Metamorphosis"
+  },
+  "gitIndexInfoSet": {
+    "locale": "en",
+    "unseparableCharacterSequences": [],
+    "userDefinedSeparatingCharacters": []
+  },
+  "gitTechInfoSet": {
+    "charset": "UTF-8",
+    "checksum": 3944821672,
+    "fileName": "kafka_metamorphosis.txt",
+    "fileOSType": "UNIX",
+    "fileType": "TEXT",
+    "mimeType": "text/plain",
+    "responsibleUser": "MVauth"
+  }
+}

@@ -9,7 +9,7 @@ Catma
 Examples
 --------
 
-For details see the `demo notebook <https://github.com/forTEXT/gitma/blob/main/demo_notebooks/load_project_from_gitlab.ipynb>`_.
+For details see the `demo notebook <https://github.com/forTEXT/gitma/blob/main/demo/notebooks/load_project_from_gitlab.ipynb>`_.
 
 Load your account informations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -29,7 +29,7 @@ Load a project from the CATMA gitlab
 
    >>> my_catma.load_project_from_gitlab(
    ...   project_name='<insert your project name here>',
-   ...   backup_directory='../projects/'
+   ...   backup_directory='../user_projects/'
    ... )
    Loading Tagsets ...
 	   Found 2 Tagset(s).

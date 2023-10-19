@@ -1,9 +1,12 @@
 .git
 .idea
-projects
+.ipynb_checkpoints
+user_projects
 __pycache__
 *.egg-info
+*.csv
 own_work.py
 own_notebook.ipynb
 _gamma_own.py
 requ.txt
+dev_dashboard.ipynb
