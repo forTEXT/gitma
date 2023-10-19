@@ -10,6 +10,13 @@ Python Package to access and process CATMA Projects via the CATMA GitLab Backend
 This package makes use of [CATMA's Git Access](https://catma.de/documentation/git-access/).
 For further information see the [GitMA Documentation](https://gitma.readthedocs.io/en/latest/index.html).
 
+## Versions
+
+Version [2.0.0](https://github.com/forTEXT/gitma/releases/tag/2.0.0) is the first version that is CATMA 7 compatible.
+
+For the latest version that is compatible with CATMA 6, check out
+[this commit](https://github.com/forTEXT/gitma/commit/86c2f8ac66fd120b090d34c5022a5ecf213d75bc).
+
 ## Installation
 
 Install using `pip install git+https://github.com/forTEXT/gitma`
