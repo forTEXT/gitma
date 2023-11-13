@@ -35,7 +35,15 @@ def get_system_properties(annotation_dict: dict) -> str:
 def get_date(annotation_dict: dict) -> datetime:
     annotation_iso_datetime = get_system_properties(annotation_dict)[Tag.SYSTEM_PROPERTY_UUID_CATMA_MARKUPTIMESTAMP][0]
     # not using datetime.fromisoformat here because it doesn't handle a timezone component without a colon separator
-    return datetime.strptime(annotation_iso_datetime, '%Y-%m-%dT%H:%M:%S.%f%z')
+    try:
+        timestamp = datetime.strptime(annotation_iso_datetime, '%Y-%m-%dT%H:%M:%S.%f%z')
+    except ValueError:
+        # older GitMA versions wrote the timestamp without a timezone component, which will cause the above to fail
+        # as a limited amount of annotations were created using these versions we assume CEST and append its offset to allow parsing to succeed
+        # if you used older GitMA versions to create annotations and an accurate timestamp is important to you, consider correcting the source data
+        # or modify the offset below
+        timestamp = datetime.strptime(annotation_iso_datetime + '+02:00', '%Y-%m-%dT%H:%M:%S%z')
+    return timestamp
 
 
 def get_author(annotation_dict: dict):
