@@ -38,7 +38,7 @@ def get_date(annotation_dict: dict) -> datetime:
     try:
         timestamp = datetime.strptime(annotation_iso_datetime, '%Y-%m-%dT%H:%M:%S.%f%z')
     except ValueError:
-        timestamp = datetime.strptime(annotation_iso_datetime, '%Y-%m-%dT%H:%M:%S')
+        timestamp = datetime.strptime(annotation_iso_datetime + '+02:00', '%Y-%m-%dT%H:%M:%S%z')
     return timestamp
 
 
