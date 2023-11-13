@@ -20,8 +20,13 @@ class Catma:
         )
 
         self._gitlab_projects = [
-            project for project in gl.projects.list()  # NB: returns only the first 20 by default, prints a warning if there are more
-            if project.name.startswith('CATMA') and not project.name.endswith('_root')  # filter out most CATMA 6 projects
+            # here we filter out CATMA 6 projects and resources by:
+            # 1. using the search parameter (within GitLab, CATMA projects always have the 'CATMA_' prefix)
+            # 2. excluding any projects with the '_root' suffix
+            # 3. excluding any projects whose names are <= 42 characters long (resource projects imported from older versions of CATMA also have the 'CATMA_'
+            #    prefix followed only by a GUID, as opposed to the newer 'D_', 'C_' and 'T_' prefixes for the different resource types)
+            project for project in gl.projects.list(get_all=True, per_page=100, search='CATMA')
+            if not project.name.endswith('_root') and not len(project.name) <= 42
         ]
 
         #: List of all projects that the CATMA account has access to.
