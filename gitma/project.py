@@ -530,13 +530,13 @@ class CatmaProject:
         )
 
     def merge_annotations(self) -> pd.DataFrame:
-        """Concatenes all annotation collections to one pandas data frame and resets index.
+        """Concatenates all annotation collections to one pandas data frame and resets index.
 
         Returns:
             pd.DataFrame: Data frame including all annotation in the CATMA project.
         """
         return pd.concat(
-            [ac.df for ac in self.annotation_collections]
+            [ac.df for ac in self.annotation_collections if not ac.df.empty]
         ).reset_index(drop=True)
 
     def merge_annotations_per_document(self) -> Dict[str, pd.DataFrame]:
@@ -821,13 +821,16 @@ class CatmaProject:
         """
         if annotation_collections == 'all':
             return pd.concat(
-                [ac.to_pygamma_table() for ac in self.annotation_collections]
+                [
+                    ac.to_pygamma_table() for ac in self.annotation_collections
+                    if not ac.df.empty
+                ]
             )
         else:
             return pd.concat(
                 [
                     ac.to_pygamma_table() for ac in self.annotation_collections
-                    if ac.name in annotation_collections
+                    if ac.name in annotation_collections and not ac.df.empty
                 ]
             )
 

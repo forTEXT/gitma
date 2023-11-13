@@ -1,4 +1,3 @@
-from email.generator import Generator
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -262,7 +261,8 @@ def plot_interactive(catma_project, color_col: str = 'annotation collection') ->
         go.Figure: Plotly scatter plot.
     """
     merged_acs = pd.concat(
-        ac.df for ac in catma_project.annotation_collections)
+        [ac.df for ac in catma_project.annotation_collections if not ac.df.empty]
+    )
     merged_acs.loc[:, 'size'] = merged_acs.end_point - merged_acs.start_point
     merged_acs.loc[:, 'ANNOTATION'] = merged_acs.annotation.apply(
         format_annotation_text)
@@ -323,9 +323,11 @@ def compare_annotation_collections(
     try:
         color_dict = get_color_dict(
             annotation_df=pd.concat(
-                [catma_project.ac_dict[ac].duplicate_by_prop(prop=color_col)
-                 if 'prop:' in color_col else catma_project.ac_dict[ac].df
-                 for ac in annotation_collections]
+                [
+                    catma_project.ac_dict[ac].duplicate_by_prop(prop=color_col) if 'prop:' in color_col
+                    else catma_project.ac_dict[ac].df
+                    for ac in annotation_collections if not ac.df.empty
+                ]
             ),
             color_col=color_col
         )

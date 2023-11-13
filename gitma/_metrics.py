@@ -367,7 +367,7 @@ def gamma_agreement(
 
     ac_data_frames = [
         ac.to_pygamma_table() for ac in project.annotation_collections
-        if ac.name in annotation_collections
+        if ac.name in annotation_collections and not ac.df.empty
     ]
 
     # all annotation collection data frames to one data frame

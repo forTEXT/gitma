@@ -1,4 +1,3 @@
-from os import dup
 import pandas as pd
 import networkx as nx
 import plotly.graph_objects as go
@@ -260,9 +259,9 @@ class Network:
         #: The annotation level.
         self.level: str = level
         
-        #: Merged annotationd dataframe
+        #: Merged annotations dataframe
         self.df: pd.DataFrame = pd.concat(
-            [ac.df for ac in annotation_collections]
+            [ac.df for ac in annotation_collections if not ac.df.empty]
         )
         if level != 'tag':
             self.df = duplicate_rows(self.df, property_col=level)
