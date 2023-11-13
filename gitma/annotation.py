@@ -35,7 +35,11 @@ def get_system_properties(annotation_dict: dict) -> str:
 def get_date(annotation_dict: dict) -> datetime:
     annotation_iso_datetime = get_system_properties(annotation_dict)[Tag.SYSTEM_PROPERTY_UUID_CATMA_MARKUPTIMESTAMP][0]
     # not using datetime.fromisoformat here because it doesn't handle a timezone component without a colon separator
-    return datetime.strptime(annotation_iso_datetime, '%Y-%m-%dT%H:%M:%S.%f%z')
+    try:
+        timestamp = datetime.strptime(annotation_iso_datetime, '%Y-%m-%dT%H:%M:%S.%f%z')
+    except ValueError:
+        timestamp = datetime.strptime(annotation_iso_datetime, '%Y-%m-%dT%H:%M:%S')
+    return timestamp
 
 
 def get_author(annotation_dict: dict):
