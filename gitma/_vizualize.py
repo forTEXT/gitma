@@ -326,7 +326,7 @@ def compare_annotation_collections(
                 [
                     catma_project.ac_dict[ac].duplicate_by_prop(prop=color_col) if 'prop:' in color_col
                     else catma_project.ac_dict[ac].df
-                    for ac in annotation_collections if not ac.df.empty
+                    for ac in annotation_collections if not catma_project.ac_dict[ac].df.empty
                 ]
             ),
             color_col=color_col
