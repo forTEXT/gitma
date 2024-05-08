@@ -20,7 +20,7 @@ setuptools.setup(
         "python-gitlab",
         "scipy",
         "Cython==0.29.36",
-        "spacy==3.0.6 --no-build-isolation",
+        "spacy==3.0.6",
         "tabulate"
     ]
 )
