@@ -19,7 +19,8 @@ setuptools.setup(
         "pygit2",
         "python-gitlab",
         "scipy",
-        "spacy",
+        "Cython==0.29.36"
+        "spacy==3.0.6 --no-build-isolation"
         "tabulate"
     ]
 )
