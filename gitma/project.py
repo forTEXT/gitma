@@ -70,7 +70,7 @@ def get_local_project_uuid(
         project_name (str): The project's name.
 
     Raises:
-        FileNotFoundError: If none of the projects in the projects_directory has the given project name.
+        FileNotFoundError: If none of the project in the projects_directory has the given project name.
         ValueError: If more than one project with the given project name exists.
 
     Returns:
@@ -171,7 +171,7 @@ def load_annotation_collections(
 def test_tageset_directory(
         project_uuid: str,
         tagset_uuid: str) -> bool:
-    """Tests if Tagset has header.json to filter empty Tagsets from loading process.
+    """Tests if tagset has header.json to filter empty tagset from loading process.
 
     Args:
         project_uuid (str): UUID.
@@ -186,13 +186,13 @@ def test_tageset_directory(
 
 
 def load_tagsets(project_uuid: str) -> Tuple[List[Tagset], Dict[str, Tagset]]:
-    """Generates List and Dict of Tagsets.
+    """Generates List and Dict of tagset.
 
     Args:
         project_uuid (str): CATMA Project UUID.
 
     Returns:
-        Tuple[List[Tagset], Dict[str, Tagset]]: Tagsets as list and dictionary with UUIDs as keys.
+        Tuple[List[Tagset], Dict[str, Tagset]]: tagset as list and dictionary with UUIDs as keys.
     """
     tagsets_directory = project_uuid + '/tagsets/'
     tagsets = [
@@ -215,7 +215,7 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
         project_uuid (str): CATMA Project UUID
 
     Returns:
-        Tuple[List[Text], Dict[Text]]: List and dictionary of documents.
+        Tuple[List[Text], Dict[Text]]: List and dictionary of document.
     """
     texts_directory = project_uuid + '/documents/'
     texts = [
@@ -231,7 +231,7 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
 
 
 class CatmaProject:
-    """Class that represents a CATMA project including all documents, tagsets and annotation collections.
+    """Class that represents a CATMA project including all document, tagset and annotation collection.
     
     You can either load the project from a local Git clone or you can load it directly
     from GitLab after generating an access token in the CATMA GUI.
@@ -305,7 +305,7 @@ class CatmaProject:
                 #: List of gitma.Tagset objects.
                 self.tagsets: List[Tagset] = tagsets[0]
 
-                #: Dictionary of the project's tagsets with the UUIDs as keys and gitma.Tagset objects as values.
+                #: Dictionary of the project's tagsets with the UUIDs as keys and gitma.Tagset objects as value.
                 self.tagset_dict: Dict[str, Tagset] = tagsets[1]
             else:
                 self.tagsets = []
@@ -313,18 +313,18 @@ class CatmaProject:
             print(f'\tFound {len(self.tagsets)} tagset(s).')
 
             # Load texts
-            print('Loading documents ...')
+            print('Loading document ...')
             texts = load_texts(project_uuid=self.uuid)
 
             #: List of the gitma.Text objects.
             self.texts: List[Text] = texts[0]
 
-            #: Dictionary of the project's texts with titles as keys and gitma.Text objects as values.
+            #: Dictionary of the project's texts with titles as keys and gitma.Text objects as value.
             self.text_dict: Dict[str, Text] = texts[1]
             print(f'\tFound {len(self.texts)} document(s).')
 
             # Load annotation collections
-            print('Loading annotation collections ...')
+            print('Loading annotation collection ...')
             annotation_collections = load_annotation_collections(
                 catma_project=self,
                 included_acs=included_acs,
@@ -334,7 +334,7 @@ class CatmaProject:
             #: List of gitma.AnnotationCollection objects.
             self.annotation_collections: List[AnnotationCollection] = annotation_collections[0]
 
-            #: Dictionary of the project's annotation collections with names as keys and gitma.AnnotationCollection objects as values.
+            #: Dictionary of the project's annotation collections with names as keys and gitma.AnnotationCollection objects as value.
             self.ac_dict: Dict[str, AnnotationCollection] = annotation_collections[1]
             print(f'\tFound {len(self.annotation_collections)} annotation collection(s).')
             for ac in self.annotation_collections:
@@ -397,13 +397,13 @@ class CatmaProject:
         subprocess.run(['git', 'pull'])
 
         os.chdir('../')
-        # Load Tagsets
+        # Load tagset
         self.tagsets, self.tagset_dict = load_tagsets(project_uuid=self.uuid)
 
         # Load Texts
         self.texts, self.text_dict = load_texts(project_uuid=self.uuid)
 
-        # Load Annotation Collections
+        # Load annotation collections
         self.annotation_collections, self.ac_dict = load_annotation_collections(
             catma_project=self,
             included_acs=list(self.ac_dict)
@@ -437,7 +437,7 @@ class CatmaProject:
         """Shows some CATMA Project stats.
 
         Returns:
-            pd.DataFrame: DataFrame with projects stats sorted by the Annotation Collection names.
+            pd.DataFrame: DataFrame with projects stats sorted by the annotation collection names.
         """
         ac_stats = [
             {
@@ -503,19 +503,19 @@ class CatmaProject:
             property_values: str = 'none',
             push_to_gitlab: bool = False):
         
-        """Searches for matching annotations in 2 AnnotationCollections and copies all matches in a third AnnotationCollection.
-        By default only matching Property Values get copied.
+        """Searches for matching annotation in 2 annotation collections and copies all matches in a third annotation collection.
+        By default only matching property values get copied.
 
         Args:
             ac_1_name (str): AnnotationCollection 1 Name.
             ac_2_name (str): AnnnotationCollection 2 Name.
-            gold_ac_name (str): AnnotationCollection Name for Gold Annotations.
-            excluded_tags (list, optional): Annotations with this Tags will not be included in the Gold Annotations. Defaults to None.
+            gold_ac_name (str): AnnotationCollection Name for Gold annotation.
+            excluded_tags (list, optional): Annotations with this Tags will not be included in the Gold annotation. Defaults to None.
             min_overlap (float, optional): The minimal overlap to genereate a gold annotation. Defaults to 1.0.
-            same_tag (bool, optional): Whether both annotations need to be the same tag. Defaults to True.
-            property_values (str, optional): Whether only matching Property Values from AnnonationCollection 1 shall be copied.\
+            same_tag (bool, optional): Whether both annotation need to be the same tag. Defaults to True.
+            property_values (str, optional): Whether only matching property values from annonation collection 1 shall be copied.\
                 Default to 'matching'. Further options: 'none'.
-            push_to_gitlab (bool, optional): Whether the gold annotations shall be uploaded to the CATMA GitLab. Default to False.
+            push_to_gitlab (bool, optional): Whether the gold annotation shall be uploaded to the CATMA GitLab. Default to False.
         """
         create_gold_annotations(
             project=self,
@@ -650,7 +650,7 @@ class CatmaProject:
         """Draws disagreement network.
 
         Every edge in the network represents two overlapping annotations from different annotation collections
-        and with different tags or property values. 
+        and with different tags or property value. 
 
         Args:
             annotation_collections (Union[str, List[str]], optional): List with the names of the included annotation collections.\
@@ -716,19 +716,19 @@ class CatmaProject:
         include_empty_annotations: bool = True,
         distance: str = 'binary',
         return_as_dict: bool = False) -> None:
-        """Computes Inter Annotator Agreement for 2 Annotation Collections.
+        """Computes Inter Annotator Agreement for 2 annotation collection.
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb)
         for details.
 
         Args:
-            ac1_name (str): AnnotationCollection name to be compared.
-            ac2_name (str): AnnotationCollection name to be compared with.
+            ac1_name (str): annotation collection name to be compared.
+            ac2_name (str): annotation collection name to be compared with.
             tag_filter (list, optional): Which Tags should be included. If None all are included. Default to None.
             filter_both_ac (bool, optional): Whether the tag filter shall be aplied to both annotation collections.\
                 Defaults to False.
-            level (str, optional): Whether the Annotation Tag or a specified Property should be compared.\
+            level (str, optional): Whether the annotation tag or a specified property should be compared.\
                 Defaults to 'tag'.
-            include_empty_annotations (bool, optionale): If `False` only annotations with a overlapping annotation in the second collection\
+            include_empty_annotations (bool, optionale): If `False` only annotation with a overlapping annotation in the second collection\
                 get included. Defaults to True.
             distance (str, optional): The IAA distance function. Either 'binary' or 'interval'.\
             See the [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further informations. Defaults to 'binary'.
