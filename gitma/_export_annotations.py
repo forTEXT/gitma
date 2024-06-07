@@ -26,7 +26,7 @@ def get_spacy_df(text: str, spacy_model: str) -> pd.DataFrame:
         if '\n' not in token.text:
             lemma_list.append((
                 token.i,          # Token ID
-                token.idx,        # Start Pointer in Document
+                token.idx,        # Start Pointer in document
                 token.text,       # Token
             ))
 

@@ -5,7 +5,7 @@
 
 ## Description
 
-Python Package to access and process CATMA Projects via the CATMA GitLab Backend.
+Python Package to access and process CATMA projects via the CATMA GitLab Backend.
 
 This package makes use of [CATMA's Git Access](https://catma.de/documentation/git-access/).
 For further information see the [GitMA Documentation](https://gitma.readthedocs.io/en/latest/index.html).
@@ -27,7 +27,7 @@ To install locally for development use: `pip install -e .`
 
 You'll find 4 Jupyter Notebooks in the demo/notebooks directory:
 
-- [Cloning and loading your CATMA Project with the package](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/load_project_from_gitlab.ipynb)
+- [Cloning and loading your CATMA project with the package](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/load_project_from_gitlab.ipynb)
 - [Exploring your annotations](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/explore_annotations.ipynb)
 - [Gold Annotation Support](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/gold_annotation_support.ipynb)
 - [Inter Annotator Agreement](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb)

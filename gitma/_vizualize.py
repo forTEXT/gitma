@@ -31,10 +31,10 @@ def duplicate_generator(df: pd.DataFrame, property_col: str) -> Generator[pd.Ser
 
 
 def duplicate_rows(ac_df: pd.DataFrame, property_col: str) -> pd.DataFrame:
-    """ Duplicates rows in AnnotationCollection DataFrame if multiple property values exist in defined porperty column.
+    """ Duplicates rows in annotation collection DataFrame if multiple property value exist in defined porperty column.
 
     Args:
-        ac_df (pd.DataFrame): Annotation collection data frame.
+        ac_df (pd.DataFrame): annotation collection data frame.
         property_col (str): The property name with the prefix 'prop:'.
     Raises:
         ValueError: If the property does not exist in the annotation collection.
@@ -48,7 +48,7 @@ def duplicate_rows(ac_df: pd.DataFrame, property_col: str) -> pd.DataFrame:
     if property_col not in ac_df.columns:
         possible_values_str = '\n\t- '.join(list(ac_df.columns))
         raise ValueError(
-            f'"{property_col}" is not a valid value in the given annotation collections.\nChoose any of these: \n\t- {possible_values_str}')
+            f'"{property_col}" is not a valid value in the given annotation collection.\nChoose any of these: \n\t- {possible_values_str}')
 
     df_new = pd.DataFrame(
         list(duplicate_generator(
@@ -250,7 +250,7 @@ def plot_scaled_annotations(ac, tag_scale: dict = None, bin_size: int = 50, smoo
 
 def plot_interactive(catma_project, color_col: str = 'annotation collection') -> go.Figure:
     """This function generates one Plotly scatter plot per annotated document in a CATMA project.
-    By default the colors represent the annotation collections.
+    By default the colors represent the annotation collection.
     By that they can't be deactivated with the interactive legend.
 
     Args:
@@ -307,7 +307,7 @@ def compare_annotation_collections(
         catma_project,
         annotation_collections: list,
         color_col: str = 'tag') -> go.Figure:
-    """Plots annotations of multiple annotation collections of the same texts as line plot.
+    """Plots annotation of multiple annotation collection of the same text as line plot.
 
     Args:
         catma_project (CatmaProject): _description_
@@ -333,8 +333,8 @@ def compare_annotation_collections(
         )
     except ValueError:
         raise ValueError(
-            f"""One of the given annotation collections does not exists.
-            These are the existing annotation collections:
+            f"""One of the given annotation collection does not exists.
+            These are the existing annotation collection:
             {[ac.name for ac in catma_project.annotation_collections]}
             """
         )
