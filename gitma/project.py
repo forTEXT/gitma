@@ -708,8 +708,8 @@ class CatmaProject:
 
     def get_iaa(
         self,
-        ac1_name: str,
-        ac2_name: str,
+        ac1_name: str | AnnotationCollection,
+        ac2_name: str | AnnotationCollection,
         tag_filter: list = None,
         filter_both_ac: bool = False,
         level: str = 'tag',
@@ -741,9 +741,14 @@ class CatmaProject:
             distance_function = interval_distance
         else:
             distance_function = binary_distance
-
-        ac1 = self.ac_dict[ac1_name]
-        ac2 = self.ac_dict[ac2_name]
+        if isinstance(ac1_name, str):
+            ac1 = self.ac_dict[ac1_name]
+        else:
+            ac1 = ac1_name
+        if isinstance(ac2_name, str):
+            ac2 = self.ac_dict[ac2_name]
+        else:
+            ac2 = ac2_name
 
         # create pairs of best matching annotations
         annotation_pairs = get_annotation_pairs(
