@@ -196,7 +196,8 @@ def get_annotation_pairs(
         ac2: AnnotationCollection,
         tag_filter: list = None,
         filter_both_ac: bool = False,
-        property_filter: str = None) -> List[Tuple[Annotation]]:
+        property_filter: str = None,
+        verbose: bool = True) -> List[Tuple[Annotation]]:
     """Returns list of all overlapping annotations in two annotation collections.
     tag_filter can be defined as list of tag names if not all annotations are included.
 
@@ -266,20 +267,21 @@ def get_annotation_pairs(
             an_pair) for an_pair in pair_list if an_pair[1].tag.name != '#None#']
     ) * 100
 
-    print(
-        textwrap.dedent(
-            f"""
-            ==============================================
-            ==============================================
-            Finished search for overlapping annotations in:
-            - {ac1.name}
-            - {ac2.name}
-            Could match {len(pair_list)} annotations.
-            Average overlap is {round(string_difference, 2)} %.
-            Couldn't match {missing_an2_annotations} annotation(s) in first annotation collection.
-            """
+    if verbose:
+        print(
+            textwrap.dedent(
+                f"""
+                ==============================================
+                ==============================================
+                Finished search for overlapping annotations in:
+                - {ac1.name}
+                - {ac2.name}
+                Could match {len(pair_list)} annotations.
+                Average overlap is {round(string_difference, 2)} %.
+                Couldn't match {missing_an2_annotations} annotation(s) in first annotation collection.
+                """
+            )
         )
-    )
 
     return pair_list
 

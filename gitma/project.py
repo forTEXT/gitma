@@ -715,6 +715,7 @@ class CatmaProject:
         level: str = 'tag',
         include_empty_annotations: bool = True,
         distance: str = 'binary',
+        verbose: bool = False,
         return_as_dict: bool = False) -> None:
         """Computes Inter Annotator Agreement for 2 Annotation Collections.
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb)
@@ -751,7 +752,8 @@ class CatmaProject:
             tag_filter=tag_filter,
             filter_both_ac=filter_both_ac,
             property_filter=level.replace(
-                'prop:', '') if 'prop:' in level else None
+                'prop:', '') if 'prop:' in level else None,
+            verbose=verbose,
         )
 
         # transform annotation pairs to data format the nltk AnnotationTask class takes as input
@@ -767,16 +769,17 @@ class CatmaProject:
             print(f"Couldn't find compute IAA for {level} due to missing overlapping annotations with the given settings.")
             pi, kappa, alpha = (0, 0, 0)
 
-        print(textwrap.dedent(
-            f"""
-            Results for "{level}"
-            -------------{len(level) * '-'}-
-            Scott's Pi:          {pi}
-            Cohen's Kappa:       {kappa}
-            Krippendorf's Alpha: {alpha}
-            ===============================================
-            """
-        ))
+        if verbose:
+            print(textwrap.dedent(
+                f"""
+                Results for "{level}"
+                -------------{len(level) * '-'}-
+                Scott's Pi:          {pi}
+                Cohen's Kappa:       {kappa}
+                Krippendorf's Alpha: {alpha}
+                ===============================================
+                """
+            ))
 
         if return_as_dict:
             return {
@@ -785,11 +788,12 @@ class CatmaProject:
                 "Krippendorf's Alpha": alpha
             }
         else:
-            print(textwrap.dedent(
-                f"""Confusion Matrix
-                -------
-                """
-            ))
+            if verbose:
+                print(textwrap.dedent(
+                    f"""Confusion Matrix
+                    -------
+                    """
+                ))
             return get_confusion_matrix(pair_list=annotation_pairs, level=level)
 
     def gamma_agreement(
