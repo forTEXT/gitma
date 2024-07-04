@@ -120,12 +120,12 @@ def load_annotation_collections(
 
     Args:
         project_uuid (str): CATMA Project UUID
-        included_acs (list): All listed Annotation Collections get loaded.
-        excluded_acs (list): All listed Annotations Collections don't get loaded.\
-            If neither included nor excluded Annotation Collections are defined, all Annotation Collections get loaded.
+        included_acs (list): All listed annotation collection get loaded.
+        excluded_acs (list): All listed annotations collections don't get loaded.\
+            If neither included nor excluded annotation collections are defined, all annotation collections get loaded.
 
     Returns:
-        Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]: List and Dict of Annotation Collections
+        Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]: List and Dict of annotation collections
     """
     collections_directory = catma_project.uuid + '/collections/'
 
@@ -171,7 +171,7 @@ def load_annotation_collections(
 def test_tageset_directory(
         project_uuid: str,
         tagset_uuid: str) -> bool:
-    """Tests if tagset has header.json to filter empty tagset from loading process.
+    """Tests if tagsets has header.json to filter empty tagsets from loading process.
 
     Args:
         project_uuid (str): UUID.
@@ -231,7 +231,7 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
 
 
 class CatmaProject:
-    """Class that represents a CATMA project including all document, tagset and annotation collection.
+    """Class that represents a CATMA project including all documents, tagsets and annotation collections.
     
     You can either load the project from a local Git clone or you can load it directly
     from GitLab after generating an access token in the CATMA GUI.
@@ -507,13 +507,13 @@ class CatmaProject:
         By default only matching property values get copied.
 
         Args:
-            ac_1_name (str): AnnotationCollection 1 Name.
-            ac_2_name (str): AnnnotationCollection 2 Name.
-            gold_ac_name (str): AnnotationCollection Name for Gold annotation.
-            excluded_tags (list, optional): Annotations with this Tags will not be included in the Gold annotation. Defaults to None.
-            min_overlap (float, optional): The minimal overlap to genereate a gold annotation. Defaults to 1.0.
+            ac_1_name (str): Annotation collection 1 name.
+            ac_2_name (str): Annnotation collection 2 name.
+            gold_ac_name (str): Annotation collection name for gold annotation.
+            excluded_tags (list, optional): Annotations with these tags will not be included in the Gold annotation. Defaults to None.
+            min_overlap (float, optional): The minimal overlap to generate a gold annotation. Defaults to 1.0.
             same_tag (bool, optional): Whether both annotation need to be the same tag. Defaults to True.
-            property_values (str, optional): Whether only matching property values from annonation collection 1 shall be copied.\
+            property_values (str, optional): Whether only matching property values from annotation collection 1 shall be copied.\
                 Default to 'matching'. Further options: 'none'.
             push_to_gitlab (bool, optional): Whether the gold annotation shall be uploaded to the CATMA GitLab. Default to False.
         """
@@ -724,7 +724,7 @@ class CatmaProject:
             ac1_name (str): annotation collection name to be compared.
             ac2_name (str): annotation collection name to be compared with.
             tag_filter (list, optional): Which Tags should be included. If None all are included. Default to None.
-            filter_both_ac (bool, optional): Whether the tag filter shall be aplied to both annotation collections.\
+            filter_both_ac (bool, optional): Whether the tag filter shall be applied to both annotation collections.\
                 Defaults to False.
             level (str, optional): Whether the annotation tag or a specified property should be compared.\
                 Defaults to 'tag'.

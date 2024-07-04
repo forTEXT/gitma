@@ -50,7 +50,7 @@ def most_common_token(
         ranking (int, optional): Number of most common token to include. Defaults to 10.
 
     Returns:
-        dict: Dictionary storing the token freqeuncies.
+        dict: Dictionary storing the token frequencies.
     """
     token_list = []
     for str_item in annotation_col:
@@ -216,7 +216,7 @@ class AnnotationCollection:
         """Returns list of annotations as dictionaries using the `Annotation.to_dict()` method.
 
         Args:
-            tags(Union[list, None]): tag included in the annotations list. If `None` all tag are included. Defaults to None.
+            tags(Union[list, None]): tags included in the annotations list. If `None` all tags are included. Defaults to None.
 
         Returns:
             List[dict]: List of annotations as dictionaries.
@@ -233,7 +233,7 @@ class AnnotationCollection:
         """Creates dictionary with UUIDs as keys an annotation objects as values.
 
         Returns:
-            Dict[str, Annotation]: Dictionary with UUIDs as keys an Annotation objects as values.
+            Dict[str, Annotation]: Dictionary with UUIDs as keys an annotation objects as values.
         """
         return {an.uuid: an for an in self.annotations}
 
@@ -276,7 +276,7 @@ class AnnotationCollection:
         print(f'Pushed annotations from collection {self.name}.')
     
     def plot_annotations(self, y_axis: str = 'tag', color_prop: str = 'tag'):
-        """Creates interactive [Plotly Scatter Plot](https://plotly.com/python/line-and-scatter/) to a explore a annotation collection.
+        """Creates interactive [Plotly Scatter Plot](https://plotly.com/python/line-and-scatter/) to  explore a annotation collection.
 
         Args:
             y_axis (str, optional): The columns in annotation collection DataFrame used for y axis. Defaults to 'tag'.
@@ -288,10 +288,10 @@ class AnnotationCollection:
         return plot_annotations(ac=self, y_axis=y_axis, color_prop=color_prop)
 
     def filter_by_tag_path(self, path_element: str) -> pd.DataFrame:
-        """Filters annotation collection data frame for annations with the given `path_element` in the tag's full path.
+        """Filters annotation collection data frame for annotations with the given `path_element` in the tag's full path.
 
         Args:
-            path_element (str): Any tag name with the used tagset.
+            path_element (str): Any tag name with the used tagsets.
 
         Returns:
             pd.DataFrame: Data frame in the format of the annotation collection data frames.
@@ -325,7 +325,7 @@ class AnnotationCollection:
             save_as_gexf: Union[bool, str]= False):
         """Draws cooccurrence network graph where every tag is a node and every edge represents two cooccurent tag.
         You can by the `character_distance` parameter when two annotations are considered cooccurent.
-        If you set `character_distance=0` only the tag of overlapping annotation will be represented
+        If you set `character_distance=0` only the tags of overlapping annotations will be represented
         as connected nodes.
 
         Args:
@@ -486,7 +486,7 @@ class AnnotationCollection:
         property: str = 'all',
         only_missing_prop_values: bool = False,
         filename: str = 'PropertyAnnotationTable'):
-        """Creates csv file to add propertiy value to existing annotation.
+        """Creates csv file to add property value to existing annotation.
         The added property value can be imported with the `read_annotation_csv()` method.
 
         [See the example below.](

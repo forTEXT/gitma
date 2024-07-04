@@ -19,7 +19,7 @@ def get_color_dict(annotation_df: pd.DataFrame, color_col: str = 'tag', colors: 
 
     Args:
         annotation_df (pd.DataFrame): DataFrame in the AnnotationCollection.df format.
-        color_col (str): 'tag' or anoather column in the annotation_df. Defaults to 'tag'.
+        color_col (str): 'tag' or another column in the annotation_df. Defaults to 'tag'.
         colors (list, optional): List of colors as hex value. Defaults to None.
 
     Returns:
@@ -53,11 +53,11 @@ def cooccurrent_annotations(
     ac_df: pd.DataFrame,
     character_distance: int = 100,
     level='tag') -> dict:
-    """Function to find cooccurent annotation within one document.
+    """Function to find coocurrent annotation within one document.
 
     Args:
         ac_df (pd.DataFrame): Pandas DataFrame in the format of gitma.AnnotationCollection.df .
-        character_distance (int, optional): The maximal distance between two annotation considered concurrent. Defaults to 100.
+        character_distance (int, optional): The maximal distance between two annotations considered coocurrent. Defaults to 100.
         level (str, optional): 'Tag' or any property used in the gitma.AnnotationCollection.df with the prefix 'prop:'. Defaults to 'tag'.
 
     Returns:
@@ -98,12 +98,12 @@ def overlapping_annotations(
     ac_df: pd.DataFrame,
     level: str = 'tag',
     only_different_acs: bool = True) -> dict:
-    """Searches for overlapping annotation and returns frequency of overlapping pairs.
+    """Searches for overlapping annotations and returns frequency of overlapping pairs.
 
     Args:
         ac_df (pd.DataFrame): DataFrame in the format of gitma.AnnotationCollection.df
         level (str, optional): Tag' or any property used in the gitma.AnnotationCollection.df with the prefix 'prop:'. Defaults to 'tag'.
-        only_different_acs (bool, optional): If True only overlapping annotation from different annotation collection\
+        only_different_acs (bool, optional): If True only overlapping annotatiosn from different annotation collections\
             are considered. Defaults to True.
 
     Returns:
@@ -233,11 +233,11 @@ class Network:
     """Class to draw annotation coocurrence network graphs.
     
     Args:
-            annotation_collections (List[AnnotationCollection]): List of included annotation collection.
+            annotation_collections (List[AnnotationCollection]): List of included annotation collections.
             character_distance (int, optional): Cooccurrence span. Defaults to 100.
             edge_func (str, optional): Keyword for the function that identifies connected annotation.\
                 Either `'cooccurent'` or `'overlapping'`. Defaults to cooccurrent_annotation. 
-            included_tags (list, optional): Included tag. If `None` and excluded_tags `None` all tag are included.\
+            included_tags (list, optional): Included tag. If `None` and excluded_tags `None` all tags are included.\
                 Defaults to None.
             excluded_tags (list, optional): Excluded tag. Defaults to None.
             level (str, optional): Whether the annotation tag or the value of the given property gets included.

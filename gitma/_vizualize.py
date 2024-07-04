@@ -31,7 +31,7 @@ def duplicate_generator(df: pd.DataFrame, property_col: str) -> Generator[pd.Ser
 
 
 def duplicate_rows(ac_df: pd.DataFrame, property_col: str) -> pd.DataFrame:
-    """ Duplicates rows in annotation collection DataFrame if multiple property value exist in defined porperty column.
+    """ Duplicates rows in annotation collection dataFrame if multiple property value exist in defined porperty column.
 
     Args:
         ac_df (pd.DataFrame): annotation collection data frame.
@@ -133,8 +133,8 @@ def plot_annotations(ac, y_axis: str = 'tag', color_prop: str = 'tag'):
 
     Args:
         ac (AnnotationCollection): gitma.AnnotationCollection
-        y_axis (str, optional): The columns in AnnotationCollection DataFrame used for y axis. Defaults to 'tag'.
-        color_prop (str, optional): A Property's name used in the AnnotationCollection . Defaults to None.
+        y_axis (str, optional): The columns in annotation collection dataframe used for y axis. Defaults to 'tag'.
+        color_prop (str, optional): A Property's name used in the annotation collection . Defaults to None.
 
     Returns:
         go.Figure: Plotly scatter plot.
@@ -307,7 +307,7 @@ def compare_annotation_collections(
         catma_project,
         annotation_collections: list,
         color_col: str = 'tag') -> go.Figure:
-    """Plots annotation of multiple annotation collection of the same text as line plot.
+    """Plots annotations of multiple annotation collection of the same text as line plot.
 
     Args:
         catma_project (CatmaProject): _description_

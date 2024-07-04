@@ -14,7 +14,7 @@ class Property:
         #: The property's name.
         self.name: str = name
 
-        #: The list of possible property value that gets displayed in CATMA's property window.
+        #: The list of possible property values that gets displayed in CATMA's property window.
         self.possible_value_list: list = possible_values
 
     def __repr__(self):

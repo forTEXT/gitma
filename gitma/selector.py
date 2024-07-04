@@ -1,5 +1,5 @@
 """
-References to spans of text, used by annotations.
+References to spans of text, used by annotation.
 """
 
 

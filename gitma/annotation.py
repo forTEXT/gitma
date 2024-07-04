@@ -93,8 +93,8 @@ def get_selector_items(start_points: list, end_points: list, source_document_uui
     Gets used when generating gold annotation.
 
     Args:
-        start_points (list): annotation Start Points
-        end_points (list): annotation End Points
+        start_points (list): annotation start points
+        end_points (list): annotation end points
         source_document_uuid (str): document UUID in CATMA project.
     Returns:
         list: List of selectors.
