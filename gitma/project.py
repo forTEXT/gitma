@@ -345,8 +345,8 @@ class CatmaProject:
             raise FileNotFoundError(
                 f"Some components of your CATMA project could not be loaded."
             )
-
-        os.chdir(cwd)
+        finally:
+            os.chdir(cwd)
 
     def __repr__(self):
         documents = [text.title for text in self.texts]
