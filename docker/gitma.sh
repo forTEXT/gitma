@@ -46,8 +46,7 @@ update_gitma() {
    echo ""
    echo "$(color_blue 'Updating GitMA')"
    echo ""
-   python -m pip install --upgrade git+https://github.com/forTEXT/gitma 
-   python -m pip install --upgrade "pygamma-agreement[CBC]" 
+   python -m pip install --upgrade git+https://github.com/forTEXT/gitma
 }
 
 reinstall_demo(){
