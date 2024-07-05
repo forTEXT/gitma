@@ -88,9 +88,14 @@ def load_annotations(catma_project, ac, context: int):
     # load all annotation collection page files
     for filename in os.listdir(base_dir):
         page_file_path = base_dir + filename
+        page_file_annotations = []
+
         with open(page_file_path, 'r', encoding='utf-8', newline='') as page_file:
             # load all annotations
-            page_file_annotations = json.load(page_file)
+            try:
+                page_file_annotations = json.load(page_file)
+            except json.JSONDecodeError as e:
+                print(f"WARNING: Failed to load annotation page file {page_file_path}\nOriginal error: {e}")
 
         # construct Annotation objects
         for annotation_data in page_file_annotations:

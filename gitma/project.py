@@ -300,13 +300,13 @@ class CatmaProject:
             # Load tagsets
             print('Loading tagsets ...')
             if os.path.isdir(self.uuid + '/tagsets/'):
-                tagsets = load_tagsets(project_uuid=self.uuid)
+                tagsets, tagset_dict = load_tagsets(project_uuid=self.uuid)
 
                 #: List of gitma.Tagset objects.
-                self.tagsets: List[Tagset] = tagsets[0]
+                self.tagsets: List[Tagset] = tagsets
 
                 #: Dictionary of the project's tagsets with the UUIDs as keys and gitma.Tagset objects as values.
-                self.tagset_dict: Dict[str, Tagset] = tagsets[1]
+                self.tagset_dict: Dict[str, Tagset] = tagset_dict
             else:
                 self.tagsets = []
                 self.tagset_dict = {}
@@ -314,37 +314,45 @@ class CatmaProject:
 
             # Load texts
             print('Loading documents ...')
-            texts = load_texts(project_uuid=self.uuid)
+            if os.path.isdir(self.uuid + '/documents/'):
+                texts, text_dict = load_texts(project_uuid=self.uuid)
 
-            #: List of the gitma.Text objects.
-            self.texts: List[Text] = texts[0]
+                #: List of the gitma.Text objects.
+                self.texts: List[Text] = texts
 
-            #: Dictionary of the project's texts with titles as keys and gitma.Text objects as values.
-            self.text_dict: Dict[str, Text] = texts[1]
+                #: Dictionary of the project's texts with titles as keys and gitma.Text objects as values.
+                self.text_dict: Dict[str, Text] = text_dict
+            else:
+                self.texts = []
+                self.text_dict = {}
             print(f'\tFound {len(self.texts)} document(s).')
 
             # Load annotation collections
             print('Loading annotation collections ...')
-            annotation_collections = load_annotation_collections(
-                catma_project=self,
-                included_acs=included_acs,
-                excluded_acs=excluded_acs,
-                ac_filter_keyword=ac_filter_keyword,
-            )
-            #: List of gitma.AnnotationCollection objects.
-            self.annotation_collections: List[AnnotationCollection] = annotation_collections[0]
+            if os.path.isdir(self.uuid + '/collections/'):
+                annotation_collections, ac_dict = load_annotation_collections(
+                    catma_project=self,
+                    included_acs=included_acs,
+                    excluded_acs=excluded_acs,
+                    ac_filter_keyword=ac_filter_keyword,
+                )
+                #: List of gitma.AnnotationCollection objects.
+                self.annotation_collections: List[AnnotationCollection] = annotation_collections
 
-            #: Dictionary of the project's annotation collections with names as keys and gitma.AnnotationCollection objects as values.
-            self.ac_dict: Dict[str, AnnotationCollection] = annotation_collections[1]
+                #: Dictionary of the project's annotation collections with names as keys and gitma.AnnotationCollection objects as values.
+                self.ac_dict: Dict[str, AnnotationCollection] = ac_dict
+            else:
+                self.annotation_collections = []
+                self.ac_dict = {}
             print(f'\tFound {len(self.annotation_collections)} annotation collection(s).')
             for ac in self.annotation_collections:
                 print(f'\tAnnotation collection "{ac.name}" for document "{ac.text.title}"')
                 print(f'\t\tAnnotations: {len(ac.annotations)}')
 
-        except FileNotFoundError:
+        except FileNotFoundError as e:
             raise FileNotFoundError(
                 f"Some components of your CATMA project could not be loaded."
-            )
+            ) from e
         finally:
             os.chdir(cwd)
 
