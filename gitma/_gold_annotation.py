@@ -80,9 +80,9 @@ def create_gold_annotations(
     if not os.path.isdir(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}/annotations/'):
         os.mkdir(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}/annotations/')
     else:
-        for f in os.listdir(f'collections/{gold_uuid}/annotations/'):
+        for f in os.listdir(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}/annotations/'):
             # removes all files in gold annotation collection to prevent double gold annotations:
-            os.remove(f'collections/{gold_uuid}/annotations/{f}')
+            os.remove(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}/annotations/{f}')
 
     al1 = [an for an in ac1.annotations if an not in excluded_tags]
     al2 = [an for an in ac2.annotations if an not in excluded_tags]
