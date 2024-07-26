@@ -508,7 +508,7 @@ class CatmaProject:
             excluded_tags: list = None,
             min_overlap: float = 1.0,
             same_tag: bool = True,
-            property_values: str = 'none',
+            property_values: str = 'matching',
             push_to_gitlab: bool = False):
         
         """Searches for matching annotations in 2 AnnotationCollections and copies all matches in a third AnnotationCollection.
