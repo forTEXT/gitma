@@ -497,25 +497,25 @@ class CatmaProject:
             ac_1_name: str,
             ac_2_name: str,
             gold_ac_name: str,
-            excluded_tags: list = None,
+            excluded_tags: List[str] = None,
             min_overlap: float = 1.0,
             same_tag: bool = True,
-            property_values: str = 'none',
+            copy_property_values_if_equal: bool = True,
             push_to_gitlab: bool = False):
-        
-        """Searches for matching annotation in 2 annotation collections and copies all matches in a third annotation collection.
-        By default only matching property values get copied.
+
+        """Searches for matching annotations in two annotation collections of this project and copies all matches into a third annotation collection.
+        By default, property values are copied when they are exactly the same for matching annotations.
 
         Args:
-            ac_1_name (str): Annotation collection 1 name.
-            ac_2_name (str): Annnotation collection 2 name.
-            gold_ac_name (str): Annotation collection name for gold annotation.
-            excluded_tags (list, optional): Annotations with these tags will not be included in the Gold annotation. Defaults to None.
+            ac_1_name (str): The name of the first annotation collection.
+            ac_2_name (str): The name of the second annotation collection.
+            gold_ac_name (str): The name of the third annotation collection, into which gold annotations will be written.
+            excluded_tags (list, optional): Annotations with these tags will not be included in the gold annotations. Defaults to `None`.
             min_overlap (float, optional): The minimal overlap to generate a gold annotation. Defaults to 1.0.
-            same_tag (bool, optional): Whether both annotation need to be the same tag. Defaults to True.
-            property_values (str, optional): Whether only matching property values from annotation collection 1 shall be copied.\
-                Default to 'matching'. Further options: 'none'.
-            push_to_gitlab (bool, optional): Whether the gold annotation shall be uploaded to the CATMA GitLab. Default to False.
+            same_tag (bool, optional): Whether both annotations have to use the same tag. Defaults to `True`.
+            copy_property_values_if_equal (bool, optional): Whether property values should be copied when they are exactly the same for matching annotations.\
+                Defaults to `True`. If `False` or property values are not exactly the same, no property values are copied.
+            push_to_gitlab (bool, optional): Whether the gold annotations should be uploaded to the CATMA GitLab backend. Defaults to `False`.
         """
         create_gold_annotations(
             project=self,
@@ -525,7 +525,7 @@ class CatmaProject:
             excluded_tags=excluded_tags,
             min_overlap=min_overlap,
             same_tag=same_tag,
-            property_values=property_values,
+            copy_property_values_if_equal=copy_property_values_if_equal,
             push_to_gitlab=push_to_gitlab
         )
 

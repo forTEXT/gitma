@@ -467,14 +467,15 @@ class AnnotationCollection:
         tags: Union[list, str] = 'all',
         file_name: str = 'tsv_annotation_export',
         spacy_model: str = 'de_core_news_sm'):
-        """Takes a CATMA `AnnotationCollection` and writes a tsv-file which can be used to train a stanford NER model.
-        Every token in the collection's text gets a tag if it lays in an annotated text segment. 
+        """Writes a TSV-file for this annotation collection which can be used to train a Stanford NER model.
+        Every token in the associated text gets a tag if it lies within an annotated text segment.
 
         Args:
-            tags (Union[list, str], optional): List of tag, that should be considered. If set to 'all' all annotations are included.\
+            tags (Union[list, str], optional): List of tags that should be considered. If set to 'all', all annotations are included.\
                 Defaults to 'all'.
-            file_name (str, optional): name of the tsv-file. Defaults to 'tsv_annotation_export'.
-            spacy_model (str, optional): a spacy model as listed in https://spacy.io/usage/models. Default to 'de_core_news_sm'.
+            file_name (str, optional): Name of the TSV-file. Defaults to 'tsv_annotation_export'.
+            spacy_model (str, optional): A spaCy model as listed at https://spacy.io/usage/models. Defaults to 'de_core_news_sm'.\
+                Note that the specified model first needs to be installed, as detailed on the linked page.
         """
         if tags == 'all':
             tags = list(self.df['tag'].unique())

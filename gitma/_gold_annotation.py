@@ -6,23 +6,18 @@ from gitma.annotation import Annotation, get_annotation_segments
 from gitma._metrics import test_overlap, test_max_overlap, get_overlap_percentage
 
 
-class PropertyValuesOption(Enum):  # Added Enum for property_values
-    MATCHING = 'matching'
-    NONE = 'none'
-    
-    
 def compare_annotations(
         an1: Annotation,
         al2: List[Annotation],
         min_overlap: float = 1.0,
         same_tag: bool = True) -> Union[Annotation, bool]:
-    """Compares a given annotation with the best matching annotation in a given list of Annotations.
+    """Compares a given annotation with the best matching annotation in a given list of annotations.
 
     Args:
-        an1 (Annotation): An annotation object
-        al2 (List[Annotation]): A list of annotation objects
+        an1 (Annotation): An `Annotation` object.
+        al2 (List[Annotation]): A list of `Annotation` objects.
         min_overlap (float, optional): The minimal overlap percentage. Defaults to 1.0.
-        same_tag (bool, optional): Whether both annotation have to be same tagged. Defaults to True.
+        same_tag (bool, optional): Whether both annotations have to use the same tag. Defaults to `True`.
 
     Returns:
         bool: True if an1 and the best matching annotation in al2 fulfill the criteria.
@@ -56,29 +51,29 @@ def create_gold_annotations(
         ac_1_name: str,
         ac_2_name: str,
         gold_ac_name: str,
-        excluded_tags: Optional[List[str]] = None, # Made excluded_tags optional with default None
+        excluded_tags: List[str] = None,
         min_overlap: float = 1.0,
         same_tag: bool = True,
-        property_values: PropertyValuesOption = PropertyValuesOption.MATCHING,  # Changed type to Enum,
-        push_to_gitlab=False) -> None:
-    """The name of the third annotation collection, into which gold annotations will be written."
-    By default only matching property value get copied.
+        copy_property_values_if_equal: bool = True,
+        push_to_gitlab: bool = False) -> None:
+    """Searches for matching annotations in two annotation collections of the given project and copies all matches into a third annotation collection.
+    By default, property values are copied when they are exactly the same for matching annotations.
 
     Args:
-        ac_1_name (str): Annotation collection 1 name.
-        ac_2_name (str): Annnotation collection 2 name.
-        gold_ac_name (str): Annotation collection name for gold annotation.
-        excluded_tags (list, optional): Annotations with these tags will not be included in the gold annotation. Defaults to none.
+        project (CatmaProject): A `CatmaProject` object.
+        ac_1_name (str): The name of the first annotation collection.
+        ac_2_name (str): The name of the second annotation collection.
+        gold_ac_name (str): The name of the third annotation collection, into which gold annotations will be written.
+        excluded_tags (list, optional): Annotations with these tags will not be included in the gold annotations. Defaults to `None`.
         min_overlap (float, optional): The minimal overlap to generate a gold annotation. Defaults to 1.0.
-        same_tag (bool, optional): Whether both annotations need to be the same tag. Defaults to true.
-        property_values (str, optional): Whether only matching property value from annonation collection 1 shall be copied.\
-            Defaults to 'matching'. Further options: 'none'.
-        push_to_gitlab (bool, optional): Whether the gold annotations should be uploaded to the CATMA GitLab backend. Defaults to False.
+        same_tag (bool, optional): Whether both annotations have to use the same tag. Defaults to `True`.
+        copy_property_values_if_equal (bool, optional): Whether property values should be copied when they are exactly the same for matching annotations.\
+            Defaults to `True`. If `False` or property values are not exactly the same, no property values are copied.
+        push_to_gitlab (bool, optional): Whether the gold annotations should be uploaded to the CATMA GitLab backend. Defaults to `False`.
     """
-    
-    if excluded_tags is None:  # Handle the default value for excluded_tags
+
+    if excluded_tags is None:
         excluded_tags = []
-        
         
     cwd = os.getcwd()
 
@@ -91,7 +86,7 @@ def create_gold_annotations(
         os.mkdir(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}/annotations/')
     else:
         for f in os.listdir(f'collections/{gold_uuid}/annotations/'):
-            # removes all files in gold annotation collection to prevent double gold annotation:
+            # removes all files in gold annotation collection to prevent double gold annotations:
             os.remove(f'collections/{gold_uuid}/annotations/{f}')
 
     al1 = [an for an in ac1.annotations if an not in excluded_tags]
@@ -99,7 +94,7 @@ def create_gold_annotations(
 
     copied_annotations = 0
     for an in al1:
-        # get all overlapping annotation
+        # get all overlapping annotations
         overlapping_annotations = [
             a for a in al2 if test_overlap(
                 an1=an,
@@ -117,7 +112,7 @@ def create_gold_annotations(
             )
 
             # get best matching annotation and compare tag
-            compare_annotation = an2 if property_values == 'matching' else None
+            compare_annotation = an2 if copy_property_values_if_equal else None
             if an2:
                 copied_annotations += 1
 
@@ -128,7 +123,7 @@ def create_gold_annotations(
                 )
 
     if push_to_gitlab:
-        # upload gold annotation via git
+        # upload gold annotations via git
         os.chdir(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}')
         subprocess.run(['git', 'add', '.'])
         subprocess.run(['git', 'commit', '-m', 'new gold annotations'])

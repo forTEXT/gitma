@@ -3,20 +3,21 @@ import spacy
 
 
 def get_spacy_df(text: str, spacy_model: str = 'de_core_news_sm') -> pd.DataFrame:
-    """Generates a table with the token and their position in the given text by using `spacy`.
+    """Uses spaCy to generate a table with the tokens and their positions in the given text.
 
     Args:
         text (str): Any text.
-        spacy_model (str, optional): A spacy model as listed in https://spacy.io/usage/models. Defaults to 'de_core_news_sm'.
+        spacy_model (str, optional): A spaCy model as listed at https://spacy.io/usage/models. Defaults to 'de_core_news_sm'.\
+            Note that the specified model first needs to be installed, as detailed on the linked page.
         
     Returns:
         pd.DataFrame: `pandas.DataFrame` with 3 columns:\n
             - 'Token_ID': index of token in tokenized text
-            - 'Token_Index': a text pointer for the start point of the token
+            - 'Text_Pointer': a text pointer for the start point of the token
             - 'Token': the token
     """
    
-    nlp = spacy.load(spacy_model)  # Use spacy_model parameter (was hardcoded before)
+    nlp = spacy.load(spacy_model)
     doc = nlp(text)
 
     lemma_list = []
@@ -24,9 +25,9 @@ def get_spacy_df(text: str, spacy_model: str = 'de_core_news_sm') -> pd.DataFram
     for token in doc:
         if '\n' not in token.text:
             lemma_list.append((
-                token.i,          # Token ID
-                token.idx,        # Start pointer in document
-                token.text,       # Token
+                token.i,          # token index
+                token.idx,        # start pointer in document
+                token.text,       # token
             ))
 
     columns = ['Token_ID', 'Text_Pointer', 'Token']
@@ -38,14 +39,15 @@ def to_stanford_tsv(
         tags: list,
         file_name: str = None,
         spacy_model: str = 'de_core_news_sm') -> None:
-    """Takes a CATMA `Annotation Collection` and writes a tsv-file which can be used to train a stanford NER model.
-    Every token in the collection's text gets a tag if it lays in an annotated text segment. 
+    """Writes a TSV-file for the supplied `AnnotationCollection` which can be used to train a Stanford NER model.
+    Every token in the collection's text gets a tag if it lies within an annotated text segment.
 
     Args:
-        ac (gitma.AnnotationCollection): `AnnotationCollection` object
-        tags (list): List of tags, that should be considered.
-        file_name (str, optional): name of the tsv-file. Defaults to None.
-        spacy_model (str, optional): a spacy model as listed in https://spacy.io/usage/models. Default to 'de_core_news_sm'.
+        ac (gitma.AnnotationCollection): `AnnotationCollection` object.
+        tags (list): List of tags that should be considered.
+        file_name (str, optional): Name of the TSV-file. Defaults to `None` (file will be named after the collection).
+        spacy_model (str, optional): A spaCy model as listed at https://spacy.io/usage/models. Defaults to 'de_core_news_sm'.\
+            Note that the specified model first needs to be installed, as detailed on the linked page.
     """
 
     filtered_ac_df = ac.df[ac.df.tag.isin(tags)].copy()
