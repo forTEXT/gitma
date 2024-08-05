@@ -20,7 +20,7 @@ def get_color_dict(annotation_df: pd.DataFrame, color_col: str = 'tag', colors: 
     Args:
         annotation_df (pd.DataFrame): DataFrame in the AnnotationCollection.df format.
         color_col (str): 'tag' or another column in the annotation_df. Defaults to 'tag'.
-        colors (list, optional): List of colors as hex value. Defaults to None.
+        colors (list, optional): List of colors as hex values. Defaults to None.
 
     Returns:
         Dict[str, str]: Dictionary with tag names as keys and colors as hex value.
@@ -53,12 +53,12 @@ def cooccurrent_annotations(
     ac_df: pd.DataFrame,
     character_distance: int = 100,
     level='tag') -> dict:
-    """Function to find coocurrent annotation within one document.
+    """Function to find co-occurrent annotations within one document.
 
     Args:
         ac_df (pd.DataFrame): Pandas DataFrame in the format of gitma.AnnotationCollection.df .
-        character_distance (int, optional): The maximal distance between two annotations considered coocurrent. Defaults to 100.
-        level (str, optional): 'Tag' or any property used in the gitma.AnnotationCollection.df with the prefix 'prop:'. Defaults to 'tag'.
+        character_distance (int, optional): The maximal distance between two annotations considered co-occurrent. Defaults to 100.
+        level (str, optional): 'tag' or any property used in the gitma.AnnotationCollection.df with the prefix 'prop:'. Defaults to 'tag'.
 
     Returns:
         dict: A dictionary with cooccurency frequency in the format:
@@ -102,8 +102,8 @@ def overlapping_annotations(
 
     Args:
         ac_df (pd.DataFrame): DataFrame in the format of gitma.AnnotationCollection.df
-        level (str, optional): Tag' or any property used in the gitma.AnnotationCollection.df with the prefix 'prop:'. Defaults to 'tag'.
-        only_different_acs (bool, optional): If True only overlapping annotatiosn from different annotation collections\
+        level (str, optional): 'tag' or any property used in the gitma.AnnotationCollection.df with the prefix 'prop:'. Defaults to 'tag'.
+        only_different_acs (bool, optional): If True only overlapping annotations from different annotation collections\
             are considered. Defaults to True.
 
     Returns:
@@ -187,11 +187,11 @@ def create_network_from_edges(edge_list: List[Edge]) -> nx.Graph:
 
 
 def norm_col(value: float, values: pd.Series) -> float:
-    """Normalizes value in a pandas series.
+    """Normalizes values in a pandas series.
 
     Args:
         value (float): Cell value.
-        value (pd.Series): Column value.
+        values (pd.Series): Column values.
 
     Returns:
         float: Normalized cell value.
@@ -234,13 +234,13 @@ class Network:
     
     Args:
             annotation_collections (List[AnnotationCollection]): List of included annotation collections.
-            character_distance (int, optional): Cooccurrence span. Defaults to 100.
-            edge_func (str, optional): Keyword for the function that identifies connected annotation.\
-                Either `'cooccurent'` or `'overlapping'`. Defaults to cooccurrent_annotation. 
-            included_tags (list, optional): Included tag. If `None` and excluded_tags `None` all tags are included.\
+            character_distance (int, optional): Co-occurrence span. Defaults to 100.
+            edge_func (str, optional): Keyword for the function that identifies connected annotations.\
+                Either `'cooccurrent'` or `'overlapping'`. Defaults to `'cooccurrent'`.
+            included_tags (list, optional): Included tags. If `None` and excluded_tags `None` all tags are included.\
                 Defaults to None.
-            excluded_tags (list, optional): Excluded tag. Defaults to None.
-            level (str, optional): Whether the annotation tag or the value of the given property gets included.
+            excluded_tags (list, optional): Excluded tags. Defaults to None.
+            level (str, optional): Whether the annotations' tag or the values of the given property gets included.
             network_layout (callable, optional): NetworkX Drawing Layout. Defaults to nx.drawing.layout.kamada_kawai_layout.
     """
 
@@ -259,7 +259,7 @@ class Network:
         #: The annotation level.
         self.level: str = level
         
-        #: Merged annotation dataframe
+        #: Merged annotations dataframe
         self.df: pd.DataFrame = pd.concat(
             [ac.df for ac in annotation_collections if not ac.df.empty]
         )
@@ -269,7 +269,7 @@ class Network:
                 self.df[level] != 'NOT ANNOTATED'
             ].copy()
 
-        # filter annotation by tag
+        # filter annotations by tag
         if included_tags:
             self.df = self.df[
                 self.df.tag.isin(included_tags)

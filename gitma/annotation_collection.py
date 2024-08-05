@@ -92,7 +92,7 @@ def load_annotations(catma_project, ac, context: int):
             # load all annotations
             page_file_annotations = json.load(page_file)
 
-        # construct annotation objects
+        # construct `Annotation` objects
         for annotation_data in page_file_annotations:
             yield Annotation(
                     annotation_data=annotation_data,
@@ -182,17 +182,17 @@ class AnnotationCollection:
         self.text_version: str = self.header.get('sourceDocumentVersion')
 
         if os.path.isdir(self.directory + 'annotations/'):
-            #: List of annotations in annotation collection as gitma.annotation objects.
+            #: List of annotations in annotation collection as gitma.Annotation objects.
             self.annotations: List[Annotation] = sorted(list(load_annotations(
                 catma_project=catma_project,
                 ac=self,
                 context=context
             )))
 
-            #: List of tag found in the annotation collection as a list of gitma.Tag objects.
+            #: Tags found in the annotation collection as a list of gitma.Tag objects.
             self.tags: List[Tag] = [an.tag for an in self.annotations]
 
-            #:  annotations as a pandas.DataFrame.
+            #: Annotations as a pandas.DataFrame.
             self.df: pd.DataFrame = ac_to_df(
                 annotations=self.annotations,
                 text_title=self.text.title,
@@ -216,7 +216,7 @@ class AnnotationCollection:
         """Returns list of annotations as dictionaries using the `Annotation.to_dict()` method.
 
         Args:
-            tags(Union[list, None]): tags included in the annotations list. If `None` all tags are included. Defaults to None.
+            tags(Union[list, None]): Tags included in the annotations list. If `None` all tags are included. Defaults to None.
 
         Returns:
             List[dict]: List of annotations as dictionaries.
@@ -230,16 +230,15 @@ class AnnotationCollection:
         ]
     
     def annotation_dict(self) -> Dict[str, Annotation]:
-        """Creates dictionary with UUIDs as keys an annotation objects as values.
+        """Creates dictionary with UUIDs as keys and `Annotation` objects as values.
 
         Returns:
-            Dict[str, Annotation]: Dictionary with UUIDs as keys an annotation objects as values.
+            Dict[str, Annotation]: Dictionary with UUIDs as keys and `Annotation` objects as values.
         """
         return {an.uuid: an for an in self.annotations}
 
     def duplicate_by_prop(self, prop: str) -> pd.DataFrame:
-        """Duplicates the rows in the annotation collection's DataFrame if the given property has multiple property value
-        the annotations represented by a DataFrame row.
+        """Duplicates the rows in the annotation collection's DataFrame if the given property has multiple property values.
 
         Args:
             prop (str): A property used in the annotation collection.
@@ -275,12 +274,12 @@ class AnnotationCollection:
         os.chdir(cwd)
         print(f'Pushed annotations from collection {self.name}.')
     
-    def plot_annotations(self, y_axis: str = 'tag', color_prop: str = 'tag'):
-        """Creates interactive [Plotly Scatter Plot](https://plotly.com/python/line-and-scatter/) to  explore a annotation collection.
+    def plot_annotations(self, y_axis: str = 'tag', color_prop: str = None):
+        """Creates an interactive [Plotly Scatter Plot](https://plotly.com/python/line-and-scatter/) to explore this annotation collection.
 
         Args:
-            y_axis (str, optional): The columns in annotation collection DataFrame used for y axis. Defaults to 'tag'.
-            color_prop (str, optional): A property's name used in the annotation collection . Defaults to None.
+            y_axis (str, optional): The column in `AnnotationCollection.df` DataFrame used for the y-axis. Defaults to 'tag'.
+            color_prop (str, optional): A property's name used in the annotation collection, prefixed with 'prop:'. Defaults to `None`.
 
         Returns:
             go.Figure: Plotly scatter plot.
@@ -323,15 +322,15 @@ class AnnotationCollection:
             level: str = 'tag',
             plot_stats: bool = False,
             save_as_gexf: Union[bool, str]= False):
-        """Draws cooccurrence network graph where every tag is a node and every edge represents two cooccurent tag.
-        You can by the `character_distance` parameter when two annotations are considered cooccurent.
+        """Draws a co-occurrence network graph where every tag is a node and every edge represents two co-occurrent tags.
+        You can by the `character_distance` parameter when two annotations are considered co-occurrent.
         If you set `character_distance=0` only the tags of overlapping annotations will be represented
         as connected nodes.
 
         Args:
-            character_distance (int, optional): In which distance annotation are considered coocurrent. Defaults to 100.
+            character_distance (int, optional): In which distance annotations are considered co-occurrent. Defaults to 100.
             included_tags (list, optional): List of included tags. Defaults to None.
-            level (str, optional): Select 'tag' or any property in your annotation collection with the prefix 'prop'.
+            level (str, optional): Select 'tag' or any property in your annotation collections with the prefix 'prop:'.
             excluded_tags (list, optional): List of excluded tags. Defaults to None.
             plot_stats (bool, optional): Whether to return network stats. Defaults to False.
             save_as_gexf (bool, optional): If given any string as filename the network gets saved as Gephi file.
@@ -402,10 +401,10 @@ class AnnotationCollection:
         return pd.DataFrame(tag_data).T
 
     def property_stats(self) -> pd.DataFrame:
-        """Counts for each property the property value.
+        """Counts for each property the property values.
 
         Returns:
-            pd.DataFrame: DataFrame with properties as index and property value as header.
+            pd.DataFrame: DataFrame with properties as index and property values as header.
         """
         return pd.DataFrame(
             {col: duplicate_rows(self.df, col)[col].value_counts(
@@ -439,12 +438,12 @@ class AnnotationCollection:
             an.set_property_values(tag=tag, prop=prop, value=value)
 
     def rename_property_value(self, tag: str, prop: str, old_value: str, new_value: str):
-        """Renames property of all annotations with the given tag name.
+        """Renames property value of all annotations with the given tag name.
         Replaces only the property value defined by the parameter `old_value`.
 
         Args:
-            tag (str): The tag's name-
-            prop (str): The property's name-
+            tag (str): The tag's name.
+            prop (str): The property's name.
             old_value (str): The old property value that will be replaced.
             new_value (str): The new property value that will replace the old property value.
         """
@@ -487,8 +486,8 @@ class AnnotationCollection:
         property: str = 'all',
         only_missing_prop_values: bool = False,
         filename: str = 'PropertyAnnotationTable'):
-        """Creates csv file to add property value to existing annotation.
-        The added property value can be imported with the `read_annotation_csv()` method.
+        """Creates a CSV file that can be used to add property values to existing annotations.
+        The added property values can be imported with the `read_annotation_csv()` method.
 
         [See the example below.](
             https://gitma.readthedocs.io/en/latest/class_annotation_collection.html#add-property-values-via-csv-table
@@ -502,9 +501,9 @@ class AnnotationCollection:
             property (str, optional): The property to be included.\
                 If set to 'all' all annotations will be written into the csv file.\
                 Defaults to 'all'.
-            only_missing_prop_values (bool, optional): Whether only empy properties should be included.\
+            only_missing_prop_values (bool, optional): Whether only empty properties should be included.\
                 Defaults to False.
-            filename (str, optional): The csv file name. Defaults to 'PropertyAnnotationTable'.
+            filename (str, optional): The name of the output CSV file. Defaults to 'PropertyAnnotationTable'.
         """
         
         # filter annotations by selected tags
@@ -556,8 +555,8 @@ class AnnotationCollection:
         self,
         filename: str = 'PropertyAnnotationTable.csv',
         push_to_gitlab=False) -> None:
-        """Reads csv file created by the `write_annotation_csv()` method and updates
-        the annotation json files. Additionally, if `push_to_gitlab=True` the annotation
+        """Reads a CSV file created by the `write_annotation_csv()` method and updates
+        the annotation JSON files. Additionally, if `push_to_gitlab=True` the annotations
         get imported in the CATMA Gitlab backend.
         
         [See the example below.](https://gitma.readthedocs.io/en/latest/class_annotation_collection.html#add-property-values-via-csv-table)
@@ -565,7 +564,7 @@ class AnnotationCollection:
         Args:
             filename (str, optional): The annotation csv file's name/directory.\
                 Defaults to 'PropertyAnnotationTable.csv'.
-            push_to_gitlab (bool, optional): Whether to push the annotation to gitlab. Defaults to False.
+            push_to_gitlab (bool, optional): Whether to push the annotations to gitlab. Defaults to False.
         """
         annotation_table = pd.read_csv(filename, sep=";")
         an_dict = self.annotation_dict()

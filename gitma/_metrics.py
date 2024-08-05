@@ -12,8 +12,8 @@ def filter_ac_by_tag(
         ac2: AnnotationCollection,
         tag_filter: list = None,
         filter_both_ac: bool = True) -> Tuple[List[Annotation]]:
-    """Returns list of annotations filtered by tags.
-    If `filter_both_ac=False` only the first collection's annotation get filtered.
+    """Returns lists of annotations filtered by tags.
+    If `filter_both_ac=False` only the first collection's annotations get filtered.
 
     Args:
         ac1 (AnnotationCollection): First annotation collection.
@@ -45,11 +45,11 @@ def get_same_text(
     """All text parts annotated only by one annotator get excluded.
 
     Args:
-        annotation_list1 (List[Annotation]): Annotation from first collection.
-        annotation_list2 (List[Annotation]): Annotation from second collection.
+        annotation_list1 (List[Annotation]): Annotations from first collection.
+        annotation_list2 (List[Annotation]): Annotations from second collection.
 
     Returns:
-        Tuple[List[Annotation]]: Annotation from both collections.
+        Tuple[List[Annotation]]: Annotations from both collections.
     """
     ac1 = [an for an in annotation_list1 if an.start_point <=
            annotation_list2[-1].start_point]
@@ -61,11 +61,11 @@ def get_same_text(
 def test_max_overlap(
     silver_annotation: Annotation,
     second_annotator_annotations: List[Annotation]) -> Annotation:
-    """Looks for best matching annotation in second annotator annotation.
+    """Looks for best matching annotation in second annotator's annotations.
 
     Args:
-        silver_annotation (Annotation): Annotation that will be matched
-        second_annotator_annotation (list): List of annotations
+        silver_annotation (Annotation): Annotation that will be matched.
+        second_annotator_annotations (list): List of annotations.
 
     Returns:
         Annotation: Annotation Object
@@ -84,7 +84,7 @@ def test_max_overlap(
 
 
 def test_overlap(an1: Annotation, an2: Annotation) -> bool:
-    """Test if annotation 2 starts or ends within annotation 1 span.
+    """Test if annotation `an2` starts or ends within annotation `an1`'s span.
 
     Args:
         an1 (Annotation): First annotation.
@@ -138,7 +138,7 @@ def get_confusion_matrix(pair_list: List[Tuple[Annotation]], level: str = 'tag')
 
     Args:
         pair_list (List[Tuple[Annotation]]): List of overlapping annotations as tuples.
-        level (str, optional): 'tag' or any property with prefix 'prop:' in the annotation collection.\
+        level (str, optional): 'tag' or any property with prefix 'prop:' in the annotation collections.\
             Defaults to 'tag'.
 
     Returns:
@@ -170,14 +170,14 @@ def get_confusion_matrix(pair_list: List[Tuple[Annotation]], level: str = 'tag')
 
 
 class EmptyTag:
-    """Helper class for missing annotation.
+    """Helper class for missing annotations.
     """
     def __init__(self):
         self.name = '#None#'
 
 
 class EmptyAnnotation:
-    """Helper class for missing annotation.
+    """Helper class for missing annotations.
 
     Args:
         start_point (int): Text pointer.
@@ -197,7 +197,7 @@ def get_annotation_pairs(
         tag_filter: list = None,
         filter_both_ac: bool = False,
         property_filter: str = None) -> List[Tuple[Annotation]]:
-    """Returns list of all overlapping annotations in two annotation collection.
+    """Returns list of all overlapping annotations in two annotation collections.
     tag_filter can be defined as list of tag names if not all annotations are included.
 
 
@@ -238,7 +238,7 @@ def get_annotation_pairs(
         overlapping_annotations = [
             an2 for an2 in ac2_annotations if test_overlap(an1, an2)]
 
-        # test if any matching annotation in an2 was found
+        # test if any matching annotations in an2 was found
         if len(overlapping_annotations) < 1:
             missing_an2_annotations += 1
             pair_list.append(
@@ -274,9 +274,9 @@ def get_annotation_pairs(
             Finished search for overlapping annotations in:
             - {ac1.name}
             - {ac2.name}
-            Could match {len(pair_list)} annotation.
+            Could match {len(pair_list)} annotations.
             Average overlap is {round(string_difference, 2)} %.
-            Couldn't match {missing_an2_annotation} annotation(s) in first annotation collection.
+            Couldn't match {missing_an2_annotations} annotation(s) in first annotation collection.
             """
         )
     )
@@ -313,11 +313,11 @@ def get_iaa_data(
 
     Args:
         annotation_pairs (List[Tuple[Annotation]]): List of annotation pairs.
-        level (str, optionale): 'tag' or any property in the annotation collection with\
+        level (str, optional): 'tag' or any property in the annotation collections with\
             the prefix 'prop:'.
 
     """
-    if not include_empty_annotations:       # remove annotation pairs including empty annotation
+    if not include_empty_annotations:       # remove annotation pairs including empty annotations
         annotation_pairs = [
             an_pair for an_pair in annotation_pairs
             if an_pair[1].tag.name != '#None#'
@@ -347,7 +347,7 @@ def gamma_agreement(
 
     Args:
         project (_type_): The CATMA project that holds the used annotation collections.
-        annotation_collection (List[AnnotationCollection]): List of annotation collections to be included.
+        annotation_collections (List[AnnotationCollection]): List of annotation collections to be included.
         alpha (int, optional): Coefficient weighting the positional dissimilarity value. Defaults to 3.
         beta (int, optional): Coefficient weighting the categorical dissimilarity value. Defaults to 1.
         delta_empty (float, optional): _description_. Defaults to 0.01.

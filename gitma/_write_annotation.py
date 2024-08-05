@@ -76,8 +76,8 @@ def write_annotation_json(
         uuid_override: str = None,
         timestamp_override: str = None) -> str:
     """
-    Function to write a new annotation into a given Catma project.
-    Gets imported in the Catma project class and should only be used as a class method.
+    Function to write a new annotation into a given `CatmaProject`.
+    Gets imported in the `CatmaProject` class and should only be used as a class method.
 
     Args:
         project (CatmaProject): A CatmaProject object.
@@ -173,10 +173,10 @@ def write_annotation_json(
         file_size = current_page_file.seek(0, os.SEEK_END)
         current_page_file.seek(0, os.SEEK_SET)
 
-        # condition is '> 2' because a page file can contain only "[]" (if all the annotation that the page contains are deleted)
+        # condition is '> 2' because a page file can contain only "[]" (if all the annotations that the page contains are deleted)
         if file_size > 2:
             # replace the opening list bracket of the serialized annotation to be written with a comma
-            # in preparation for appending the annotation to the list of existing annotation in the page file
+            # in preparation for appending the annotation to the list of existing annotations in the page file
             annotation_json = ',' + annotation_json[1:]
 
             # seek so that the closing list bracket and the preceding newline in the page file will be overwritten

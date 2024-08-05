@@ -40,7 +40,7 @@ class Tag:
     """Class which represents a CATMA tag.
 
     Args:
-        json_file_path (str): The path of the tags within the project's folder structure.
+        json_file_path (str): The path of the tag within the project's folder structure.
 
     Raises:
         FileNotFoundError: If the json_file_path could not be found.

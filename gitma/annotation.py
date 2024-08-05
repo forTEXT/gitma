@@ -39,8 +39,8 @@ def get_date(annotation_dict: dict) -> datetime:
         timestamp = datetime.strptime(annotation_iso_datetime, '%Y-%m-%dT%H:%M:%S.%f%z')
     except ValueError:
         # older GitMA versions wrote the timestamp without a timezone component, which will cause the above to fail
-        # as a limited amount of annotation were created using these versions we assume CEST and append its offset to allow parsing to succeed
-        # if you used older GitMA versions to create annotation and an accurate timestamp is important to you, consider correcting the source data
+        # as a limited amount of annotations were created using these versions we assume CEST and append its offset to allow parsing to succeed
+        # if you used older GitMA versions to create annotations and an accurate timestamp is important to you, consider correcting the source data
         # or modify the offset below
         timestamp = datetime.strptime(annotation_iso_datetime + '+02:00', '%Y-%m-%dT%H:%M:%S%z')
     return timestamp
@@ -90,12 +90,12 @@ def get_annotation_segments(json_data: dict) -> bool:
 
 def get_selector_items(start_points: list, end_points: list, source_document_uuid: str) -> list:
     """Creates list of selectors for annotation JSON file.
-    Gets used when generating gold annotation.
+    Gets used when generating gold annotations.
 
     Args:
-        start_points (list): annotation start points
-        end_points (list): annotation end points
-        source_document_uuid (str): document UUID in CATMA project.
+        start_points (list): Annotation start points.
+        end_points (list): Annotation end points.
+        source_document_uuid (str): Document UUID in CATMA project.
     Returns:
         list: List of selectors.
     """
@@ -132,13 +132,13 @@ def merge_adjacent_spans_forming_continuous_logical_span(selector_list: List[Sel
 
 
 def numeric_property_values_to_int(prop_dict: dict) -> dict:
-    """Transforms numeric property value to integers.
+    """Transforms numeric property values to integers.
 
     Args:
-        prop_dict (dict): Dictionary with Property names as keys and value as list.
+        prop_dict (dict): Dictionary with property names as keys and values as list.
 
     Returns:
-        dict: Dictionary with Property names as keys and value as list.
+        dict: Dictionary with property names as keys and values as list.
     """
     output_dict = {}
     for prop in prop_dict:
@@ -161,7 +161,7 @@ class Annotation:
         plain_text (str): The plain text annotated by the annotation.
         project (CatmaProject): The parent CatmaProject.
         context (int, optional): Size of the context that gets included in the\
-            data frame representation of annotation collection. Defaults to 50.
+            data frame representation of annotation collections. Defaults to 50.
     """
     def __init__(self, annotation_data: dict, page_file_path: str, plain_text: str, project, context: int = 50):
         #: The parent CatmaProject
@@ -214,7 +214,7 @@ class Annotation:
         user_properties = get_user_properties(self.data)
 
         #: The annotation's properties as a dictionary with property names as keys
-        #: and the property value as list.
+        #: and the property values as list.
         self.properties = {
             self.tag.properties_data[prop]['name']: user_properties[prop] for prop in user_properties
         }
@@ -326,7 +326,7 @@ class Annotation:
         Args:
             tag (str): The tag's name.
             prop (str): The property's name.
-            value (list): The list of new property value.
+            value (list): The list of new property values.
         """
         if self.tag.name == tag and prop in self.properties:
 
@@ -361,7 +361,7 @@ class Annotation:
     ) -> str:
         new_properties = deepcopy(self.properties)
 
-        # remove property value from new_properties unless we have a compare_annotation whose corresponding property value match
+        # remove property values from new_properties unless we have a compare_annotation whose corresponding property values match
         for property_name in new_properties.keys():
             if compare_annotation is None or new_properties.get(property_name) != compare_annotation.properties.get(property_name, []):
                 new_properties[property_name] = []
@@ -395,6 +395,6 @@ class Annotation:
 
         Args:
             annotation_collection_name (str): The name of the annotation collection that the annotation should be copied to.
-            compare_annotation (Annotation, optional): An annotation to compare property value (for gold annotation). Defaults to None.
+            compare_annotation (Annotation, optional): An annotation to compare property values (for gold annotations). Defaults to None.
         """
         self._copy(annotation_collection_name, compare_annotation)

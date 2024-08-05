@@ -17,7 +17,7 @@ class Tagset:
         #: The tagsets UUID.
         self.uuid: str = tagset_uuid
 
-        #: The path of the tagsets within the project's folder structure.
+        #: The path of the tagset within the project's folder structure.
         self.path: str = project_uuid + '/tagsets/' + tagset_uuid
 
         try:

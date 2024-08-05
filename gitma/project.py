@@ -70,7 +70,7 @@ def get_local_project_uuid(
         project_name (str): The project's name.
 
     Raises:
-        FileNotFoundError: If none of the project in the projects_directory has the given project name.
+        FileNotFoundError: If none of the projects in the projects_directory has the given project name.
         ValueError: If more than one project with the given project name exists.
 
     Returns:
@@ -116,16 +116,16 @@ def load_annotation_collections(
         included_acs: list = None,
         excluded_acs: list = None,
         ac_filter_keyword: str = None) -> Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]:
-    """Generates List and Dict of CATMA Annotation Collections.
+    """Generates list and dict of CATMA annotation collections.
 
     Args:
-        project_uuid (str): CATMA Project UUID
-        included_acs (list): All listed annotation collection get loaded.
-        excluded_acs (list): All listed annotations collections don't get loaded.\
+        project_uuid (str): CATMA project UUID.
+        included_acs (list): All listed annotation collections get loaded.
+        excluded_acs (list): All listed annotation collections don't get loaded.\
             If neither included nor excluded annotation collections are defined, all annotation collections get loaded.
 
     Returns:
-        Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]: List and Dict of annotation collections
+        Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]: List and dict of annotation collections.
     """
     collections_directory = catma_project.uuid + '/collections/'
 
@@ -171,7 +171,7 @@ def load_annotation_collections(
 def test_tageset_directory(
         project_uuid: str,
         tagset_uuid: str) -> bool:
-    """Tests if tagsets has header.json to filter empty tagsets from loading process.
+    """Tests if tagset has header.json to filter empty tagsets from loading process.
 
     Args:
         project_uuid (str): UUID.
@@ -186,13 +186,13 @@ def test_tageset_directory(
 
 
 def load_tagsets(project_uuid: str) -> Tuple[List[Tagset], Dict[str, Tagset]]:
-    """Generates List and Dict of tagset.
+    """Generates list and dict of tagsets.
 
     Args:
-        project_uuid (str): CATMA Project UUID.
+        project_uuid (str): CATMA project UUID.
 
     Returns:
-        Tuple[List[Tagset], Dict[str, Tagset]]: tagset as list and dictionary with UUIDs as keys.
+        Tuple[List[Tagset], Dict[str, Tagset]]: Tagsets as list and dictionary with UUIDs as keys.
     """
     tagsets_directory = project_uuid + '/tagsets/'
     tagsets = [
@@ -209,13 +209,13 @@ def load_tagsets(project_uuid: str) -> Tuple[List[Tagset], Dict[str, Tagset]]:
 
 
 def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
-    """Generates List and Dict of CATMA Texts.
+    """Generates list and dict of CATMA texts.
 
     Args:
-        project_uuid (str): CATMA Project UUID
+        project_uuid (str): CATMA project UUID.
 
     Returns:
-        Tuple[List[Text], Dict[Text]]: List and dictionary of document.
+        Tuple[List[Text], Dict[Text]]: List and dictionary of documents.
     """
     texts_directory = project_uuid + '/documents/'
     texts = [
@@ -305,7 +305,7 @@ class CatmaProject:
                 #: List of gitma.Tagset objects.
                 self.tagsets: List[Tagset] = tagsets[0]
 
-                #: Dictionary of the project's tagsets with the UUIDs as keys and gitma.Tagset objects as value.
+                #: Dictionary of the project's tagsets with the UUIDs as keys and gitma.Tagset objects as values.
                 self.tagset_dict: Dict[str, Tagset] = tagsets[1]
             else:
                 self.tagsets = []
@@ -313,18 +313,18 @@ class CatmaProject:
             print(f'\tFound {len(self.tagsets)} tagset(s).')
 
             # Load texts
-            print('Loading document ...')
+            print('Loading documents ...')
             texts = load_texts(project_uuid=self.uuid)
 
             #: List of the gitma.Text objects.
             self.texts: List[Text] = texts[0]
 
-            #: Dictionary of the project's texts with titles as keys and gitma.Text objects as value.
+            #: Dictionary of the project's texts with titles as keys and gitma.Text objects as values.
             self.text_dict: Dict[str, Text] = texts[1]
             print(f'\tFound {len(self.texts)} document(s).')
 
             # Load annotation collections
-            print('Loading annotation collection ...')
+            print('Loading annotation collections ...')
             annotation_collections = load_annotation_collections(
                 catma_project=self,
                 included_acs=included_acs,
@@ -334,7 +334,7 @@ class CatmaProject:
             #: List of gitma.AnnotationCollection objects.
             self.annotation_collections: List[AnnotationCollection] = annotation_collections[0]
 
-            #: Dictionary of the project's annotation collections with names as keys and gitma.AnnotationCollection objects as value.
+            #: Dictionary of the project's annotation collections with names as keys and gitma.AnnotationCollection objects as values.
             self.ac_dict: Dict[str, AnnotationCollection] = annotation_collections[1]
             print(f'\tFound {len(self.annotation_collections)} annotation collection(s).')
             for ac in self.annotation_collections:
@@ -397,10 +397,10 @@ class CatmaProject:
         subprocess.run(['git', 'pull'])
 
         os.chdir('../')
-        # Load tagset
+        # Load tagsets
         self.tagsets, self.tagset_dict = load_tagsets(project_uuid=self.uuid)
 
-        # Load Texts
+        # Load texts
         self.texts, self.text_dict = load_texts(project_uuid=self.uuid)
 
         # Load annotation collections
@@ -409,7 +409,7 @@ class CatmaProject:
             included_acs=list(self.ac_dict)
         )
 
-        print('Updated the CATMA Project')
+        print('Updated the CATMA project')
 
         os.chdir(cwd)
 
@@ -434,10 +434,10 @@ class CatmaProject:
                 yield tag
 
     def stats(self) -> pd.DataFrame:
-        """Shows some CATMA Project stats.
+        """Shows some CATMA project stats.
 
         Returns:
-            pd.DataFrame: DataFrame with projects stats sorted by the annotation collection names.
+            pd.DataFrame: DataFrame with project's stats sorted by the annotation collection names.
         """
         ac_stats = [
             {
@@ -598,10 +598,10 @@ class CatmaProject:
         level: str = 'tag',
         plot_stats: bool = False,
         save_as_gexf: Union[bool, str] = False):
-        """Draws cooccurrence network graph for annotations.
+        """Draws co-occurrence network graph for annotations.
          
-        Every tag is represented by a node and every edge represents two cooccurent tags.
-        You can by the `character_distance` parameter when two annotations are considered cooccurent.
+        Every tag is represented by a node and every edge represents two co-occurrent tags.
+        You can by the `character_distance` parameter when two annotations are considered co-occurrent.
         If you set `character_distance=0` only the tags of overlapping annotations will be represented
         as connected nodes.
 
@@ -610,7 +610,7 @@ class CatmaProject:
         Args:
             annotation_collections (Union[str, List[str]]): List with the names of the included annotation collections.\
                 If set to 'all' all annotation collections are included. Defaults to 'all'.
-            character_distance (int, optional): In which distance annotations are considered coocurrent. Defaults to 100.
+            character_distance (int, optional): In which distance annotations are considered co-occurrent. Defaults to 100.
             included_tags (list, optional): List of included tags. Defaults to None.
             excluded_tags (list, optional): List of excluded tags. Defaults to None.
             level (str, optional): 'tag' or any property name with 'prop:' as prefix. Defaults to 'tag'.
@@ -650,7 +650,7 @@ class CatmaProject:
         """Draws disagreement network.
 
         Every edge in the network represents two overlapping annotations from different annotation collections
-        and with different tags or property value. 
+        and with different tags or property values.
 
         Args:
             annotation_collections (Union[str, List[str]], optional): List with the names of the included annotation collections.\
@@ -716,22 +716,22 @@ class CatmaProject:
         include_empty_annotations: bool = True,
         distance: str = 'binary',
         return_as_dict: bool = False) -> None:
-        """Computes Inter Annotator Agreement for 2 annotation collection.
+        """Computes Inter-Annotator-Agreement for two annotation collections.
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb)
         for details.
 
         Args:
-            ac1_name (str): annotation collection name to be compared.
-            ac2_name (str): annotation collection name to be compared with.
-            tag_filter (list, optional): Which Tags should be included. If None all are included. Default to None.
-            filter_both_ac (bool, optional): Whether the tag filter shall be applied to both annotation collections.\
-                Defaults to False.
+            ac1_name (str): Annotation collection name to be compared.
+            ac2_name (str): Annotation collection name to be compared with.
+            tag_filter (list, optional): Which tags should be included. If `None`, all are included. Defaults to `None`.
+            filter_both_ac (bool, optional): Whether the tag filter should be applied to both annotation collections.\
+                Defaults to `False`.
             level (str, optional): Whether the annotation tag or a specified property should be compared.\
                 Defaults to 'tag'.
-            include_empty_annotations (bool, optionale): If `False` only annotation with a overlapping annotation in the second collection\
-                get included. Defaults to True.
+            include_empty_annotations (bool, optional): If `False`, only annotations with an overlapping annotation in the second collection\
+                get included. Defaults to `True`.
             distance (str, optional): The IAA distance function. Either 'binary' or 'interval'.\
-            See the [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further informations. Defaults to 'binary'.
+                See the [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further information. Defaults to 'binary'.
         """
         from nltk.metrics.agreement import AnnotationTask
         from nltk.metrics import interval_distance, binary_distance

@@ -31,10 +31,10 @@ def duplicate_generator(df: pd.DataFrame, property_col: str) -> Generator[pd.Ser
 
 
 def duplicate_rows(ac_df: pd.DataFrame, property_col: str) -> pd.DataFrame:
-    """ Duplicates rows in annotation collection dataFrame if multiple property value exist in defined porperty column.
+    """Duplicates rows in `AnnotationCollection.df` DataFrame if multiple property values exist in defined property column.
 
     Args:
-        ac_df (pd.DataFrame): annotation collection data frame.
+        ac_df (pd.DataFrame): `AnnotationCollection.df` DataFrame.
         property_col (str): The property name with the prefix 'prop:'.
     Raises:
         ValueError: If the property does not exist in the annotation collection.
@@ -128,21 +128,21 @@ def format_annotation_text(text: str) -> str:
     return output_string
 
 
-def plot_annotations(ac, y_axis: str = 'tag', color_prop: str = 'tag'):
-    """Creates interactive [Plotly Scatter Plot](https://plotly.com/python/line-and-scatter/) to a explore a annotation collection.
+def plot_annotations(ac, y_axis: str = 'tag', color_prop: str = None):
+    """Creates interactive [Plotly Scatter Plot](https://plotly.com/python/line-and-scatter/) to explore an annotation collection.
 
     Args:
         ac (AnnotationCollection): gitma.AnnotationCollection
-        y_axis (str, optional): The columns in annotation collection dataframe used for y axis. Defaults to 'tag'.
-        color_prop (str, optional): A Property's name used in the annotation collection . Defaults to None.
+        y_axis (str, optional): The column in `AnnotationCollection.df` DataFrame used for y axis. Defaults to 'tag'.
+        color_prop (str, optional): A property's name used in the annotation collection, prefixed with 'prop:'. Defaults to `None`.
 
     Returns:
         go.Figure: Plotly scatter plot.
     """
 
-    if 'prop' in y_axis:
+    if 'prop:' in y_axis:
         ac.df = ac.duplicate_by_prop(prop=y_axis)
-    if 'prop' in color_prop:
+    if color_prop is not None and 'prop:' in color_prop:
         ac.df = ac.duplicate_by_prop(prop=color_prop)
 
     plot_df = ac.df.copy()
@@ -221,7 +221,7 @@ def plot_scaled_annotations(ac, tag_scale: dict = None, bin_size: int = 50, smoo
 
         if len(plot_df) < 0:
             raise Exception(
-                'None of the given tags have been used in the Annotation Collection!')
+                'None of the given tags have been used in the annotation collection!')
 
         plot_df.loc[:, 'abs_tag_values'] = [tag_scale[tag_item]
                                             for tag_item in plot_df.tag]
@@ -250,7 +250,7 @@ def plot_scaled_annotations(ac, tag_scale: dict = None, bin_size: int = 50, smoo
 
 def plot_interactive(catma_project, color_col: str = 'annotation collection') -> go.Figure:
     """This function generates one Plotly scatter plot per annotated document in a CATMA project.
-    By default the colors represent the annotation collection.
+    By default, the colors represent the annotation collections.
     By that they can't be deactivated with the interactive legend.
 
     Args:
@@ -307,7 +307,7 @@ def compare_annotation_collections(
         catma_project,
         annotation_collections: list,
         color_col: str = 'tag') -> go.Figure:
-    """Plots annotations of multiple annotation collection of the same text as line plot.
+    """Plots annotations of multiple annotation collections of the same text as line plot.
 
     Args:
         catma_project (CatmaProject): _description_
@@ -333,8 +333,8 @@ def compare_annotation_collections(
         )
     except ValueError:
         raise ValueError(
-            f"""One of the given annotation collection does not exists.
-            These are the existing annotation collection:
+            f"""One of the given annotation collections does not exists.
+            These are the existing annotation collections:
             {[ac.name for ac in catma_project.annotation_collections]}
             """
         )
