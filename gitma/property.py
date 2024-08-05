@@ -1,10 +1,10 @@
 class Property:
-    """Class to represent a CATMA Property
+    """Class to represent a CATMA property.
 
     Args:
         uuid (str): The property's UUID.
         name (str): The property's name.
-        possible_values (list): The property's possible value.
+        possible_values (list): The property's possible values.
     """
 
     def __init__(self, uuid: str, name: str, possible_values: list):

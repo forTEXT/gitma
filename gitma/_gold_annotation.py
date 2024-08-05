@@ -11,16 +11,16 @@ def compare_annotations(
         al2: List[Annotation],
         min_overlap: float = 1.0,
         same_tag: bool = True) -> Union[Annotation, bool]:
-    """Compares a given Annotation with the best machting Annotation in a given list of Annotations.
+    """Compares a given annotation with the best matching annotation in a given list of annotations.
 
     Args:
-        an1 (Annotation): An Annotation object
-        al2 (List[Annotation]): A list of Annotation objects
+        an1 (Annotation): An `Annotation` object.
+        al2 (List[Annotation]): A list of `Annotation` objects.
         min_overlap (float, optional): The minimal overlap percentage. Defaults to 1.0.
-        same_tag (bool, optional): Whethe both annotation have to be same tagged. Defaults to True.
+        same_tag (bool, optional): Whether both annotations have to use the same tag. Defaults to `True`.
 
     Returns:
-        bool: True if Annotation1 (an1) and the best matching annotation in al2 fullfill the criteria.
+        bool: True if an1 and the best matching annotation in al2 fulfill the criteria.
     """
 
     an2 = test_max_overlap(
@@ -51,25 +51,30 @@ def create_gold_annotations(
         ac_1_name: str,
         ac_2_name: str,
         gold_ac_name: str,
-        excluded_tags: list,
+        excluded_tags: List[str] = None,
         min_overlap: float = 1.0,
         same_tag: bool = True,
-        property_values: str = 'matching',
-        push_to_gitlab=False) -> None:
-    """Searches for matching annotations in 2 AnnotationCollections and copies all matches in a third AnnotationCollection.
-    By default only matching Property Values get copied.
+        copy_property_values_if_equal: bool = True,
+        push_to_gitlab: bool = False) -> None:
+    """Searches for matching annotations in two annotation collections of the given project and copies all matches into a third annotation collection.
+    By default, property values are copied when they are exactly the same for matching annotations.
 
     Args:
-        ac_1_name (str): AnnotationCollection 1 Name.
-        ac_2_name (str): AnnnotationCollection 2 Name.
-        gold_ac_name (str): AnnotationCollection Name for Gold Annotations.
-        excluded_tags (list, optional): Annotations with this Tags will not be included in the Gold Annotations. Defaults to None.
-        min_overlap (float, optional): The minimal overlap to genereate a gold annotation. Defaults to 1.0.
-        same_tag (bool, optional): Whether both annotations need to be the same tag. Defaults to True.
-        property_values (str, optional): Whether only matching Property Values from AnnonationCollection 1 shall be copied.\
-            Default to 'matching'. Further options: 'none'.
-        push_to_gitlab (bool, optional): Whether the gold annotations shall be uploaded to the CATMA GitLab. Default to False.
+        project (CatmaProject): A `CatmaProject` object.
+        ac_1_name (str): The name of the first annotation collection.
+        ac_2_name (str): The name of the second annotation collection.
+        gold_ac_name (str): The name of the third annotation collection, into which gold annotations will be written.
+        excluded_tags (list, optional): Annotations with these tags will not be included in the gold annotations. Defaults to `None`.
+        min_overlap (float, optional): The minimal overlap to generate a gold annotation. Defaults to 1.0.
+        same_tag (bool, optional): Whether both annotations have to use the same tag. Defaults to `True`.
+        copy_property_values_if_equal (bool, optional): Whether property values should be copied when they are exactly the same for matching annotations.\
+            Defaults to `True`. If `False` or property values are not exactly the same, no property values are copied.
+        push_to_gitlab (bool, optional): Whether the gold annotations should be uploaded to the CATMA GitLab backend. Defaults to `False`.
     """
+
+    if excluded_tags is None:
+        excluded_tags = []
+        
     cwd = os.getcwd()
 
     ac1 = project.ac_dict[ac_1_name]
@@ -107,7 +112,7 @@ def create_gold_annotations(
             )
 
             # get best matching annotation and compare tag
-            compare_annotation = an2 if property_values == 'matching' else None
+            compare_annotation = an2 if copy_property_values_if_equal else None
             if an2:
                 copied_annotations += 1
 
@@ -126,10 +131,10 @@ def create_gold_annotations(
 
     print(textwrap.dedent(
         f"""
-            Found {len(al1)} annotations in Annotation Collection: '{ac_1_name}'.
-            Found {len(al2)} annotations in Annotation Collection: '{ac_2_name}'.
+            Found {len(al1)} annotations in annotation collection: '{ac_1_name}'.
+            Found {len(al2)} annotations in annotation collection: '{ac_2_name}'.
             -------------
-            Wrote {copied_annotations} gold annotations in Annotation Collection '{gold_ac_name}'.
+            Wrote {copied_annotations} gold annotations into annotation collection '{gold_ac_name}'.
         """
     ))
     os.chdir(cwd)

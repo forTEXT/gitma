@@ -61,11 +61,11 @@ def get_same_text(
 def test_max_overlap(
     silver_annotation: Annotation,
     second_annotator_annotations: List[Annotation]) -> Annotation:
-    """Looks for best matching Annotation in second annotator annotations.
+    """Looks for best matching annotation in second annotator's annotations.
 
     Args:
-        silver_annotation (Annotation): Annotation that will be matched
-        second_annotator_annotations (list): List of Annotations
+        silver_annotation (Annotation): Annotation that will be matched.
+        second_annotator_annotations (list): List of annotations.
 
     Returns:
         Annotation: Annotation Object
@@ -84,7 +84,7 @@ def test_max_overlap(
 
 
 def test_overlap(an1: Annotation, an2: Annotation) -> bool:
-    """Test if annotation 2 starts or ends within annotations 1 span.
+    """Test if annotation `an2` starts or ends within annotation `an1`'s span.
 
     Args:
         an1 (Annotation): First annotation.
@@ -313,7 +313,7 @@ def get_iaa_data(
 
     Args:
         annotation_pairs (List[Tuple[Annotation]]): List of annotation pairs.
-        level (str, optionale): 'tag' or any property in the annotation collections with\
+        level (str, optional): 'tag' or any property in the annotation collections with\
             the prefix 'prop:'.
 
     """

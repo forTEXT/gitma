@@ -116,16 +116,16 @@ def load_annotation_collections(
         included_acs: list = None,
         excluded_acs: list = None,
         ac_filter_keyword: str = None) -> Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]:
-    """Generates List and Dict of CATMA Annotation Collections.
+    """Generates list and dict of CATMA annotation collections.
 
     Args:
-        project_uuid (str): CATMA Project UUID
-        included_acs (list): All listed Annotation Collections get loaded.
-        excluded_acs (list): All listed Annotations Collections don't get loaded.\
-            If neither included nor excluded Annotation Collections are defined, all Annotation Collections get loaded.
+        project_uuid (str): CATMA project UUID.
+        included_acs (list): All listed annotation collections get loaded.
+        excluded_acs (list): All listed annotation collections don't get loaded.\
+            If neither included nor excluded annotation collections are defined, all annotation collections get loaded.
 
     Returns:
-        Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]: List and Dict of Annotation Collections
+        Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]: List and dict of annotation collections.
     """
     collections_directory = catma_project.uuid + '/collections/'
 
@@ -171,7 +171,7 @@ def load_annotation_collections(
 def test_tageset_directory(
         project_uuid: str,
         tagset_uuid: str) -> bool:
-    """Tests if Tagset has header.json to filter empty Tagsets from loading process.
+    """Tests if tagset has header.json to filter empty tagsets from loading process.
 
     Args:
         project_uuid (str): UUID.
@@ -186,10 +186,10 @@ def test_tageset_directory(
 
 
 def load_tagsets(project_uuid: str) -> Tuple[List[Tagset], Dict[str, Tagset]]:
-    """Generates List and Dict of Tagsets.
+    """Generates list and dict of tagsets.
 
     Args:
-        project_uuid (str): CATMA Project UUID.
+        project_uuid (str): CATMA project UUID.
 
     Returns:
         Tuple[List[Tagset], Dict[str, Tagset]]: Tagsets as list and dictionary with UUIDs as keys.
@@ -209,10 +209,10 @@ def load_tagsets(project_uuid: str) -> Tuple[List[Tagset], Dict[str, Tagset]]:
 
 
 def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
-    """Generates List and Dict of CATMA Texts.
+    """Generates list and dict of CATMA texts.
 
     Args:
-        project_uuid (str): CATMA Project UUID
+        project_uuid (str): CATMA project UUID.
 
     Returns:
         Tuple[List[Text], Dict[Text]]: List and dictionary of documents.
@@ -405,19 +405,19 @@ class CatmaProject:
         subprocess.run(['git', 'pull'])
 
         os.chdir('../')
-        # Load Tagsets
+        # Load tagsets
         self.tagsets, self.tagset_dict = load_tagsets(project_uuid=self.uuid)
 
-        # Load Texts
+        # Load texts
         self.texts, self.text_dict = load_texts(project_uuid=self.uuid)
 
-        # Load Annotation Collections
+        # Load annotation collections
         self.annotation_collections, self.ac_dict = load_annotation_collections(
             catma_project=self,
             included_acs=list(self.ac_dict)
         )
 
-        print('Updated the CATMA Project')
+        print('Updated the CATMA project')
 
         os.chdir(cwd)
 
@@ -442,10 +442,10 @@ class CatmaProject:
                 yield tag
 
     def stats(self) -> pd.DataFrame:
-        """Shows some CATMA Project stats.
+        """Shows some CATMA project stats.
 
         Returns:
-            pd.DataFrame: DataFrame with projects stats sorted by the Annotation Collection names.
+            pd.DataFrame: DataFrame with project's stats sorted by the annotation collection names.
         """
         ac_stats = [
             {
@@ -505,25 +505,25 @@ class CatmaProject:
             ac_1_name: str,
             ac_2_name: str,
             gold_ac_name: str,
-            excluded_tags: list = None,
+            excluded_tags: List[str] = None,
             min_overlap: float = 1.0,
             same_tag: bool = True,
-            property_values: str = 'matching',
+            copy_property_values_if_equal: bool = True,
             push_to_gitlab: bool = False):
-        
-        """Searches for matching annotations in 2 AnnotationCollections and copies all matches in a third AnnotationCollection.
-        By default only matching Property Values get copied.
+
+        """Searches for matching annotations in two annotation collections of this project and copies all matches into a third annotation collection.
+        By default, property values are copied when they are exactly the same for matching annotations.
 
         Args:
-            ac_1_name (str): AnnotationCollection 1 Name.
-            ac_2_name (str): AnnnotationCollection 2 Name.
-            gold_ac_name (str): AnnotationCollection Name for Gold Annotations.
-            excluded_tags (list, optional): Annotations with this Tags will not be included in the Gold Annotations. Defaults to None.
-            min_overlap (float, optional): The minimal overlap to genereate a gold annotation. Defaults to 1.0.
-            same_tag (bool, optional): Whether both annotations need to be the same tag. Defaults to True.
-            property_values (str, optional): Whether only matching Property Values from AnnonationCollection 1 shall be copied.\
-                Default to 'matching'. Further options: 'none'.
-            push_to_gitlab (bool, optional): Whether the gold annotations shall be uploaded to the CATMA GitLab. Default to False.
+            ac_1_name (str): The name of the first annotation collection.
+            ac_2_name (str): The name of the second annotation collection.
+            gold_ac_name (str): The name of the third annotation collection, into which gold annotations will be written.
+            excluded_tags (list, optional): Annotations with these tags will not be included in the gold annotations. Defaults to `None`.
+            min_overlap (float, optional): The minimal overlap to generate a gold annotation. Defaults to 1.0.
+            same_tag (bool, optional): Whether both annotations have to use the same tag. Defaults to `True`.
+            copy_property_values_if_equal (bool, optional): Whether property values should be copied when they are exactly the same for matching annotations.\
+                Defaults to `True`. If `False` or property values are not exactly the same, no property values are copied.
+            push_to_gitlab (bool, optional): Whether the gold annotations should be uploaded to the CATMA GitLab backend. Defaults to `False`.
         """
         create_gold_annotations(
             project=self,
@@ -533,7 +533,7 @@ class CatmaProject:
             excluded_tags=excluded_tags,
             min_overlap=min_overlap,
             same_tag=same_tag,
-            property_values=property_values,
+            copy_property_values_if_equal=copy_property_values_if_equal,
             push_to_gitlab=push_to_gitlab
         )
 
@@ -606,10 +606,10 @@ class CatmaProject:
         level: str = 'tag',
         plot_stats: bool = False,
         save_as_gexf: Union[bool, str] = False):
-        """Draws cooccurrence network graph for annotations.
+        """Draws co-occurrence network graph for annotations.
          
-        Every tag is represented by a node and every edge represents two cooccurent tags.
-        You can by the `character_distance` parameter when two annotations are considered cooccurent.
+        Every tag is represented by a node and every edge represents two co-occurrent tags.
+        You can by the `character_distance` parameter when two annotations are considered co-occurrent.
         If you set `character_distance=0` only the tags of overlapping annotations will be represented
         as connected nodes.
 
@@ -618,7 +618,7 @@ class CatmaProject:
         Args:
             annotation_collections (Union[str, List[str]]): List with the names of the included annotation collections.\
                 If set to 'all' all annotation collections are included. Defaults to 'all'.
-            character_distance (int, optional): In which distance annotations are considered coocurrent. Defaults to 100.
+            character_distance (int, optional): In which distance annotations are considered co-occurrent. Defaults to 100.
             included_tags (list, optional): List of included tags. Defaults to None.
             excluded_tags (list, optional): List of excluded tags. Defaults to None.
             level (str, optional): 'tag' or any property name with 'prop:' as prefix. Defaults to 'tag'.
@@ -658,7 +658,7 @@ class CatmaProject:
         """Draws disagreement network.
 
         Every edge in the network represents two overlapping annotations from different annotation collections
-        and with different tags or property values. 
+        and with different tags or property values.
 
         Args:
             annotation_collections (Union[str, List[str]], optional): List with the names of the included annotation collections.\
@@ -724,22 +724,22 @@ class CatmaProject:
         include_empty_annotations: bool = True,
         distance: str = 'binary',
         return_as_dict: bool = False) -> None:
-        """Computes Inter Annotator Agreement for 2 Annotation Collections.
+        """Computes Inter-Annotator-Agreement for two annotation collections.
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb)
         for details.
 
         Args:
-            ac1_name (str): AnnotationCollection name to be compared.
-            ac2_name (str): AnnotationCollection name to be compared with.
-            tag_filter (list, optional): Which Tags should be included. If None all are included. Default to None.
-            filter_both_ac (bool, optional): Whether the tag filter shall be aplied to both annotation collections.\
-                Defaults to False.
-            level (str, optional): Whether the Annotation Tag or a specified Property should be compared.\
+            ac1_name (str): Annotation collection name to be compared.
+            ac2_name (str): Annotation collection name to be compared with.
+            tag_filter (list, optional): Which tags should be included. If `None`, all are included. Defaults to `None`.
+            filter_both_ac (bool, optional): Whether the tag filter should be applied to both annotation collections.\
+                Defaults to `False`.
+            level (str, optional): Whether the annotation tag or a specified property should be compared.\
                 Defaults to 'tag'.
-            include_empty_annotations (bool, optionale): If `False` only annotations with a overlapping annotation in the second collection\
-                get included. Defaults to True.
+            include_empty_annotations (bool, optional): If `False`, only annotations with an overlapping annotation in the second collection\
+                get included. Defaults to `True`.
             distance (str, optional): The IAA distance function. Either 'binary' or 'interval'.\
-            See the [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further informations. Defaults to 'binary'.
+                See the [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further information. Defaults to 'binary'.
         """
         from nltk.metrics.agreement import AnnotationTask
         from nltk.metrics import interval_distance, binary_distance

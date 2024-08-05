@@ -50,7 +50,7 @@ def most_common_token(
         ranking (int, optional): Number of most common token to include. Defaults to 10.
 
     Returns:
-        dict: Dictionary storing the token freqeuncies.
+        dict: Dictionary storing the token frequencies.
     """
     token_list = []
     for str_item in annotation_col:
@@ -97,7 +97,7 @@ def load_annotations(catma_project, ac, context: int):
             except json.JSONDecodeError as e:
                 print(f"WARNING: Failed to load annotation page file {page_file_path}\nOriginal error: {e}")
 
-        # construct Annotation objects
+        # construct `Annotation` objects
         for annotation_data in page_file_annotations:
             yield Annotation(
                     annotation_data=annotation_data,
@@ -194,10 +194,10 @@ class AnnotationCollection:
                 context=context
             )))
 
-            #: List of tags found in the annotation collection as a list of gitma.Tag objects.
+            #: Tags found in the annotation collection as a list of gitma.Tag objects.
             self.tags: List[Tag] = [an.tag for an in self.annotations]
 
-            #:  Annotations as a pandas.DataFrame.
+            #: Annotations as a pandas.DataFrame.
             self.df: pd.DataFrame = ac_to_df(
                 annotations=self.annotations,
                 text_title=self.text.title,
@@ -235,16 +235,15 @@ class AnnotationCollection:
         ]
     
     def annotation_dict(self) -> Dict[str, Annotation]:
-        """Creates dictionary with UUIDs as keys an Annotation objects as values.
+        """Creates dictionary with UUIDs as keys and `Annotation` objects as values.
 
         Returns:
-            Dict[str, Annotation]: Dictionary with UUIDs as keys an Annotation objects as values.
+            Dict[str, Annotation]: Dictionary with UUIDs as keys and `Annotation` objects as values.
         """
         return {an.uuid: an for an in self.annotations}
 
     def duplicate_by_prop(self, prop: str) -> pd.DataFrame:
-        """Duplicates the rows in the annotation collection's DataFrame if the given Property has multiple Property Values
-        the annotations represented by a DataFrame row.
+        """Duplicates the rows in the annotation collection's DataFrame if the given property has multiple property values.
 
         Args:
             prop (str): A property used in the annotation collection.
@@ -261,7 +260,7 @@ class AnnotationCollection:
             prop_cols = [item.replace('prop:', '')
                          for item in self.df.columns if 'prop:' in item]
             raise ValueError(
-                f"Given Property doesn't exist. Choose one of these: {prop_cols}")
+                f"Given property doesn't exist. Choose one of these: {prop_cols}")
 
     def push_annotations(self, commit_message: str = 'new annotations') -> None:
         """Process `git add .`, `git commit` and `git push` for a single annotation collection.
@@ -280,12 +279,12 @@ class AnnotationCollection:
         os.chdir(cwd)
         print(f'Pushed annotations from collection {self.name}.')
     
-    def plot_annotations(self, y_axis: str = 'tag', color_prop: str = 'tag'):
-        """Creates interactive [Plotly Scatter Plot](https://plotly.com/python/line-and-scatter/) to a explore a annotation collection.
+    def plot_annotations(self, y_axis: str = 'tag', color_prop: str = None):
+        """Creates an interactive [Plotly Scatter Plot](https://plotly.com/python/line-and-scatter/) to explore this annotation collection.
 
         Args:
-            y_axis (str, optional): The columns in AnnotationCollection DataFrame used for y axis. Defaults to 'tag'.
-            color_prop (str, optional): A Property's name used in the AnnotationCollection . Defaults to None.
+            y_axis (str, optional): The column in `AnnotationCollection.df` DataFrame used for the y-axis. Defaults to 'tag'.
+            color_prop (str, optional): A property's name used in the annotation collection, prefixed with 'prop:'. Defaults to `None`.
 
         Returns:
             go.Figure: Plotly scatter plot.
@@ -293,7 +292,7 @@ class AnnotationCollection:
         return plot_annotations(ac=self, y_axis=y_axis, color_prop=color_prop)
 
     def filter_by_tag_path(self, path_element: str) -> pd.DataFrame:
-        """Filters annotation collection data frame for annations with the given `path_element` in the tag's full path.
+        """Filters annotation collection data frame for annotations with the given `path_element` in the tag's full path.
 
         Args:
             path_element (str): Any tag name with the used tagsets.
@@ -328,15 +327,15 @@ class AnnotationCollection:
             level: str = 'tag',
             plot_stats: bool = False,
             save_as_gexf: Union[bool, str]= False):
-        """Draws cooccurrence network graph where every tag is a node and every edge represents two cooccurent tags.
-        You can by the `character_distance` parameter when two annotations are considered cooccurent.
+        """Draws a co-occurrence network graph where every tag is a node and every edge represents two co-occurrent tags.
+        You can by the `character_distance` parameter when two annotations are considered co-occurrent.
         If you set `character_distance=0` only the tags of overlapping annotations will be represented
         as connected nodes.
 
         Args:
-            character_distance (int, optional): In which distance annotations are considered coocurrent. Defaults to 100.
+            character_distance (int, optional): In which distance annotations are considered co-occurrent. Defaults to 100.
             included_tags (list, optional): List of included tags. Defaults to None.
-            level (str, optional): Select 'tag' or any property in your annotation collections with the prefix 'prop'.
+            level (str, optional): Select 'tag' or any property in your annotation collections with the prefix 'prop:'.
             excluded_tags (list, optional): List of excluded tags. Defaults to None.
             plot_stats (bool, optional): Whether to return network stats. Defaults to False.
             save_as_gexf (bool, optional): If given any string as filename the network gets saved as Gephi file.
@@ -444,12 +443,12 @@ class AnnotationCollection:
             an.set_property_values(tag=tag, prop=prop, value=value)
 
     def rename_property_value(self, tag: str, prop: str, old_value: str, new_value: str):
-        """Renames Property of all annotations with the given tag name.
+        """Renames property value of all annotations with the given tag name.
         Replaces only the property value defined by the parameter `old_value`.
 
         Args:
-            tag (str): The tag's name-
-            prop (str): The property's name-
+            tag (str): The tag's name.
+            prop (str): The property's name.
             old_value (str): The old property value that will be replaced.
             new_value (str): The new property value that will replace the old property value.
         """
@@ -472,14 +471,15 @@ class AnnotationCollection:
         tags: Union[list, str] = 'all',
         file_name: str = 'tsv_annotation_export',
         spacy_model: str = 'de_core_news_sm'):
-        """Takes a CATMA `AnnotationCollection` and writes a tsv-file which can be used to train a stanford NER model.
-        Every token in the collection's text gets a tag if it lays in an annotated text segment. 
+        """Writes a TSV-file for this annotation collection which can be used to train a Stanford NER model.
+        Every token in the associated text gets a tag if it lies within an annotated text segment.
 
         Args:
-            tags (Union[list, str], optional): List of tags, that should be considered. If set to 'all' all annotations are included.\
+            tags (Union[list, str], optional): List of tags that should be considered. If set to 'all', all annotations are included.\
                 Defaults to 'all'.
-            file_name (str, optional): name of the tsv-file. Defaults to 'tsv_annotation_export'.
-            spacy_model (str, optional): a spacy model as listed in https://spacy.io/usage/models. Default to 'de_core_news_sm'.
+            file_name (str, optional): Name of the TSV-file. Defaults to 'tsv_annotation_export'.
+            spacy_model (str, optional): A spaCy model as listed at https://spacy.io/usage/models. Defaults to 'de_core_news_sm'.\
+                Note that the specified model first needs to be installed, as detailed on the linked page.
         """
         if tags == 'all':
             tags = list(self.df['tag'].unique())
@@ -491,7 +491,7 @@ class AnnotationCollection:
         property: str = 'all',
         only_missing_prop_values: bool = False,
         filename: str = 'PropertyAnnotationTable'):
-        """Creates csv file to add propertiy values to existing annotations.
+        """Creates a CSV file that can be used to add property values to existing annotations.
         The added property values can be imported with the `read_annotation_csv()` method.
 
         [See the example below.](
@@ -506,9 +506,9 @@ class AnnotationCollection:
             property (str, optional): The property to be included.\
                 If set to 'all' all annotations will be written into the csv file.\
                 Defaults to 'all'.
-            only_missing_prop_values (bool, optional): Whether only empy properties should be included.\
+            only_missing_prop_values (bool, optional): Whether only empty properties should be included.\
                 Defaults to False.
-            filename (str, optional): The csv file name. Defaults to 'PropertyAnnotationTable'.
+            filename (str, optional): The name of the output CSV file. Defaults to 'PropertyAnnotationTable'.
         """
         
         # filter annotations by selected tags
@@ -560,8 +560,8 @@ class AnnotationCollection:
         self,
         filename: str = 'PropertyAnnotationTable.csv',
         push_to_gitlab=False) -> None:
-        """Reads csv file created by the `write_annotation_csv()` method and updates
-        the annotation json files. Additionally, if `push_to_gitlab=True` the annotations
+        """Reads a CSV file created by the `write_annotation_csv()` method and updates
+        the annotation JSON files. Additionally, if `push_to_gitlab=True` the annotations
         get imported in the CATMA Gitlab backend.
         
         [See the example below.](https://gitma.readthedocs.io/en/latest/class_annotation_collection.html#add-property-values-via-csv-table)

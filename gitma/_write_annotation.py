@@ -76,8 +76,8 @@ def write_annotation_json(
         uuid_override: str = None,
         timestamp_override: str = None) -> str:
     """
-    Function to write a new annotation into a given CatmaProject.
-    Gets imported in the CatmaProject class and should only be used as a class method.
+    Function to write a new annotation into a given `CatmaProject`.
+    Gets imported in the `CatmaProject` class and should only be used as a class method.
 
     Args:
         project (CatmaProject): A CatmaProject object.

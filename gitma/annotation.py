@@ -93,9 +93,9 @@ def get_selector_items(start_points: list, end_points: list, source_document_uui
     Gets used when generating gold annotations.
 
     Args:
-        start_points (list): Annotation Start Points
-        end_points (list): Annotation End Points
-        source_document_uuid (str): Document UUID in CATMA Project.
+        start_points (list): Annotation start points.
+        end_points (list): Annotation end points.
+        source_document_uuid (str): Document UUID in CATMA project.
     Returns:
         list: List of selectors.
     """
@@ -135,10 +135,10 @@ def numeric_property_values_to_int(prop_dict: dict) -> dict:
     """Transforms numeric property values to integers.
 
     Args:
-        prop_dict (dict): Dictionary with Property names as keys and values as list.
+        prop_dict (dict): Dictionary with property names as keys and values as list.
 
     Returns:
-        dict: Dictionary with Property names as keys and values as list.
+        dict: Dictionary with property names as keys and values as list.
     """
     output_dict = {}
     for prop in prop_dict:
@@ -299,7 +299,7 @@ class Annotation:
         self.modify_annotation()
     
     def modify_property_value(self, tag: str, prop: str, old_value: str, new_value: str) -> None:
-        """Modifies property values if the annotation is tagged by defined tag and property
+        """Modifies property value if the annotation is tagged by defined tag and property
         by rewriting the annotation's JSON file.
 
         Args:
