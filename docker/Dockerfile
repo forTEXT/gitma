@@ -41,9 +41,9 @@ RUN conda create --yes \
 RUN source /opt/conda/bin/activate \
     && conda activate gitma \
     && conda init bash \
-    && python -m pip install \ 
+    && python -m pip install \
         git+https://github.com/forTEXT/gitma \
-        "pygamma-agreement[CBC]" \
+        "pygamma-agreement[CBC]==0.5.6" \
     && conda clean -afy \
     && find /opt/conda/ -follow -type f -name '*.a' -delete \
     && find /opt/conda/ -follow -type f -name '*.pyc' -delete \
