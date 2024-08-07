@@ -157,8 +157,8 @@ def plot_annotations(ac, y_axis: str = 'tag', color_prop: str = None):
         y=y_axis,
         size='size',
         hover_data=hover_cols,
-        color=color_prop,
-        color_discrete_map=get_color_dict(plot_df, color_col=color_prop),
+        color=color_prop or 'tag',
+        color_discrete_map=get_color_dict(plot_df, color_col=color_prop or 'tag'),
         opacity=0.7,
         marginal_x='histogram',
         size_max=10
