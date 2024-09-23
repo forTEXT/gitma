@@ -197,22 +197,25 @@ def get_annotation_pairs(
         tag_filter: list = None,
         filter_both_ac: bool = False,
         property_filter: str = None,
-        verbose: bool = True) -> List[Tuple[Annotation]]:
-    """Returns list of all overlapping annotations in two annotation collections.
-    tag_filter can be defined as list of tag names if not all annotations are included.
+        verbose: bool = True) -> List[Union[Tuple[Annotation, EmptyAnnotation], Tuple[Annotation, Annotation]]]:
+    """
+    For each annotation in `ac1`, finds the best matching annotation (maximum overlap) in `ac2`. Where there is no matching
+    annotation in `ac2`, an `EmptyAnnotation` is substituted. Returns a list of tuples of the matched pairs.
 
+    The filter parameters can be used so that only annotations using one of the specified tags or the specified property
+    are included.
 
     Args:
         ac1 (AnnotationCollection): First annotation collection.
         ac2 (AnnotationCollection): Second annotation collection.
-        tag_filter (list, optional): List of included tag names. Defaults to None.
-        filter_both_ac (bool, optional): If `True` both annotation collections get filterde.\
-            Defaults to False.
-        property_filter (str, optional): List of included properties. Defaults to None.
+        tag_filter (list, optional): The list of tags to be included. Defaults to `None` (no filter / all tags included).
+        filter_both_ac (bool, optional): If `True` the `tag_filter` is applied to both collections. Defaults to `False`.
+        property_filter (str, optional): If not `None`, only annotations with this property are included. Defaults to
+                                         `None` (no filter / all annotations included).
         verbose (bool, optional): Whether to print results to stdout. Defaults to `True`.
 
     Returns:
-        List[Tuple[Annotation]]: List of paired annotations.
+        List[Union[Tuple[Annotation, EmptyAnnotation], Tuple[Annotation, Annotation]]]: List of paired annotation tuples.
     """
     ac1_annotations, ac2_annotations = filter_ac_by_tag(ac1=ac1, ac2=ac2, tag_filter=tag_filter,
                                                         filter_both_ac=filter_both_ac)
@@ -224,12 +227,12 @@ def get_annotation_pairs(
         ac1_annotations = [
             an for an in ac1_annotations
             if property_filter in an.properties             # test if property exists
-            and len(an.properties[property_filter]) > 0     # test if property is annotated
+            and len(an.properties[property_filter]) > 0     # test if property has values
         ]
         ac2_annotations = [
             an for an in ac2_annotations
             if property_filter in an.properties             # test if property exists
-            and len(an.properties[property_filter]) > 0     # test if property is annotated
+            and len(an.properties[property_filter]) > 0     # test if property has values
         ]
 
     pair_list = []
@@ -240,7 +243,7 @@ def get_annotation_pairs(
         overlapping_annotations = [
             an2 for an2 in ac2_annotations if test_overlap(an1, an2)]
 
-        # test if any matching annotations in an2 was found
+        # test if any overlapping annotations were found in ac2_annotations
         if len(overlapping_annotations) < 1:
             missing_an2_annotations += 1
             pair_list.append(
@@ -259,7 +262,6 @@ def get_annotation_pairs(
                 second_annotator_annotations=overlapping_annotations
             )
             pair_list.append(
-                # pairs first overlapping annotation
                 (an1, best_matching_annotation)
             )
 
@@ -274,12 +276,12 @@ def get_annotation_pairs(
                 f"""
                 ==============================================
                 ==============================================
-                Finished search for overlapping annotations in:
+                Finished search for matching annotations in:
                 - {ac1.name}
                 - {ac2.name}
-                Could match {len(pair_list)} annotations.
-                Average overlap is {round(string_difference, 2)} %.
-                Couldn't match {missing_an2_annotations} annotation(s) in first annotation collection.
+                {len(pair_list)} annotation(s) could be matched.
+                Average overlap is {round(string_difference, 2)}%.
+                Couldn't match {missing_an2_annotations} annotation(s) in the first annotation collection.
                 """
             )
         )
