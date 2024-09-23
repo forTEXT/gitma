@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 import textwrap
-from typing import List, Tuple
+from typing import List, Tuple, Union
 from gitma.annotation import Annotation
 from gitma.annotation_collection import AnnotationCollection
 
@@ -209,6 +209,7 @@ def get_annotation_pairs(
         filter_both_ac (bool, optional): If `True` both annotation collections get filterde.\
             Defaults to False.
         property_filter (str, optional): List of included properties. Defaults to None.
+        verbose (bool, optional): Whether to print results to stdout. Defaults to `True`.
 
     Returns:
         List[Tuple[Annotation]]: List of paired annotations.

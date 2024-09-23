@@ -716,14 +716,14 @@ class CatmaProject:
 
     def get_iaa(
         self,
-        ac1_name: str | AnnotationCollection,
-        ac2_name: str | AnnotationCollection,
+        ac1_name: Union[str, AnnotationCollection],
+        ac2_name: Union[str, AnnotationCollection],
         tag_filter: list = None,
         filter_both_ac: bool = False,
         level: str = 'tag',
         include_empty_annotations: bool = True,
         distance: str = 'binary',
-        verbose: bool = False,
+        verbose: bool = True,
         return_as_dict: bool = False) -> None:
         """Computes Inter-Annotator-Agreement for two annotation collections.
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb)
@@ -741,6 +741,7 @@ class CatmaProject:
                 get included. Defaults to `True`.
             distance (str, optional): The IAA distance function. Either 'binary' or 'interval'.\
                 See the [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further information. Defaults to 'binary'.
+            verbose (bool, optional): Whether to print results to stdout. Defaults to `True`.
         """
         from nltk.metrics.agreement import AnnotationTask
         from nltk.metrics import interval_distance, binary_distance
@@ -749,6 +750,7 @@ class CatmaProject:
             distance_function = interval_distance
         else:
             distance_function = binary_distance
+
         if isinstance(ac1_name, str):
             ac1 = self.ac_dict[ac1_name]
         else:
