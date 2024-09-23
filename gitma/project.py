@@ -716,8 +716,8 @@ class CatmaProject:
 
     def get_iaa(
         self,
-        ac1_name: Union[str, AnnotationCollection],
-        ac2_name: Union[str, AnnotationCollection],
+        ac1_name_or_inst: Union[str, AnnotationCollection],
+        ac2_name_or_inst: Union[str, AnnotationCollection],
         tag_filter: list = None,
         filter_both_ac: bool = False,
         level: str = 'tag',
@@ -730,8 +730,10 @@ class CatmaProject:
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb) for details.
 
         Args:
-            ac1_name (str): The name of the first annotation collection, whose annotations form the basis of the computation.
-            ac2_name (str): The name of the second annotation collection, whose annotations will be searched for matches to those in the first.
+            ac1_name_or_inst (str): The name or instance of the first annotation collection, whose annotations form the basis of the
+                                    computation.
+            ac2_name_or_inst (str): The name or instance of the second annotation collection, whose annotations will be searched for
+                                    matches to those in the first.
             tag_filter (list, optional): Which tags should be included. Defaults to `None` (all tags).
             filter_both_ac (bool, optional): Whether the tag filter should be applied to both annotation collections. Defaults to `False`
                                              (only applied to the first collection).
@@ -754,14 +756,14 @@ class CatmaProject:
         else:
             distance_function = binary_distance
 
-        if isinstance(ac1_name, str):
-            ac1 = self.ac_dict[ac1_name]
+        if isinstance(ac1_name_or_inst, str):
+            ac1 = self.ac_dict[ac1_name_or_inst]
         else:
-            ac1 = ac1_name
-        if isinstance(ac2_name, str):
-            ac2 = self.ac_dict[ac2_name]
+            ac1 = ac1_name_or_inst
+        if isinstance(ac2_name_or_inst, str):
+            ac2 = self.ac_dict[ac2_name_or_inst]
         else:
-            ac2 = ac2_name
+            ac2 = ac2_name_or_inst
 
         # create pairs of best matching annotations
         annotation_pairs = get_annotation_pairs(
