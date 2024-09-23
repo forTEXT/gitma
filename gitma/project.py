@@ -716,30 +716,37 @@ class CatmaProject:
 
     def get_iaa(
         self,
-        ac1_name: str,
-        ac2_name: str,
+        ac1_name_or_inst: Union[str, AnnotationCollection],
+        ac2_name_or_inst: Union[str, AnnotationCollection],
         tag_filter: list = None,
         filter_both_ac: bool = False,
         level: str = 'tag',
         include_empty_annotations: bool = True,
         distance: str = 'binary',
+        verbose: bool = True,
         return_as_dict: bool = False) -> None:
-        """Computes Inter-Annotator-Agreement for two annotation collections.
-        See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb)
-        for details.
+        """
+        Computes Inter-Annotator-Agreement for two annotation collections.
+        See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb) for details.
 
         Args:
-            ac1_name (str): Annotation collection name to be compared.
-            ac2_name (str): Annotation collection name to be compared with.
-            tag_filter (list, optional): Which tags should be included. If `None`, all are included. Defaults to `None`.
-            filter_both_ac (bool, optional): Whether the tag filter should be applied to both annotation collections.\
-                Defaults to `False`.
-            level (str, optional): Whether the annotation tag or a specified property should be compared.\
-                Defaults to 'tag'.
-            include_empty_annotations (bool, optional): If `False`, only annotations with an overlapping annotation in the second collection\
-                get included. Defaults to `True`.
-            distance (str, optional): The IAA distance function. Either 'binary' or 'interval'.\
-                See the [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further information. Defaults to 'binary'.
+            ac1_name_or_inst (str): The name or instance of the first annotation collection, whose annotations form the basis of the
+                                    computation.
+            ac2_name_or_inst (str): The name or instance of the second annotation collection, whose annotations will be searched for
+                                    matches to those in the first.
+            tag_filter (list, optional): Which tags should be included. Defaults to `None` (all tags).
+            filter_both_ac (bool, optional): Whether the tag filter should be applied to both annotation collections. Defaults to `False`
+                                             (only applied to the first collection).
+            level (str, optional): Whether the annotations' tags or a specified property (prefixed with 'prop:') should be compared. Defaults
+                                   to 'tag'.
+            include_empty_annotations (bool, optional): If `False`, only annotations with a matching annotation in the second collection are
+                                                        included. Defaults to `True`.
+            distance (str, optional): The IAA distance function. Either 'binary' or 'interval'. See the
+                                      [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further information. Defaults to 'binary'.
+            verbose (bool, optional): Whether to print results to stdout. Defaults to `True`.
+            return_as_dict (bool, optional): Whether the computed agreement scores should be returned as a dictionary in addition to being
+                                             printed (assuming `verbose=True`). Defaults to `False`, in which case a Pandas DataFrame with a
+                                             confusion matrix is returned instead.
         """
         from nltk.metrics.agreement import AnnotationTask
         from nltk.metrics import interval_distance, binary_distance
@@ -749,8 +756,14 @@ class CatmaProject:
         else:
             distance_function = binary_distance
 
-        ac1 = self.ac_dict[ac1_name]
-        ac2 = self.ac_dict[ac2_name]
+        if isinstance(ac1_name_or_inst, str):
+            ac1 = self.ac_dict[ac1_name_or_inst]
+        else:
+            ac1 = ac1_name_or_inst
+        if isinstance(ac2_name_or_inst, str):
+            ac2 = self.ac_dict[ac2_name_or_inst]
+        else:
+            ac2 = ac2_name_or_inst
 
         # create pairs of best matching annotations
         annotation_pairs = get_annotation_pairs(
@@ -758,11 +771,11 @@ class CatmaProject:
             ac2=ac2,
             tag_filter=tag_filter,
             filter_both_ac=filter_both_ac,
-            property_filter=level.replace(
-                'prop:', '') if 'prop:' in level else None
+            property_filter=level.replace('prop:', '') if 'prop:' in level else None,
+            verbose=verbose
         )
 
-        # transform annotation pairs to data format the nltk AnnotationTask class takes as input
+        # transform annotation pairs to data format the NLTK AnnotationTask class takes as input
         data = list(get_iaa_data(annotation_pairs, level=level, include_empty_annotations=include_empty_annotations))
 
         annotation_task = AnnotationTask(data=data, distance=distance_function)
@@ -772,19 +785,20 @@ class CatmaProject:
             kappa = annotation_task.kappa()
             alpha = annotation_task.alpha()
         except ZeroDivisionError:
-            print(f"Couldn't find compute IAA for {level} due to missing overlapping annotations with the given settings.")
+            print(f"Couldn't compute IAA for level '{level}' due to missing matching annotations with the given settings.")
             pi, kappa, alpha = (0, 0, 0)
 
-        print(textwrap.dedent(
-            f"""
-            Results for "{level}"
-            -------------{len(level) * '-'}-
-            Scott's Pi:          {pi}
-            Cohen's Kappa:       {kappa}
-            Krippendorf's Alpha: {alpha}
-            ===============================================
-            """
-        ))
+        if verbose:
+            print(textwrap.dedent(
+                f"""
+                Results for "{level}"
+                -------------{len(level) * '-'}-
+                Scott's Pi:          {pi}
+                Cohen's Kappa:       {kappa}
+                Krippendorf's Alpha: {alpha}
+                ===============================================
+                """
+            ))
 
         if return_as_dict:
             return {
@@ -793,11 +807,12 @@ class CatmaProject:
                 "Krippendorf's Alpha": alpha
             }
         else:
-            print(textwrap.dedent(
-                f"""Confusion Matrix
-                -------
-                """
-            ))
+            if verbose:
+                print(textwrap.dedent(
+                    f"""Confusion Matrix
+                    -------
+                    """
+                ))
             return get_confusion_matrix(pair_list=annotation_pairs, level=level)
 
     def gamma_agreement(
