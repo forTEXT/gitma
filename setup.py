@@ -20,7 +20,8 @@ setuptools.setup(
         "python-gitlab",
         "scipy",
         "Cython",
-        "spacy",
+        # avoid spacy >=3.8.0 for now due to install problem on ARM Linux, ref: https://github.com/explosion/cython-blis/issues/117#issuecomment-2596810409
+        "spacy<3.8.0",
         "tabulate"
     ]
 )
