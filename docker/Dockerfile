@@ -13,7 +13,8 @@ RUN apt-get update \
         git \
     && apt-get clean -y
 
-RUN git clone https://github.com/forTEXT/gitma.git ./src
+RUN git clone https://github.com/forTEXT/gitma.git ./src \
+    && cp -R ./src ./src_backup
 
 RUN conda create --yes \
     --name gitma  \
