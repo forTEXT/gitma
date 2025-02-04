@@ -6,10 +6,11 @@ WORKDIR /opt/gitma
 
 SHELL ["/bin/bash", "-c"]
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get install -y \
-        build-essential cmake\
+        build-essential \
+        cmake \
         git \
     && apt-get clean -y
 
@@ -39,7 +40,7 @@ RUN conda create --yes \
         # avoid spacy >=3.8.0 for now due to install problem on ARM Linux, ref: https://github.com/explosion/cython-blis/issues/117#issuecomment-2596810409
         spacy\<3.8.0 \
         tabulate
-         
+
 RUN source /opt/conda/bin/activate \
     && conda activate gitma \
     && conda init bash \
@@ -52,4 +53,5 @@ RUN source /opt/conda/bin/activate \
     && find /opt/conda/ -follow -type f -name '*.js.map' -delete
 
 COPY gitma.sh .
+
 ENTRYPOINT ["/bin/bash", "-c", "./gitma.sh"]

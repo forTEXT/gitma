@@ -1,6 +1,6 @@
 #!/bin/bash
-source /opt/conda/bin/activate  
-conda activate gitma 
+source /opt/conda/bin/activate
+conda activate gitma
 
 red='\033[31m'
 green='\033[32m'
@@ -17,46 +17,46 @@ color_red(){
   echo -ne $red$1$clear
 }
 color_green(){
-	echo -ne $green$1$clear
+  echo -ne $green$1$clear
 }
 color_yellow(){
   echo -ne $yellow$1$clear
 }
 color_blue(){
-	echo -ne $blue$1$clear
+  echo -ne $blue$1$clear
 }
 
 run_jupyter() {
- echo ""
- echo "$(color_blue 'Starting jupyter')"
- echo ""
- jupyter lab \
-   --notebook-dir=./src/demo/notebooks/ \
-   --ip='*' \
-   --port=8888 \
-   --no-browser \
-   --allow-root 
+  echo ""
+  echo "$(color_blue 'Starting Jupyter')"
+  echo ""
+  jupyter lab \
+    --notebook-dir=./src/demo/notebooks/ \
+    --ip='*' \
+    --port=8888 \
+    --no-browser \
+    --allow-root
 }
 
 update_gitma() {
-   echo ""
-   echo "$(color_blue 'Updating conda')"
-   echo ""
-   conda update -y -n gitma --all
-   echo ""
-   echo "$(color_blue 'Updating GitMA')"
-   echo ""
-   python -m pip install --upgrade git+https://github.com/forTEXT/gitma
+  echo ""
+  echo "$(color_blue 'Updating Conda environment')"
+  echo ""
+  conda update -y -n gitma --all
+  echo ""
+  echo "$(color_blue 'Updating GitMA')"
+  echo ""
+  python -m pip install --upgrade git+https://github.com/forTEXT/gitma
 }
 
 reinstall_demo(){
-   echo ""
-   echo "$(color_red 'Removing old GitMA demo files')"
-   echo ""
-   rm -rf ./src
-   echo "Restoring GitMA demo files"
-   #git clone https://github.com/forTEXT/gitma.git ./src
-   cp -R ./src_backup ./src
+  echo ""
+  echo "$(color_red 'Removing old GitMA demo files')"
+  echo ""
+  rm -rf ./src
+  echo "Restoring GitMA demo files"
+  #git clone https://github.com/forTEXT/gitma.git ./src
+  cp -R ./src_backup ./src
 }
 
 press_enter() {
@@ -72,7 +72,7 @@ incorrect_selection() {
 }
 
 print_logo(){
-  echo -ne " 
+  echo -ne "
   $bold
   $blue        ___                              $purple     ___           ___      
   $blue       /  /\        ___           ___    $purple    /__/\         /  /\     
@@ -84,8 +84,8 @@ print_logo(){
   $blue    \  \:\  /:/      \__\::/ \__\/  \:\  $purple \  \:\        \  \::/      
   $blue     \  \:\/:/       /__/:/       \  \:\ $purple  \  \:\        \  \:\      
   $blue      \  \::/        \__\/         \__\/ $purple   \  \:\        \  \:\     
-  $blue       \__\/                             $purple    \__\/         \__\/            
-       
+  $blue       \__\/                             $purple    \__\/         \__\/     
+  
   $clear$italic$blue                                   https://github.com/forTEXT/gitma
   $clear$italic$blue                                   v0.0.5 2023-02-17
   $clear$italic$blue                                   CATMA 7
@@ -96,13 +96,13 @@ until [ "$selection" = "0" ]; do
   clear
   print_logo
   echo -ne "
-    
-    $(color_blue 1):  Run jupyter
-    $(color_blue 2):  Reinstall demo files $(color_red '(all changes will be lost!)')
- 
-    $(color_red q):  Exit
-
-    $bold$(color_blue 'Enter selection'): "
+  
+  $(color_blue 1):  Run Jupyter
+  $(color_blue 2):  Reinstall demo files $(color_red '(all changes will be lost!)')
+  
+  $(color_red q):  Exit
+  
+  $bold$(color_blue 'Enter selection'): "
   read selection
 
   case $selection in
