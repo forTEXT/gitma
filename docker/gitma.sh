@@ -33,7 +33,7 @@ run_jupyter() {
   jupyter lab \
     --notebook-dir=./src/demo/notebooks/ \
     --ip='*' \
-    --port=8888 \
+    --port=9999 \
     --no-browser \
     --allow-root
 }
