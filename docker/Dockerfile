@@ -1,6 +1,6 @@
 FROM  condaforge/miniforge3
 LABEL maintainer="GitMA Team" \
-      version="0.0.5"
+      version="0.0.10"
 
 WORKDIR /opt/gitma
 
