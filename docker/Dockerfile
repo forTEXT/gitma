@@ -1,3 +1,6 @@
+# Sample build command: docker buildx build --platform linux/amd64,linux/arm64 --tag maltem/gitma-demo:0.0.10 --tag maltem/gitma-demo:latest --push .
+# Consider adding --no-cache as per https://docs.docker.com/build/building/best-practices/#rebuild-your-images-often
+
 FROM  condaforge/miniforge3
 LABEL maintainer="GitMA Team" \
       version="0.0.10"
