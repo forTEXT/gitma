@@ -76,3 +76,8 @@ docker rm <container-name-or-id>    # deletes a container
 docker images                       # lists all images
 docker rmi <image-name-or-id>       # deletes an image
 ```
+
+#### Official Docker Documentation
+
+Get started / [What is Docker?](https://docs.docker.com/get-started/docker-overview/)  
+Reference / CLI reference / [docker](https://docs.docker.com/reference/cli/docker/)
