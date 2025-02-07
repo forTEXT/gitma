@@ -1,4 +1,4 @@
-# GitMA Docker Image
+## GitMA Docker Image
 
 We have created a ready to use Docker image that includes GitMA and all dependencies, as well as demo Jupyter Notebooks.
 
@@ -8,12 +8,12 @@ a local Python environment.
 
 This image should work for all amd64 and arm64 machines: [maltem/gitma-demo](https://hub.docker.com/r/maltem/gitma-demo)
 
-## Prerequisites
+### Prerequisites
 
 You will need to download and install the Docker Desktop application: https://www.docker.com/products/docker-desktop/  
 (ignore the button to choose a plan and scroll down the page to find the download button)
 
-## Usage
+### Usage
 
 To **fetch the image**, execute the following in your terminal / command prompt:  
 `docker pull maltem/gitma-demo:latest`
@@ -25,10 +25,10 @@ To **start the container again at a later stage**, execute the following in your
 `docker start -ai gitma-demo`
 
 Upon starting the container you should see the following menu:  
-![gitma_main_menu](gitma_main_menu.png)
+![gitma_main_menu](https://raw.githubusercontent.com/forTEXT/gitma/refs/heads/main/docker/gitma_main_menu.png)
 
 Choose option 1 to start the Jupyter server. Use the final link that is displayed in the output:  
-![gitma_jupyter_output](gitma_jupyter_output.png)
+![gitma_jupyter_output](https://raw.githubusercontent.com/forTEXT/gitma/refs/heads/main/docker/gitma_jupyter_output.png)
 
 Once you can see the JupyterLab interface in your browser, simply double-click on one of the notebooks in the list on the left to open it. We recommend that you
 start with `load_project_from_gitlab`, followed by `explore_annotations`. (We assume that you know what Jupyter Notebooks are and how to navigate them. If not
@@ -39,7 +39,7 @@ menu.
 
 If you choose the option to exit from the main menu the container will be stopped. You can start it again as shown at the top of this section.
 
-## Updates
+### Updates
 
 We may publish updated versions of the Docker image from time to time. To get the latest version, simply re-run the `docker pull` command as shown at the top of
 the *Usage* section. The output of the command will tell you if anything new was fetched.
@@ -48,11 +48,11 @@ To start a container using a new version, execute the same `docker run` command 
 as you already have a container named "gitma-demo". Alternatively you can simply delete the old container first, but make sure that it doesn't contain anything
 you want to keep! Read on to find out how to delete a container (and to learn a bit more about Docker in general).
 
-## More about Docker
+### More about Docker
 
 Here is a quick crash-course on some Docker terminology and commands.
 
-### Images and Containers
+#### Images and Containers
 
 In layman's terms, you can think of a Docker image as a recipe for a cake, and a container as a cake that you bake using that recipe.
 
@@ -63,7 +63,7 @@ versions of it!).
 The cake (the container) is made from the recipe. When you "run" a Docker image, you create a container. You can create multiple containers from the same image,
 and each one works independently of the others. A container is therefore a running instance of the image blueprint - it is active and modifiable.
 
-### Common Commands
+#### Common Commands
 
 Apart from those listed in the *Usage* section, here are some common commands to work with images and containers in the terminal / command prompt. Note that all
 of these actions can also be performed using the Docker Desktop application interface.
