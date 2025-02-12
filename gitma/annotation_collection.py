@@ -428,7 +428,7 @@ class AnnotationCollection:
         return [
             annotation for annotation in self.annotations
             if annotation.tag.name == tag_name
-            or annotation.tag.parent.name == tag_name
+            or annotation.tag.parent is not None and annotation.tag.parent.name == tag_name
         ]
 
     def annotate_properties(self, tag: str, prop: str, value: list):
