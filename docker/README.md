@@ -6,7 +6,8 @@ Its purpose is to make it easy for you to try out the demo notebooks, so that yo
 if you want to work with GitMA more seriously, for example to create and upload gold annotations back to CATMA, you should consider installing GitMA directly in
 a local Python environment.
 
-This image should work for all amd64 and arm64 machines: [maltem/gitma-demo](https://hub.docker.com/r/maltem/gitma-demo)
+This image should work for all amd64 and arm64 machines: [maltem/gitma-demo](https://hub.docker.com/r/maltem/gitma-demo)  
+(note that this replaced the previous image 'gerstorfer/gitma-demo')
 
 ### Prerequisites
 
