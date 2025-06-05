@@ -3,7 +3,7 @@
 
 FROM  condaforge/miniforge3
 LABEL maintainer="GitMA Team" \
-      version="0.0.10"
+      version="0.0.11"
 
 WORKDIR /opt/gitma
 
