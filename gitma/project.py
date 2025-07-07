@@ -554,7 +554,7 @@ class CatmaProject:
             Dict[str, pd.DataFrame]: Dictionary with document titles as keys and annotations per\
                 document as pandas data frame.
         """
-        project_df = self.merge_annotations
+        project_df = self.merge_annotations()
         document_acs = {
             document: project_df[project_df['document']
                                  == document].reset_index(drop=True)
