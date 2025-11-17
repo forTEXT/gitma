@@ -780,32 +780,37 @@ class CatmaProject:
 
         annotation_task = AnnotationTask(data=data, distance=distance_function)
 
-        try:
-            pi = annotation_task.pi()
-            kappa = annotation_task.kappa()
-            alpha = annotation_task.alpha()
-        except ZeroDivisionError:
-            print(f"Couldn't compute IAA for level '{level}' due to missing matching annotations with the given settings.")
-            pi, kappa, alpha = (0, 0, 0)
+        metric_methods = {
+            "Scott's Pi": annotation_task.pi,
+            "Cohen's Kappa": annotation_task.kappa
+        }
+
+        iaa_results = {}
+        for name, method in metric_methods.items():
+            try:
+                iaa_results[name] = method()
+            except ZeroDivisionError:
+                print(f"Couldn't compute IAA for level '{level}' due to missing matching annotations with the given settings.")
+                iaa_results[name] = 0
+            except Exception as e:
+                iaa_results[name] = f"Error: {e}"
 
         if verbose:
-            print(textwrap.dedent(
-                f"""
-                Results for "{level}"
-                -------------{len(level) * '-'}-
-                Scott's Pi:          {pi}
-                Cohen's Kappa:       {kappa}
-                Krippendorf's Alpha: {alpha}
-                ===============================================
-                """
-            ))
+            for name, value in iaa_results.items():
+                print(f"{name}: {value}")
+            # print(textwrap.dedent(
+            #     f"""
+            #     Results for "{level}"
+            #     -------------{len(level) * '-'}-
+            #     Scott's Pi:          {pi}
+            #     Cohen's Kappa:       {kappa}
+            #     Krippendorf's Alpha: {alpha}
+            #     ===============================================
+            #     """
+            # ))
 
         if return_as_dict:
-            return {
-                "Scott's Pi": pi,
-                "Cohen's Kappa": kappa,
-                "Krippendorf's Alpha": alpha
-            }
+            return iaa_results
         else:
             if verbose:
                 print(textwrap.dedent(
@@ -814,6 +819,22 @@ class CatmaProject:
                     """
                 ))
             return get_confusion_matrix(pair_list=annotation_pairs, level=level)
+
+    def calculate_scotts_pi(self, ac1_name_or_inst, ac2_name_or_inst, **kwargs):
+        """
+        Returns only Scott's Pi for two annotation collections.
+        All extra kwargs are passed to get_iaa (level, tag_filter, etc.)
+        """
+
+        return self.get_iaa(ac1_name_or_inst, ac2_name_or_inst, return_as_dict=True, **kwargs)["Scott's Pi"]
+    
+    def calculate_cohens_kappa(self, ac1_name_or_inst, ac2_name_or_inst, **kwargs):
+        """
+        Returns only Cohen's Kappa for two annotation collections.
+        All extra kwargs are passed to get_iaa (level, tag_filter, etc.)
+        """
+
+        return self.get_iaa(ac1_name_or_inst, ac2_name_or_inst, return_as_dict=True, **kwargs)["Cohen's Kappa"]
 
     def gamma_agreement(
         self,
