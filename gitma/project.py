@@ -825,16 +825,26 @@ class CatmaProject:
         Returns only Scott's Pi for two annotation collections.
         All extra kwargs are passed to get_iaa (level, tag_filter, etc.)
         """
+        kwargs['verbose'] = False
+        results = self.get_iaa(ac1_name_or_inst, ac2_name_or_inst, return_as_dict=True, **kwargs)
+        #get only scotts value
+        scotts_value = results["Scott's Pi"]
+        print(f"Scott's Pi: {scotts_value}")
 
-        return self.get_iaa(ac1_name_or_inst, ac2_name_or_inst, return_as_dict=True, **kwargs)["Scott's Pi"]
+        return {"Scott's Pi": scotts_value}
     
     def calculate_cohens_kappa(self, ac1_name_or_inst, ac2_name_or_inst, **kwargs):
         """
         Returns only Cohen's Kappa for two annotation collections.
         All extra kwargs are passed to get_iaa (level, tag_filter, etc.)
         """
+        kwargs['verbose'] = False
+        results = self.get_iaa(ac1_name_or_inst, ac2_name_or_inst, return_as_dict=True, **kwargs)
+        #get only scotts value
+        scotts_value = results["Cohen's Kappa"]
+        print(f"Cohen's Kappa: {scotts_value}")
 
-        return self.get_iaa(ac1_name_or_inst, ac2_name_or_inst, return_as_dict=True, **kwargs)["Cohen's Kappa"]
+        return {"Cohen's Kappa": scotts_value}
 
     def gamma_agreement(
         self,
