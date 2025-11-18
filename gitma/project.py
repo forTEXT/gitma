@@ -782,7 +782,8 @@ class CatmaProject:
 
         metric_methods = {
             "Scott's Pi": annotation_task.pi,
-            "Cohen's Kappa": annotation_task.kappa
+            "Cohen's Kappa": annotation_task.kappa,
+            "Krippendorf's Alpha": annotation_task.alpha, # krippendorf's alpha but for two annotators
         }
 
         iaa_results = {}
@@ -845,6 +846,19 @@ class CatmaProject:
         print(f"Cohen's Kappa: {scotts_value}")
 
         return {"Cohen's Kappa": scotts_value}
+
+    def calculate_krippendorffs_alpha_for_two_collections(self, ac1_name_or_inst, ac2_name_or_inst, **kwargs):
+        """
+        Returns only Krippendorf's Alpha for two annotation collections using nltk.
+        All extra kwargs are passed to get_iaa (level, tag_filter, etc.)
+        """
+        kwargs['verbose'] = False
+        results = self.get_iaa(ac1_name_or_inst, ac2_name_or_inst, return_as_dict=True, **kwargs)
+        #get only scotts value
+        scotts_value = results["Krippendorf's Alpha"]
+        print(f"Krippendorf's Alpha: {scotts_value}")
+
+        return {"Krippendorf's Alpha": scotts_value}
 
     def gamma_agreement(
         self,
