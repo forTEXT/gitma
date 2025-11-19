@@ -860,6 +860,22 @@ class CatmaProject:
 
         return {"Krippendorf's Alpha": scotts_value}
 
+    def calculate_krippendorffs_alpha_for_multiple(self, annotation_collections: List[AnnotationCollection], **kwargs):
+        """
+        Returns Krippendorf's Alpha for more than two annotators but uses different collection strategy for 
+        annotations rather than pairwise comparison.
+        """
+        annotation_collections = self.annotation_collections
+
+        data = []
+        for ac in annotation_collections:
+            for annotation in ac.annotations:
+                # yield three three value tuples: (Coder, Item, Label)
+                data.append((
+                    ac.name,
+                    "item", # span??
+                    annotation.tag.name))
+
     def gamma_agreement(
         self,
         annotation_collections: List[AnnotationCollection],
