@@ -782,7 +782,8 @@ class CatmaProject:
 
         metric_methods = {
             "Scott's Pi": annotation_task.pi,
-            "Cohen's Kappa": annotation_task.kappa
+            "Cohen's Kappa": annotation_task.kappa,
+            "Krippendorff's Alpha": annotation_task.alpha
         }
 
         iaa_results = {}
@@ -827,12 +828,11 @@ class CatmaProject:
         """
         kwargs['verbose'] = False
         results = self.get_iaa(ac1_name_or_inst, ac2_name_or_inst, return_as_dict=True, **kwargs)
-        #get only scotts value
-        scotts_value = results["Scott's Pi"]
-        print(f"Scott's Pi: {scotts_value}")
+        # get only Scott's Pi value
+        scotts_pi_value = results["Scott's Pi"]
+        print(f"Scott's Pi: {scotts_pi_value}")
+        return {"Scott's Pi": scotts_pi_value}
 
-        return {"Scott's Pi": scotts_value}
-    
     def calculate_cohens_kappa(self, ac1_name_or_inst, ac2_name_or_inst, **kwargs):
         """
         Returns only Cohen's Kappa for two annotation collections.
@@ -840,11 +840,113 @@ class CatmaProject:
         """
         kwargs['verbose'] = False
         results = self.get_iaa(ac1_name_or_inst, ac2_name_or_inst, return_as_dict=True, **kwargs)
-        #get only scotts value
-        scotts_value = results["Cohen's Kappa"]
-        print(f"Cohen's Kappa: {scotts_value}")
+        # get only Cohen's Kappa value
+        cohens_kappa_value = results["Cohen's Kappa"]
+        print(f"Cohen's Kappa: {cohens_kappa_value}")
+        return {"Cohen's Kappa": cohens_kappa_value}
 
-        return {"Cohen's Kappa": scotts_value}
+    def calculate_krippendorffs_alpha_for_two_collections(self, ac1_name_or_inst, ac2_name_or_inst, **kwargs):
+        """
+        Returns only Krippendorff's Alpha for two annotation collections using NLTK.
+        All extra kwargs are passed to get_iaa (level, tag_filter, etc.)
+        """
+        kwargs['verbose'] = False
+        results = self.get_iaa(ac1_name_or_inst, ac2_name_or_inst, return_as_dict=True, **kwargs)
+        # get only Krippendorff's Alpha value
+        krippendorffs_alpha_value = results["Krippendorff's Alpha"]
+        print(f"Krippendorff's Alpha: {krippendorffs_alpha_value}")
+        return {"Krippendorf's Alpha": krippendorffs_alpha_value}
+
+    def get_iaa_data_multiple(annotation_collections: List[AnnotationCollection],level='tag'):
+        """
+        Yields 3-tuples (Coder, Item, Label) for nltk.AnnotationTask data input from multiple annotation collections.
+        This method avoids pairwise comparison and subject to test.
+        Args:
+            annotation_collections (List[AnnotationCollection]): List of annotation collections.
+            level (str, optional): 'tag' or any property in the annotation collections with\
+                the prefix 'prop:'.
+        Returns:
+            List[Tuple[int, int, str]]: Yields tuples of coder index, annotation index, and tag or annotated property.
+        """
+        for ac_index, ac in enumerate(annotation_collections):
+            for an_index, an in enumerate(ac.annotations):
+                print(an)
+                if level == 'tag':
+                    yield ac_index, an_index, an.tag.name
+                    print(an_index, an.tag.name)
+                elif an.properties and level.replace('prop:', '') in an.properties:
+                    yield ac_index, an_index, an.properties[level.replace('prop:', '')][0]
+                    print(an_index, an.tag.name)
+                else:
+                    yield ac_index, an_index, an.properties[level.replace('prop:', '')][0]
+
+    def get_krippendorff(
+        self,
+        *ac_name_or_insts,
+        tag_filter: list = None,
+        filter_both_ac: bool = False,
+        level: str = 'tag',
+        include_empty_annotations: bool = True,
+        distance: str = 'binary',
+        verbose: bool = True,
+        return_as_dict: bool = False) -> None:
+        """
+        Computes Inter-Annotator-Agreement for two annotation collections.
+        See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb) for details.
+
+        Args:
+            ac1_name_or_inst (str): The name or instance of the first annotation collection, whose annotations form the basis of the
+                                    computation.
+            ac2_name_or_inst (str): The name or instance of the second annotation collection, whose annotations will be searched for
+                                    matches to those in the first.
+            tag_filter (list, optional): Which tags should be included. Defaults to `None` (all tags).
+            filter_both_ac (bool, optional): Whether the tag filter should be applied to both annotation collections. Defaults to `False`
+                                             (only applied to the first collection).
+            level (str, optional): Whether the annotations' tags or a specified property (prefixed with 'prop:') should be compared. Defaults
+                                   to 'tag'.
+            include_empty_annotations (bool, optional): If `False`, only annotations with a matching annotation in the second collection are
+                                                        included. Defaults to `True`.
+            distance (str, optional): The IAA distance function. Either 'binary' or 'interval'. See the
+                                      [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further information. Defaults to 'binary'.
+            verbose (bool, optional): Whether to print results to stdout. Defaults to `True`.
+            return_as_dict (bool, optional): Whether the computed agreement scores should be returned as a dictionary in addition to being
+                                             printed (assuming `verbose=True`). Defaults to `False`, in which case a Pandas DataFrame with a
+                                             confusion matrix is returned instead.
+        """
+        from nltk.metrics.agreement import AnnotationTask
+        from nltk.metrics import interval_distance, binary_distance
+
+        if distance == 'interval':
+            distance_function = interval_distance
+        else:
+            distance_function = binary_distance
+
+        # get all provided annotation collection names
+        ac_list = []
+        for ac in ac_name_or_insts:
+            if isinstance(ac, str):
+                ac_list.append(self.ac_dict[ac])
+            else:
+                ac_list.append(ac)
+
+        annotation_list = list()
+        for ac in ac_list:
+            print("print ac in ac_list ", ac.annotations)
+            print(len(ac)) # number of annotations
+
+        ac1_annotations = ac_list[1]
+        for annotation_unit in ac1_annotations:
+            print("print one annotation unit ", annotation_unit)
+
+        # solutions to create tuples
+        # 1) Map each annotation to token level
+        # 2) Take the raw text, tokenize the raw text, match indexes for annotations, every token should get a tag 
+
+        pair_list = list()
+        same_annotationlists = list()
+
+        print("list of provided annotation collections ", ac_list)
+        return "the end"
 
     def gamma_agreement(
         self,
