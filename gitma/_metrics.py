@@ -338,6 +338,28 @@ def get_iaa_data(
                 yield an_index, index, an.properties[level.replace('prop:', '')][0]
 
 
+def get_iaa_data_multiple(annotation_collections: List[AnnotationCollection],
+                          level='tag',) -> List[Tuple[int, int, str]]:
+    """
+    Yields 3-tuples (Coder, Item, Label) for nltk.AnnotationTask data input from multiple annotation collections.
+    This method avoids pairwise comparison and subject to test.
+    Args:
+        annotation_collections (List[AnnotationCollection]): List of annotation collections.
+        level (str, optional): 'tag' or any property in the annotation collections with\
+            the prefix 'prop:'.
+    Returns:
+        List[Tuple[int, int, str]]: Yields tuples of coder index, annotation index, and tag or annotated property.
+    """
+    for ac_index, ac in enumerate(annotation_collections):
+        for an_index, an in enumerate(ac.annotations):
+            if level == 'tag':
+                yield ac_index, an_index, an.tag.name
+            elif an.properties and level.replace('prop:', '') in an.properties:
+                yield ac_index, an_index, an.properties[level.replace('prop:', '')][0]
+            else:
+                yield ac_index, an_index, an.properties[level.replace('prop:', '')][0]
+
+
 def gamma_agreement(
         project,
         annotation_collections: List[AnnotationCollection],

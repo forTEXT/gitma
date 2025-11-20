@@ -15,7 +15,7 @@ from gitma.tag import Tag
 from gitma._write_annotation import write_annotation_json
 from gitma._gold_annotation import create_gold_annotations
 from gitma._vizualize import plot_interactive, plot_annotation_progression
-from gitma._metrics import get_annotation_pairs, get_iaa_data, get_confusion_matrix, gamma_agreement
+from gitma._metrics import get_annotation_pairs, get_iaa_data, get_confusion_matrix, gamma_agreement, get_iaa_data_multiple
 
 
 def load_gitlab_project(
@@ -865,16 +865,17 @@ class CatmaProject:
         Returns Krippendorf's Alpha for more than two annotators but uses different collection strategy for 
         annotations rather than pairwise comparison.
         """
+        from nltk.metrics.agreement import AnnotationTask
         annotation_collections = self.annotation_collections
 
-        data = []
-        for ac in annotation_collections:
-            for annotation in ac.annotations:
-                # yield three three value tuples: (Coder, Item, Label)
-                data.append((
-                    ac.name,
-                    "item", # span??
-                    annotation.tag.name))
+        iaa_data = get_iaa_data_multiple(
+            annotation_collections=annotation_collections,
+            level=kwargs.get('level', 'tag'))
+        annotation_task = AnnotationTask(data=iaa_data, distance="binary")
+        krippendorffs_alpha = annotation_task.alpha()
+        print(f"Krippendorf's Alpha for multiple annotators: {krippendorffs_alpha}")
+        return {"Krippendorf's Alpha": krippendorffs_alpha}
+
 
     def gamma_agreement(
         self,
