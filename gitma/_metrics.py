@@ -5,6 +5,7 @@ import textwrap
 from typing import List, Tuple, Union
 from gitma.annotation import Annotation
 from gitma.annotation_collection import AnnotationCollection
+import itertools
 
 
 def filter_ac_by_tag(
@@ -359,6 +360,49 @@ def get_iaa_data_multiple(annotation_collections: List[AnnotationCollection],
             else:
                 yield ac_index, an_index, an.properties[level.replace('prop:', '')][0]
 
+def get_iaa_data_combination(annotation_collections: List[AnnotationCollection],
+                             level='tag',) -> List[Tuple[int, int, str]]:
+    """
+    Iterates over combinations of annotation collections and yields 3 value tuples (Coder, Item, Label)
+    using default get_iaa_data function.
+    """
+    
+    ac_names = [ac.name for ac in annotation_collections]
+    ac_names_enum = list(enumerate(ac_names))
+    ac_combinations = list(itertools.combinations([key for key, value in ac_names_enum], 2))
+    # return ac_combinations
+    print(list(enumerate(ac_names)))
+    # get all ac combination pairs
+
+    all_iaa_data = []
+    for ac_pair in ac_combinations:
+        print(f'Calculating IAA for annotation collections: {ac_pair[0]} and {ac_pair[1]}')
+        print(annotation_collections[ac_pair[0]])
+        print(annotation_collections[ac_pair[1]])
+        annotation_pairs = get_annotation_pairs(
+            # project.ac_dict[ac_names_enum[ac_pair[0]][1]],
+            # project.ac_dict[ac_names_enum[ac_pair[1]][1]]
+            annotation_collections[ac_pair[0]],
+            annotation_collections[ac_pair[1]],
+        )
+        iaa_data = list(get_iaa_data(annotation_pairs))
+
+        # map back to original ac indices
+        zeroth_index = ac_names_enum[ac_pair[0]][0] # , 0)
+        print(zeroth_index, 0)
+        first_index = ac_names_enum[ac_pair[1]][0] # , 1)
+        print(first_index, 1)
+        new_iaa_data = []
+        for iaa_triple in iaa_data:
+            if iaa_triple[0] == 0:
+                new_triple = (zeroth_index, iaa_triple[1], iaa_triple[2])
+            elif iaa_triple[0] == 1:
+                new_triple = (first_index, iaa_triple[1], iaa_triple[2])
+            new_iaa_data.append(new_triple)
+        print(new_iaa_data)
+        all_iaa_data.extend(new_iaa_data)
+
+    return all_iaa_data
 
 def gamma_agreement(
         project,

@@ -777,7 +777,7 @@ class CatmaProject:
 
         # transform annotation pairs to data format the NLTK AnnotationTask class takes as input
         data = list(get_iaa_data(annotation_pairs, level=level, include_empty_annotations=include_empty_annotations))
-
+        print("IAA data pairwise: ", data)
         annotation_task = AnnotationTask(data=data, distance=distance_function)
 
         metric_methods = {
@@ -866,12 +866,23 @@ class CatmaProject:
         annotations rather than pairwise comparison.
         """
         from nltk.metrics.agreement import AnnotationTask
-        annotation_collections = self.annotation_collections
 
-        iaa_data = get_iaa_data_multiple(
+        from nltk.metrics import interval_distance, binary_distance
+
+        if "distance" in kwargs:
+            if kwargs["distance"] == 'interval':
+                distance_function = interval_distance
+            else:
+                distance_function = binary_distance
+        else:
+            distance_function = binary_distance
+
+
+        iaa_data = list(get_iaa_data_multiple(
             annotation_collections=annotation_collections,
-            level=kwargs.get('level', 'tag'))
-        annotation_task = AnnotationTask(data=iaa_data, distance="binary")
+            level=kwargs.get('level', 'tag')))
+        print("IAA data multiple: ", iaa_data)
+        annotation_task = AnnotationTask(data=iaa_data, distance=distance_function)
         krippendorffs_alpha = annotation_task.alpha()
         print(f"Krippendorf's Alpha for multiple annotators: {krippendorffs_alpha}")
         return {"Krippendorf's Alpha": krippendorffs_alpha}
