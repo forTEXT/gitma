@@ -210,7 +210,7 @@ def get_annotation_pairs(
         ac2 (AnnotationCollection): Second annotation collection.
         tag_filter (list, optional): The list of tags to be included. Defaults to `None` (no filter / all tags included).
         filter_both_ac (bool, optional): If `True` the `tag_filter` is applied to both collections. Defaults to `False`.
-        property_filter (str, optional): If not `None`, only annotations with this property are included. Defaults to
+        property_filter (str, optional): If not `None`, only annotations with this property are included. Defaults to\
                                          `None` (no filter / all annotations included).
         verbose (bool, optional): Whether to print results to stdout. Defaults to `True`.
 

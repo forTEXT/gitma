@@ -730,22 +730,22 @@ class CatmaProject:
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb) for details.
 
         Args:
-            ac1_name_or_inst (str): The name or instance of the first annotation collection, whose annotations form the basis of the
+            ac1_name_or_inst (str): The name or instance of the first annotation collection, whose annotations form the basis of the\
                                     computation.
-            ac2_name_or_inst (str): The name or instance of the second annotation collection, whose annotations will be searched for
+            ac2_name_or_inst (str): The name or instance of the second annotation collection, whose annotations will be searched for\
                                     matches to those in the first.
             tag_filter (list, optional): Which tags should be included. Defaults to `None` (all tags).
-            filter_both_ac (bool, optional): Whether the tag filter should be applied to both annotation collections. Defaults to `False`
+            filter_both_ac (bool, optional): Whether the tag filter should be applied to both annotation collections. Defaults to `False`\
                                              (only applied to the first collection).
-            level (str, optional): Whether the annotations' tags or a specified property (prefixed with 'prop:') should be compared. Defaults
+            level (str, optional): Whether the annotations' tags or a specified property (prefixed with 'prop:') should be compared. Defaults\
                                    to 'tag'.
-            include_empty_annotations (bool, optional): If `False`, only annotations with a matching annotation in the second collection are
+            include_empty_annotations (bool, optional): If `False`, only annotations with a matching annotation in the second collection are\
                                                         included. Defaults to `True`.
-            distance (str, optional): The IAA distance function. Either 'binary' or 'interval'. See the
+            distance (str, optional): The IAA distance function. Either 'binary' or 'interval'. See the\
                                       [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further information. Defaults to 'binary'.
             verbose (bool, optional): Whether to print results to stdout. Defaults to `True`.
-            return_as_dict (bool, optional): Whether the computed agreement scores should be returned as a dictionary in addition to being
-                                             printed (assuming `verbose=True`). Defaults to `False`, in which case a Pandas DataFrame with a
+            return_as_dict (bool, optional): Whether the computed agreement scores should be returned as a dictionary in addition to being\
+                                             printed (assuming `verbose=True`). Defaults to `False`, in which case a Pandas DataFrame with a\
                                              confusion matrix is returned instead.
         """
         from nltk.metrics.agreement import AnnotationTask
