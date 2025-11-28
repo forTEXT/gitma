@@ -275,7 +275,7 @@ def get_annotation_pairs(
             textwrap.dedent(
                 f"""
                 ==============================================
-                ==============================================
+                
                 Finished search for matching annotations in:
                 - {ac1.name}
                 - {ac2.name}

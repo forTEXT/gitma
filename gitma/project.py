@@ -6,7 +6,7 @@ import gitlab
 import pygit2
 import pandas as pd
 import plotly.graph_objects as go
-from typing import Dict, List, Tuple, Union, Generator
+from typing import Any, Dict, List, Tuple, Union, Generator
 from gitma.text import Text
 from gitma.tagset import Tagset
 from gitma.annotation_collection import AnnotationCollection
@@ -15,7 +15,9 @@ from gitma.tag import Tag
 from gitma._write_annotation import write_annotation_json
 from gitma._gold_annotation import create_gold_annotations
 from gitma._vizualize import plot_interactive, plot_annotation_progression
-from gitma._metrics import get_annotation_pairs, get_iaa_data, get_confusion_matrix, gamma_agreement
+from gitma._metrics import get_annotation_pairs, get_iaa_data, get_confusion_matrix, gamma_agreement, EmptyAnnotation
+from nltk.metrics.agreement import AnnotationTask
+from nltk.metrics import interval_distance, binary_distance
 
 
 def load_gitlab_project(
@@ -714,6 +716,7 @@ class CatmaProject:
             color_col=color_col
         )
 
+    # deprecated
     def get_iaa(
         self,
         ac1_name_or_inst: Union[str, AnnotationCollection],
@@ -726,6 +729,8 @@ class CatmaProject:
         verbose: bool = True,
         return_as_dict: bool = False) -> None:
         """
+        This method is deprecated! See `calculate_scotts_pi` and `calculate_cohens_kappa`.
+
         Computes Inter-Annotator-Agreement for two annotation collections.
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb) for details.
 
@@ -748,9 +753,6 @@ class CatmaProject:
                                              printed (assuming `verbose=True`). Defaults to `False`, in which case a Pandas DataFrame with a\
                                              confusion matrix is returned instead.
         """
-        from nltk.metrics.agreement import AnnotationTask
-        from nltk.metrics import interval_distance, binary_distance
-
         if distance == 'interval':
             distance_function = interval_distance
         else:
@@ -796,6 +798,7 @@ class CatmaProject:
                 Scott's Pi:          {pi}
                 Cohen's Kappa:       {kappa}
                 Krippendorf's Alpha: {alpha}
+                
                 ===============================================
                 """
             ))
@@ -809,11 +812,163 @@ class CatmaProject:
         else:
             if verbose:
                 print(textwrap.dedent(
-                    f"""Confusion Matrix
-                    -------
+                    f"""
+                    Confusion Matrix
+                    ----------------
                     """
                 ))
             return get_confusion_matrix(pair_list=annotation_pairs, level=level)
+
+    def _prepare_nltk_annotation_task(
+            self,
+            ac1_name_or_inst: Union[str, AnnotationCollection],
+            ac2_name_or_inst: Union[str, AnnotationCollection],
+            tag_filter: list,
+            filter_both_ac: bool,
+            level: str,
+            include_empty_annotations: bool,
+            distance: str,
+            verbose: bool
+    ) -> Tuple[AnnotationTask, List[Union[Tuple[Annotation, EmptyAnnotation], Tuple[Annotation, Annotation]]]]:
+        if isinstance(ac1_name_or_inst, str):
+            ac1 = self.ac_dict[ac1_name_or_inst]
+        else:
+            ac1 = ac1_name_or_inst
+        if isinstance(ac2_name_or_inst, str):
+            ac2 = self.ac_dict[ac2_name_or_inst]
+        else:
+            ac2 = ac2_name_or_inst
+
+        # create pairs of best matching annotations
+        annotation_pairs = get_annotation_pairs(
+            ac1=ac1,
+            ac2=ac2,
+            tag_filter=tag_filter,
+            filter_both_ac=filter_both_ac,
+            property_filter=level.replace('prop:', '') if 'prop:' in level else None,
+            verbose=verbose
+        )
+
+        # transform annotation pairs to data format the NLTK AnnotationTask class takes as input
+        data = get_iaa_data(annotation_pairs, level=level, include_empty_annotations=include_empty_annotations)
+
+        if distance == 'interval':
+            distance_function = interval_distance
+        else:
+            distance_function = binary_distance
+
+        return AnnotationTask(data=data, distance=distance_function), annotation_pairs
+
+    def _return_iaa_result(self, metric_function, metric_name, level, confusion_matrix, verbose) -> Tuple[Union[float, Any], pd.DataFrame]:
+        try:
+            metric_result = metric_function()
+        except ZeroDivisionError:
+            print(f"Couldn't calculate {metric_name} for level '{level}' due to missing matching annotations with the given settings.")
+            return
+        except Exception as e:
+            print(f"Unexpected error calculating {metric_name}: {e}")
+            return
+
+        if verbose:
+            print(textwrap.dedent(
+                f"""
+                Results for "{level}"
+                -------------{len(level) * '-'}-
+                {metric_name}: {metric_result}
+                
+                ===============================================
+                
+                Confusion Matrix
+                ----------------
+                """
+            ))
+            print(confusion_matrix)
+
+        return metric_result, confusion_matrix
+
+    def calculate_scotts_pi(
+            self,
+            ac1_name_or_inst: Union[str, AnnotationCollection],
+            ac2_name_or_inst: Union[str, AnnotationCollection],
+            tag_filter: list = None,
+            filter_both_ac: bool = False,
+            level: str = 'tag',
+            include_empty_annotations: bool = True,
+            distance: str = 'binary',
+            verbose: bool = True
+    ) -> Tuple[Union[float, Any], pd.DataFrame]:
+        """
+        Computes the Scott's Pi inter-annotator-agreement (IAA) metric for two annotation collections.
+        See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb) for details.
+
+        Args:
+            ac1_name_or_inst (str): The name or instance of the first annotation collection, whose annotations form the basis of the\
+                                    computation.
+            ac2_name_or_inst (str): The name or instance of the second annotation collection, whose annotations will be searched for\
+                                    matches to those in the first.
+            tag_filter (list, optional): Which tags should be included. Defaults to `None` (all tags).
+            filter_both_ac (bool, optional): Whether the tag filter should be applied to both annotation collections. Defaults to `False`\
+                                             (only applied to the first collection).
+            level (str, optional): Whether the annotations' tags or a specified property (prefixed with 'prop:') should be compared. Defaults\
+                                   to 'tag'.
+            include_empty_annotations (bool, optional): If `False`, only annotations with a matching annotation in the second collection are\
+                                                        included. Defaults to `True`.
+            distance (str, optional): The IAA distance function. Either 'binary' or 'interval'. See the\
+                                      [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further information. Defaults to 'binary'.
+            verbose (bool, optional): Whether to print results to stdout. Defaults to `True`.
+
+        Returns:
+            Tuple[Union[Float, Any], pd.DataFrame]: The metric score and a Pandas DataFrame with a confusion matrix.
+        """
+        annotation_task, annotation_pairs = self._prepare_nltk_annotation_task(
+            ac1_name_or_inst, ac2_name_or_inst, tag_filter, filter_both_ac, level, include_empty_annotations, distance, verbose
+        )
+
+        confusion_matrix = get_confusion_matrix(annotation_pairs, level)
+
+        return self._return_iaa_result(annotation_task.pi, "Scott's Pi", level, confusion_matrix, verbose)
+
+    def calculate_cohens_kappa(
+            self,
+            ac1_name_or_inst: Union[str, AnnotationCollection],
+            ac2_name_or_inst: Union[str, AnnotationCollection],
+            tag_filter: list = None,
+            filter_both_ac: bool = False,
+            level: str = 'tag',
+            include_empty_annotations: bool = True,
+            distance: str = 'binary',
+            verbose: bool = True
+    ) -> Tuple[Union[float, Any], pd.DataFrame]:
+        """
+        Computes the Cohen's Kappa inter-annotator-agreement (IAA) metric for two annotation collections.
+        See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb) for details.
+
+        Args:
+            ac1_name_or_inst (str): The name or instance of the first annotation collection, whose annotations form the basis of the\
+                                    computation.
+            ac2_name_or_inst (str): The name or instance of the second annotation collection, whose annotations will be searched for\
+                                    matches to those in the first.
+            tag_filter (list, optional): Which tags should be included. Defaults to `None` (all tags).
+            filter_both_ac (bool, optional): Whether the tag filter should be applied to both annotation collections. Defaults to `False`\
+                                             (only applied to the first collection).
+            level (str, optional): Whether the annotations' tags or a specified property (prefixed with 'prop:') should be compared. Defaults\
+                                   to 'tag'.
+            include_empty_annotations (bool, optional): If `False`, only annotations with a matching annotation in the second collection are\
+                                                        included. Defaults to `True`.
+            distance (str, optional): The IAA distance function. Either 'binary' or 'interval'. See the\
+                                      [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further information. Defaults to 'binary'.
+            verbose (bool, optional): Whether to print results to stdout. Defaults to `True`.
+
+        Returns:
+            Tuple[Union[Float, Any], pd.DataFrame]: The metric score and a Pandas DataFrame with a confusion matrix.
+        """
+        annotation_task, annotation_pairs = self._prepare_nltk_annotation_task(
+            ac1_name_or_inst, ac2_name_or_inst, tag_filter, filter_both_ac, level, include_empty_annotations, distance, verbose
+        )
+
+        confusion_matrix = get_confusion_matrix(annotation_pairs, level)
+
+        return self._return_iaa_result(annotation_task.kappa, "Cohen's Kappa", level, confusion_matrix, verbose)
 
     def gamma_agreement(
         self,
