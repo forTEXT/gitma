@@ -798,8 +798,6 @@ class CatmaProject:
                 Scott's Pi:          {pi}
                 Cohen's Kappa:       {kappa}
                 Krippendorf's Alpha: {alpha}
-                
-                ===============================================
                 """
             ))
 
@@ -876,7 +874,6 @@ class CatmaProject:
                 -------------{len(level) * '-'}-
                 {metric_name}: {metric_result}
                 
-                ===============================================
                 
                 Confusion Matrix
                 ----------------
