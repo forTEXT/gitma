@@ -173,7 +173,7 @@ def load_annotation_collections(
     return annotation_collections, ac_dict
 
 
-def test_tageset_directory(
+def test_tagset_directory(
         project_uuid: str,
         tagset_uuid: str) -> bool:
     """Tests if tagset has header.json to filter empty tagsets from loading process.
@@ -185,10 +185,10 @@ def test_tageset_directory(
     Returns:
         boolean: True if header.json exists.
     """
-    tageset_dir = f'{project_uuid}/tagsets/{tagset_uuid}/header.json'
-    if os.path.isfile(tageset_dir):
+    tagset_dir = f'{project_uuid}/tagsets/{tagset_uuid}/header.json'
+    if os.path.isfile(tagset_dir):
         return True
-
+    return False
 
 def load_tagsets(project_uuid: str) -> Tuple[List[Tagset], Dict[str, Tagset]]:
     """Generates list and dict of tagsets.
@@ -206,7 +206,7 @@ def load_tagsets(project_uuid: str) -> Tuple[List[Tagset], Dict[str, Tagset]]:
             tagset_uuid=directory
         ) for directory in os.listdir(tagsets_directory)
         # ignore empty tagsets
-        if test_tageset_directory(project_uuid, directory)
+        if test_tagset_directory(project_uuid, directory)
     ]
     tagset_dict = {tagset.uuid: tagset for tagset in tagsets}
 
@@ -267,7 +267,7 @@ class CatmaProject:
             load_from_gitlab: bool = False,
             gitlab_access_token: str = None,
             backup_directory: str = './'):
-        # get the current directory, to return to after loading the project
+        # get the current directory to return to after loading the project
         cwd = os.getcwd()
 
         # TODO: what we're calling UUID here is actually the full GitLab project name, which is unlikely to change and contains a UUID
