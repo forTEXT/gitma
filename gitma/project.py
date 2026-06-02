@@ -970,7 +970,7 @@ class CatmaProject:
 
         return self._return_iaa_result(annotation_task.kappa, "Cohen's Kappa", level, confusion_matrix, verbose)
 
-    def get_cooccurence_matrix(self, annotationdata):
+    def get_cooccurence_matrix(self, annotationdata) -> pd.DataFrame:
         """Generates cooccurence matrix for annotation data
 
         Args:
@@ -1009,7 +1009,7 @@ class CatmaProject:
             tag_filter: list = [],  # to be passed to gitma get_annotation_pairs function
             filter_both_ac: bool = True,  # to be passed to gitma get_annotation_pairs function
             include_empty_annotations: bool = True,  # passed to get_iaa_data function of gitma
-    ):
+    ) -> set:
         """
         Get annotation data from Catma project via API or local directory.
         Args:
@@ -1019,7 +1019,7 @@ class CatmaProject:
             include_empty_annotations (bool): Whether to include empty annotations in the IAA data. If `False`, only annotations with a matching annotation in the second collection are\
                                                 included. Default is True. Passed to get_iaa_data function of gitma.
         Returns:
-            List of annotation tuples in NLTK format for IAA calculation.
+            Set of annotation tuples in [NLTK format](https://www.nltk.org/api/nltk.metrics.agreement.html#nltk.metrics.agreement.AnnotationTask.__init__) for IAA calculation.
         """
 
         if ac_names == []:
@@ -1085,7 +1085,7 @@ class CatmaProject:
             filter_both_ac: bool = True,  # to be passed to gitma get_annotation_pairs function
             include_empty_annotations: bool = True,  # passed to get_iaa_data function of gitma
             distance: str = 'binary',
-    ):
+    ) -> Tuple[Union[float, Any], pd.DataFrame]:
         """
         Computes Krippendorff's Alpha inter-annotator-agreement (IAA) metric for multiple annotation collections based on NLTK implementation.
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb) for details.
@@ -1100,7 +1100,7 @@ class CatmaProject:
                                           [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further information. Defaults to 'binary'.
 
         Returns:
-            A Pandas DataFrame with a co-occurence matrix
+            Tuple[Union[Float, Any], pd.DataFrame]: The Krippendorff's alpha score and a Pandas DataFrame with a co-ocurrence matrix.
         """
 
         if distance == 'interval':
