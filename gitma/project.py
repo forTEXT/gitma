@@ -105,7 +105,6 @@ def get_ac_name(project_uuid: str, directory: str) -> str:
     Args:
         project_uuid (str): CATMA project UUID
         directory (str): annotation collection directory
-        test_positive (bool, optional): what should be returned if it is intrinsic markup. Defaults to True.
 
     Returns:
         str: annotation collection name
@@ -124,10 +123,11 @@ def load_annotation_collections(
     """Generates list and dict of CATMA annotation collections.
 
     Args:
-        project_uuid (str): CATMA project UUID.
-        included_acs (list): All listed annotation collections get loaded.
-        excluded_acs (list): All listed annotation collections don't get loaded.\
+        catma_project (CatmaProject): CATMA project.
+        included_acs (list, optional): All listed annotation collections get loaded.
+        excluded_acs (list, optional): All listed annotation collections don't get loaded.\
             If neither included nor excluded annotation collections are defined, all annotation collections get loaded.
+        ac_filter_keyword (str, optional): Only annotation collections with the given keyword get loaded.
 
     Returns:
         Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]: List and dict of annotation collections.
