@@ -1025,7 +1025,7 @@ class CatmaProject:
 
         if ac_names == []:
             print("No annotation collection names provided, using all ACs in the project.")
-            ac_names = list(project.ac_dict.keys())
+            ac_names = list(self.ac_dict.keys())
         else:
             print("Using provided annotation collection names: ", ac_names)
 
