@@ -120,6 +120,7 @@ def load_annotation_collections(
         included_acs: list = None,
         excluded_acs: list = None,
         ac_filter_keyword: str = None) -> Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]:
+    # !TODO: add remark that just one filter option is possible at a time, filters are exclusive
     """Generates list and dict of CATMA annotation collections.
 
     Args:
