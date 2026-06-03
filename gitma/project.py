@@ -1009,8 +1009,7 @@ class CatmaProject:
 
         return matrix
 
-    # !TODO rename this function
-    def get_annotation_multiple_annotators(
+    def get_iaa_data_for_multiple_annotators(
             self,
             ac_names: list = [],
             tag_filter: list = [],  # to be passed to gitma get_annotation_pairs function
@@ -1019,7 +1018,7 @@ class CatmaProject:
             property_filter: str = None,
     ) -> set:
         """
-        Get annotation data from Catma project via API or local directory.
+        Get annotation data in the NLTK format for IAA calculation for two or more annotators without duplicate pairs.
         Args:
             ac_names (list): List of annotation collection names to include in the IAA calculation. If empty, all ACs in the project will be used.
             tag_filter (list): List of tags that should be included for iaa calculation. If empty, all tags will be used. Passed to get_annotation_pairs function of gitma.
@@ -1091,7 +1090,7 @@ class CatmaProject:
 
         return pairwise_iaa_data
 
-    # TODO: use level parameter instead of tag_filter, implement filtering for properties?
+    # TODO: implement level parameter
     def calculate_krippendorffs_alpha(
             self,
             ac_names: list = [],
