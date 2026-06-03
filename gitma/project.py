@@ -1077,13 +1077,15 @@ class CatmaProject:
 
         return pairwise_iaa_data
 
-    def calculate_krippendorff(
+    # TODO: use level parameter instead of tag_filter, implement filtering for properties?
+    def calculate_krippendorffs_alpha(
             self,
             ac_names: list = [],
             tag_filter: list = [],  # to be passed to gitma get_annotation_pairs function
             filter_both_ac: bool = True,  # to be passed to gitma get_annotation_pairs function
             include_empty_annotations: bool = True,  # passed to get_iaa_data function of gitma
             distance: str = 'binary',
+            verbose: bool = True
     ) -> Tuple[Union[float, Any], pd.DataFrame]:
         """
         Computes Krippendorff's Alpha inter-annotator-agreement (IAA) metric for multiple annotation collections based on NLTK implementation.
@@ -1097,6 +1099,7 @@ class CatmaProject:
                                                 included. Default is True. Passed to get_iaa_data function of gitma.
             distance (str, optional): The IAA distance function. Either 'binary' or 'interval'. See the\
                                           [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further information. Defaults to 'binary'.
+            verbose (bool, optional): Whether to print results to stdout. Defaults to `True`.
 
         Returns:
             Tuple[Union[Float, Any], pd.DataFrame]: The score for Krippendorff's alpha and a Pandas DataFrame with a co-ocurrence matrix.
@@ -1116,9 +1119,19 @@ class CatmaProject:
         )
 
         annotation_task = AnnotationTask(data=annotation_pairs, distance=distance_function)
-        print("Krippendorff's alpha [NLTK]: ", annotation_task.alpha())
-
         co_matrix = self.get_cooccurence_matrix(annotation_pairs)
+
+        if verbose:
+            print(textwrap.dedent(
+                f"""
+                Results for Krippendorff's alpha for project "{self.name}"
+                -------------{len(self.name) * '-'}-----------
+                Krippendorf's Alpha: {annotation_task.alpha()}
+                """
+            ))
+            # !TODO: should we print a warning that this is not a confusion matrix, but a co-occurence matrix?
+            print(co_matrix)
+
         # !TODO: look at the format of the return values, might want to follow the same format as other IAA calculations
         return annotation_task.alpha(), co_matrix
 
