@@ -1052,8 +1052,8 @@ class CatmaProject:
 
             # Get annotation pairs for the current AC combination
             annotation_pairs = get_annotation_pairs(
-                project.ac_dict[ac_first_name],
-                project.ac_dict[ac_second_name],
+                self.ac_dict[ac_first_name],
+                self.ac_dict[ac_second_name],
                 filter_both_ac=filter_both_ac,
                 tag_filter=tag_filter,
             )
