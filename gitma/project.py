@@ -861,9 +861,15 @@ class CatmaProject:
 
         return AnnotationTask(data=data, distance=distance_function), annotation_pairs
 
-    def _return_iaa_result(self, metric_function, metric_name, level, confusion_matrix, verbose) -> Tuple[Union[float, Any], pd.DataFrame]:
+    def _return_iaa_result(self, metric_function, metric_name, level, confusion_matrix, verbose, annotation_task_override: AnnotationTask = None) -> Tuple[Union[float, Any], pd.DataFrame]:
         try:
-            metric_result = metric_function()
+            # TODO: think of a better way to handle this special case for Krippendorffs alpha,
+            # as IAA calculation for multiple annotators needs special merging of annotations (see get_iaa_data_for_multiple_annotators
+            # might want to add an additional iaa_data field to self
+            if annotation_task_override and metric_function.__name__ == 'alpha':
+                metric_result = annotation_task_override.alpha()
+            else:
+                metric_result = metric_function()
         except ZeroDivisionError:
             print(f"Couldn't calculate {metric_name} for level '{level}' due to missing matching annotations with the given settings.")
             return
@@ -1121,19 +1127,7 @@ class CatmaProject:
         annotation_task = AnnotationTask(data=annotation_pairs, distance=distance_function)
         co_matrix = self.get_cooccurence_matrix(annotation_pairs)
 
-        if verbose:
-            print(textwrap.dedent(
-                f"""
-                Results for Krippendorff's alpha for project "{self.name}"
-                -------------{len(self.name) * '-'}-----------
-                Krippendorf's Alpha: {annotation_task.alpha()}
-                """
-            ))
-            # !TODO: should we print a warning that this is not a confusion matrix, but a co-occurence matrix?
-            print(co_matrix)
-
-        # !TODO: look at the format of the return values, might want to follow the same format as other IAA calculations
-        return annotation_task.alpha(), co_matrix
+        return self._return_iaa_result(annotation_task.alpha, "Krippendorff's Alpha", 'tag', co_matrix, verbose, annotation_task_override=annotation_task)
 
     def gamma_agreement(
         self,
