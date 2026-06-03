@@ -1016,6 +1016,7 @@ class CatmaProject:
             tag_filter: list = [],  # to be passed to gitma get_annotation_pairs function
             filter_both_ac: bool = True,  # to be passed to gitma get_annotation_pairs function
             include_empty_annotations: bool = True,  # passed to get_iaa_data function of gitma
+            property_filter: str = None,
     ) -> set:
         """
         Get annotation data from Catma project via API or local directory.
@@ -1025,6 +1026,7 @@ class CatmaProject:
             filter_both_ac (bool): Whether to apply tag_filter on both ACs in the pair or just on the first AC. Default is True. Passed to get_annotation_pairs function of gitma.
             include_empty_annotations (bool): Whether to include empty annotations in the IAA data. If `False`, only annotations with a matching annotation in the second collection are\
                                                 included. Default is True. Passed to get_iaa_data function of gitma.
+            property_filter (str, optional): Property to filter by as a string with the property name. If None, all properties will be used. Passed to get_annotation_pairs function of gitma.
         Returns:
             Set of annotation tuples in [NLTK format](https://www.nltk.org/api/nltk.metrics.agreement.html#nltk.metrics.agreement.AnnotationTask.__init__) for IAA calculation.
         """
@@ -1039,6 +1041,11 @@ class CatmaProject:
             print("No tag filter provided, using all annotations.")
         else:
             print(f"Using provided tag filter: {tag_filter}, with filter_both_ac set to {filter_both_ac}.")
+
+        if not property_filter:
+            print("No property filter provided, using all annotations.")
+        else:
+            print(f"Using provided property filter: {property_filter}.")
 
         # Get annotation collection combinations and enumerate them for IAA calculation
         # enumerate for mapping back to original indices after getting annotation pairs
@@ -1062,6 +1069,7 @@ class CatmaProject:
                 self.ac_dict[ac_second_name],
                 filter_both_ac=filter_both_ac,
                 tag_filter=tag_filter,
+                property_filter=property_filter,
             )
 
             # Converts gitma annotation pairs to IAA data format (Coder, Item, Label)
@@ -1087,9 +1095,10 @@ class CatmaProject:
     def calculate_krippendorffs_alpha(
             self,
             ac_names: list = [],
-            tag_filter: list = [],  # to be passed to gitma get_annotation_pairs function
-            filter_both_ac: bool = True,  # to be passed to gitma get_annotation_pairs function
-            include_empty_annotations: bool = True,  # passed to get_iaa_data function of gitma
+            tag_filter: list = [],
+            filter_both_ac: bool = True,
+            include_empty_annotations: bool = True,
+            property_filter: str = None,
             distance: str = 'binary',
             verbose: bool = True
     ) -> Tuple[Union[float, Any], pd.DataFrame]:
@@ -1103,6 +1112,7 @@ class CatmaProject:
             filter_both_ac (bool): Whether to apply tag_filter on both ACs in the pair or just on the first AC. Default is True. Passed to get_annotation_pairs function of gitma.
             include_empty_annotations (bool): Whether to include empty annotations in the IAA data. If `False`, only annotations with a matching annotation in the second collection are\
                                                 included. Default is True. Passed to get_iaa_data function of gitma.
+            property_filter (str, optional): Property to filter by. If None, all properties will be used. Passed to get_annotation_pairs function of gitma.
             distance (str, optional): The IAA distance function. Either 'binary' or 'interval'. See the\
                                           [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further information. Defaults to 'binary'.
             verbose (bool, optional): Whether to print results to stdout. Defaults to `True`.
@@ -1117,11 +1127,12 @@ class CatmaProject:
             distance_function = binary_distance
 
         # get matching annotation pairs
-        annotation_pairs = self.get_annotation_multiple_annotators(
-            ac_names,
-            tag_filter,
-            filter_both_ac,
-            include_empty_annotations
+        annotation_pairs = self.get_iaa_data_for_multiple_annotators(
+            ac_names=ac_names,
+            tag_filter=tag_filter,
+            filter_both_ac=filter_both_ac,
+            include_empty_annotations=include_empty_annotations,
+            property_filter=property_filter
         )
 
         annotation_task = AnnotationTask(data=annotation_pairs, distance=distance_function)
