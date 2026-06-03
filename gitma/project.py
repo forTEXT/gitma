@@ -733,7 +733,7 @@ class CatmaProject:
         verbose: bool = True,
         return_as_dict: bool = False) -> None:
         """
-        This method is deprecated! See `calculate_scotts_pi` and `calculate_cohens_kappa`.
+        This method is deprecated! See `calculate_scotts_pi`, `calculate_cohens_kappa` and `calculate_krippendorffs_alpha`.
 
         Computes Inter-Annotator-Agreement for two annotation collections.
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb) for details.
@@ -971,11 +971,11 @@ class CatmaProject:
 
         return self._return_iaa_result(annotation_task.kappa, "Cohen's Kappa", level, confusion_matrix, verbose)
 
-    def get_cooccurence_matrix(self, annotationdata) -> pd.DataFrame:
+    def get_cooccurence_matrix(self, annotationdata: set) -> pd.DataFrame:
         """Generates cooccurence matrix for annotation data
 
         Args:
-            annotationdata (List[List[coderid,itemid,tag]]): List of overlapping annotations as lists.
+            annotationdata (Set[List[coderid,itemid,tag]]): List of overlapping annotations as a set.
 
         Returns:
             pd.DataFrame: Cooccurence matrix as pandas data frame.
@@ -1045,10 +1045,8 @@ class CatmaProject:
         pairwise_iaa_data = set()
 
         for ac_pair in ac_combinations:
-            ac_first_index = ac_pair[
-                0]  # this is the enumerated index of the first AC in the pair, in current setup, it is always 0th index since we are comparing the first AC against the rest of ACs.
-            ac_second_index = ac_pair[
-                1]  # this is the enumerated index of the second AC in pairwise comparison, could be 1,2,3,...nth
+            ac_first_index = ac_pair[0]  # this is the enumerated index of the first AC in the pair, in current setup, it is always 0th index since we are comparing the first AC against the rest of ACs.
+            ac_second_index = ac_pair[1]  # this is the enumerated index of the second AC in pairwise comparison, could be 1,2,3,...nth
             ac_first_name = ac_names_enum[ac_first_index][1]  # name of the first AC in the pair
             ac_second_name = ac_names_enum[ac_second_index][1]  # name of the second AC in the pair
 
@@ -1101,7 +1099,7 @@ class CatmaProject:
                                           [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further information. Defaults to 'binary'.
 
         Returns:
-            Tuple[Union[Float, Any], pd.DataFrame]: The Krippendorff's alpha score and a Pandas DataFrame with a co-ocurrence matrix.
+            Tuple[Union[Float, Any], pd.DataFrame]: The score for Krippendorff's alpha and a Pandas DataFrame with a co-ocurrence matrix.
         """
 
         if distance == 'interval':
@@ -1110,8 +1108,12 @@ class CatmaProject:
             distance_function = binary_distance
 
         # get matching annotation pairs
-        annotation_pairs = self.get_annotation_multiple_annotators(project, ac_names, tag_filter, filter_both_ac,
-                                                              include_empty_annotations)
+        annotation_pairs = self.get_annotation_multiple_annotators(
+            ac_names,
+            tag_filter,
+            filter_both_ac,
+            include_empty_annotations
+        )
 
         annotation_task = AnnotationTask(data=annotation_pairs, distance=distance_function)
         print("Krippendorff's alpha [NLTK]: ", annotation_task.alpha())
