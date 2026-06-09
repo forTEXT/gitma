@@ -868,8 +868,10 @@ class CatmaProject:
             # might want to add an additional iaa_data field to self
             if annotation_task_override and metric_function.__name__ == 'alpha':
                 metric_result = annotation_task_override.alpha()
+                matrix_type = "Co-occurrence matrix"
             else:
                 metric_result = metric_function()
+                matrix_type = "Confusion matrix"
         except ZeroDivisionError:
             print(f"Couldn't calculate {metric_name} for level '{level}' due to missing matching annotations with the given settings.")
             return
@@ -885,8 +887,8 @@ class CatmaProject:
                 {metric_name}: {metric_result}
                 
                 
-                Confusion Matrix
-                ----------------
+                {matrix_type}
+                {len(matrix_type) * '-'}
                 """
             ))
             print(confusion_matrix)
