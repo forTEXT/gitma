@@ -30,7 +30,7 @@ def setup(app):
 # -- Project information -----------------------------------------------------
 
 project = 'GitMA'
-copyright = '2022, Michael Vauth'
+copyright = '2026, Michael Vauth'
 author = 'Michael Vauth'
 
 # The full version, including alpha/beta/rc tags

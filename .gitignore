@@ -1,12 +1,19 @@
+# development tooling
 .git
 .idea
+
+# python
+.venv
 .ipynb_checkpoints
-user_projects
 __pycache__
+requ.txt
+build
+
+# user-based data and sample project data
+user_projects
 *.egg-info
 *.csv
 own_work.py
 own_notebook.ipynb
 _gamma_own.py
-requ.txt
 dev_dashboard.ipynb

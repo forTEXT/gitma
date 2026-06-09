@@ -330,6 +330,7 @@ def get_iaa_data(
         for an_index, an in enumerate(pair):
             if level == 'tag':
                 yield an_index, index, an.tag.name
+            # TODO: naming a prop "prop:" would break this, right?
             elif an.properties and level.replace('prop:', '') in an.properties:
                 yield an_index, index, an.properties[level.replace('prop:', '')][0]
             else:
