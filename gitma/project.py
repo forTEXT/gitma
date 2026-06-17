@@ -861,17 +861,11 @@ class CatmaProject:
 
         return AnnotationTask(data=data, distance=distance_function), annotation_pairs
 
-    def _return_iaa_result(self, metric_function, metric_name, level, confusion_matrix, verbose, annotation_task_override: AnnotationTask = None) -> Tuple[Union[float, Any], pd.DataFrame]:
+    def _return_iaa_result(self, metric_function, metric_name, level, confusion_matrix, verbose, matrix_type: str = "Confusion matrix") -> Tuple[Union[float, Any], pd.DataFrame]:
         try:
-            # TODO: think of a better way to handle this special case for Krippendorffs alpha,
             # as IAA calculation for multiple annotators needs special merging of annotations (see get_iaa_data_for_multiple_annotators
             # might want to add an additional iaa_data field to self
-            if annotation_task_override and metric_function.__name__ == 'alpha':
-                metric_result = annotation_task_override.alpha()
-                matrix_type = "Co-occurrence matrix"
-            else:
-                metric_result = metric_function()
-                matrix_type = "Confusion matrix"
+            metric_result = metric_function()
         except ZeroDivisionError:
             print(f"Couldn't calculate {metric_name} for level '{level}' due to missing matching annotations with the given settings.")
             return
@@ -1139,7 +1133,7 @@ class CatmaProject:
         annotation_task = AnnotationTask(data=annotation_pairs, distance=distance_function)
         co_matrix = self.get_cooccurence_matrix(annotation_pairs)
 
-        return self._return_iaa_result(annotation_task.alpha, "Krippendorff's Alpha", 'tag', co_matrix, verbose, annotation_task_override=annotation_task)
+        return self._return_iaa_result(annotation_task.alpha, "Krippendorff's Alpha", 'tag', co_matrix, verbose, matrix_type="Co-occurrence matrix")
 
     def gamma_agreement(
         self,
