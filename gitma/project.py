@@ -799,17 +799,17 @@ class CatmaProject:
                 f"""
                 Results for "{level}"
                 -------------{len(level) * '-'}-
-                Scott's Pi:          {pi}
-                Cohen's Kappa:       {kappa}
-                Krippendorf's Alpha: {alpha}
+                Scott's pi:          {pi}
+                Cohen's kappa:       {kappa}
+                Krippendorf's alpha: {alpha}
                 """
             ))
 
         if return_as_dict:
             return {
-                "Scott's Pi": pi,
-                "Cohen's Kappa": kappa,
-                "Krippendorf's Alpha": alpha
+                "Scott's pi": pi,
+                "Cohen's kappa": kappa,
+                "Krippendorf's alpha": alpha
             }
         else:
             if verbose:
@@ -901,7 +901,7 @@ class CatmaProject:
             verbose: bool = True
     ) -> Tuple[Union[float, Any], pd.DataFrame]:
         """
-        Computes the Scott's Pi inter-annotator-agreement (IAA) metric for two annotation collections.
+        Computes the Scott's pi inter-annotator-agreement (IAA) metric for two annotation collections.
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb) for details.
 
         Args:
@@ -929,7 +929,7 @@ class CatmaProject:
 
         confusion_matrix = get_confusion_matrix(annotation_pairs, level)
 
-        return self._return_iaa_result(annotation_task.pi, "Scott's Pi", level, confusion_matrix, verbose)
+        return self._return_iaa_result(annotation_task.pi, "Scott's pi", level, confusion_matrix, verbose)
 
     def calculate_cohens_kappa(
             self,
@@ -943,7 +943,7 @@ class CatmaProject:
             verbose: bool = True
     ) -> Tuple[Union[float, Any], pd.DataFrame]:
         """
-        Computes the Cohen's Kappa inter-annotator-agreement (IAA) metric for two annotation collections.
+        Computes the Cohen's kappa inter-annotator-agreement (IAA) metric for two annotation collections.
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb) for details.
 
         Args:
@@ -971,7 +971,7 @@ class CatmaProject:
 
         confusion_matrix = get_confusion_matrix(annotation_pairs, level)
 
-        return self._return_iaa_result(annotation_task.kappa, "Cohen's Kappa", level, confusion_matrix, verbose)
+        return self._return_iaa_result(annotation_task.kappa, "Cohen's kappa", level, confusion_matrix, verbose)
 
 
     # TODO: implement level parameter
@@ -986,7 +986,7 @@ class CatmaProject:
             verbose: bool = True
     ) -> Tuple[Union[float, Any], pd.DataFrame]:
         """
-        Computes Krippendorff's Alpha inter-annotator-agreement (IAA) metric for multiple annotation collections based on NLTK implementation.
+        Computes Krippendorff's alpha inter-annotator-agreement (IAA) metric for multiple annotation collections based on NLTK implementation.
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb) for details.
 
         Args:
@@ -1023,7 +1023,7 @@ class CatmaProject:
         annotation_task = AnnotationTask(data=annotation_pairs, distance=distance_function)
         co_matrix = get_cooccurence_matrix(annotation_pairs)
 
-        return self._return_iaa_result(annotation_task.alpha, "Krippendorff's Alpha", 'tag', co_matrix, verbose, matrix_type="Co-occurrence matrix")
+        return self._return_iaa_result(annotation_task.alpha, "Krippendorff's alpha", 'tag', co_matrix, verbose, matrix_type="Co-occurrence matrix")
 
     def gamma_agreement(
         self,
