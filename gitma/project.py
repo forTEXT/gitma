@@ -1005,42 +1005,45 @@ class CatmaProject:
 
         return matrix
 
-    def get_iaa_data_for_multiple_annotators(
+    def get_annotation_pairs_for_multiple_annotators(
             self,
             ac_names: list = [],
-            tag_filter: list = [],  # to be passed to gitma get_annotation_pairs function
-            filter_both_ac: bool = True,  # to be passed to gitma get_annotation_pairs function
-            include_empty_annotations: bool = True,  # passed to get_iaa_data function of gitma
+            tag_filter: list = [],
+            filter_both_ac: bool = True,
+            include_empty_annotations: bool = True,
             property_filter: str = None,
+            verbose: bool = True,
     ) -> set:
         """
         Get annotation data in the NLTK format for IAA calculation for two or more annotators without duplicate pairs.
         Args:
             ac_names (list): List of annotation collection names to include in the IAA calculation. If empty, all ACs in the project will be used.
-            tag_filter (list): List of tags that should be included for iaa calculation. If empty, all tags will be used. Passed to get_annotation_pairs function of gitma.
-            filter_both_ac (bool): Whether to apply tag_filter on both ACs in the pair or just on the first AC. Default is True. Passed to get_annotation_pairs function of gitma.
-            include_empty_annotations (bool): Whether to include empty annotations in the IAA data. If `False`, only annotations with a matching annotation in the second collection are\
-                                                included. Default is True. Passed to get_iaa_data function of gitma.
-            property_filter (str, optional): Property to filter by as a string with the property name. If None, all properties will be used. Passed to get_annotation_pairs function of gitma.
+            tag_filter (list): List of tags that should be included for iaa calculation. If empty, all tags will be used.
+            filter_both_ac (bool): Whether to apply tag_filter on both ACs in the pair or just on the first AC. Default is True.
+            include_empty_annotations (bool): Whether to include empty annotations in the IAA data. If `False`, only annotations with a matching annotation\
+             in the second collection are included. Default is True.
+            property_filter (str, optional): Property to filter by as a string with the property name. If None, all properties will be used.\
+            verbose (bool, optional): Whether to print results to stdout. Defaults to `True`.
         Returns:
             Set of annotation tuples in [NLTK format](https://www.nltk.org/api/nltk.metrics.agreement.html#nltk.metrics.agreement.AnnotationTask.__init__) for IAA calculation.
         """
 
-        if ac_names == []:
-            print("No annotation collection names provided, using all ACs in the project.")
-            ac_names = list(self.ac_dict.keys())
-        else:
-            print("Using provided annotation collection names: ", ac_names)
+        if verbose:
+            if ac_names == []:
+                print("No annotation collection names provided, using all ACs in the project.")
+                ac_names = list(self.ac_dict.keys())
+            else:
+                print("Using provided annotation collection names: ", ac_names)
 
-        if tag_filter == []:
-            print("No tag filter provided, using all annotations.")
-        else:
-            print(f"Using provided tag filter: {tag_filter}, with filter_both_ac set to {filter_both_ac}.")
+            if tag_filter == []:
+                print("No tag filter provided, using all annotations.")
+            else:
+                print(f"Using provided tag filter: {tag_filter}, with filter_both_ac set to {filter_both_ac}.")
 
-        if not property_filter:
-            print("No property filter provided, using all annotations.")
-        else:
-            print(f"Using provided property filter: {property_filter}.")
+            if not property_filter:
+                print("No property filter provided, using all annotations.")
+            else:
+                print(f"Using provided property filter: {property_filter}.")
 
         # Get annotation collection combinations and enumerate them for IAA calculation
         # enumerate for mapping back to original indices after getting annotation pairs
@@ -1065,6 +1068,7 @@ class CatmaProject:
                 filter_both_ac=filter_both_ac,
                 tag_filter=tag_filter,
                 property_filter=property_filter,
+                verbose=verbose
             )
 
             # Converts gitma annotation pairs to IAA data format (Coder, Item, Label)
@@ -1103,11 +1107,11 @@ class CatmaProject:
 
         Args:
             ac_names (list): List of annotation collection names for IAA calculation. If empty, all ACs in the project will be used.
-            tag_filter (list): List of tags that should be included for iaa calculation. If empty, all tags will be used. Passed to get_annotation_pairs function of gitma.
-            filter_both_ac (bool): Whether to apply tag_filter on both ACs in the pair or just on the first AC. Default is True. Passed to get_annotation_pairs function of gitma.
+            tag_filter (list): List of tags that should be included for iaa calculation. If empty, all tags will be used.
+            filter_both_ac (bool): Whether to apply tag_filter on both ACs in the pair or just on the first AC. Default is True.
             include_empty_annotations (bool): Whether to include empty annotations in the IAA data. If `False`, only annotations with a matching annotation in the second collection are\
-                                                included. Default is True. Passed to get_iaa_data function of gitma.
-            property_filter (str, optional): Property to filter by. If None, all properties will be used. Passed to get_annotation_pairs function of gitma.
+                                                included. Default is True.
+            property_filter (str, optional): Property to filter by. If None, all properties will be used.
             distance (str, optional): The IAA distance function. Either 'binary' or 'interval'. See the\
                                           [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further information. Defaults to 'binary'.
             verbose (bool, optional): Whether to print results to stdout. Defaults to `True`.
@@ -1122,12 +1126,13 @@ class CatmaProject:
             distance_function = binary_distance
 
         # get matching annotation pairs
-        annotation_pairs = self.get_iaa_data_for_multiple_annotators(
+        annotation_pairs = self.get_annotation_pairs_for_multiple_annotators(
             ac_names=ac_names,
             tag_filter=tag_filter,
             filter_both_ac=filter_both_ac,
             include_empty_annotations=include_empty_annotations,
-            property_filter=property_filter
+            property_filter=property_filter,
+            verbose=False
         )
 
         annotation_task = AnnotationTask(data=annotation_pairs, distance=distance_function)
