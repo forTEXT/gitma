@@ -197,7 +197,7 @@ def get_annotation_pairs(
         tag_filter: list = None,
         filter_both_ac: bool = True,
         property_filter: str = None,
-        verbose: bool = False) -> List[Union[Tuple[Annotation, EmptyAnnotation], Tuple[Annotation, Annotation]]]:
+        verbose: bool = True) -> List[Union[Tuple[Annotation, EmptyAnnotation], Tuple[Annotation, Annotation]]]:
     """
     For each annotation in `ac1`, finds the best matching annotation (maximum overlap) in `ac2`. Where there is no matching
     annotation in `ac2`, an `EmptyAnnotation` is substituted. Returns a list of tuples of the matched pairs.
@@ -213,7 +213,7 @@ def get_annotation_pairs(
          only to the first collection. Defaults to `True`.
         property_filter (str, optional): If not `None`, only annotations with this property are included. Defaults to\
                                          `None` (no filter / all annotations included).
-        verbose (bool, optional): Whether to print results to stdout. Defaults to `False`.
+        verbose (bool, optional): Whether to print results to stdout. Defaults to `True`.
 
     Returns:
         List[Union[Tuple[Annotation, EmptyAnnotation], Tuple[Annotation, Annotation]]]: List of paired annotation tuples.
