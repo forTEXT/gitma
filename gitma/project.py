@@ -2,8 +2,6 @@ import subprocess
 import os
 import json
 import textwrap
-from collections import defaultdict, Counter
-from itertools import combinations
 from typing import Any, Dict, List, Tuple, Union, Generator
 
 import gitlab
@@ -21,7 +19,9 @@ from gitma.tag import Tag
 from gitma._write_annotation import write_annotation_json
 from gitma._gold_annotation import create_gold_annotations
 from gitma._vizualize import plot_interactive, plot_annotation_progression
-from gitma._metrics import get_annotation_pairs, get_iaa_data, get_confusion_matrix, gamma_agreement, EmptyAnnotation
+from gitma._metrics import get_annotation_pairs, get_iaa_data, get_confusion_matrix, gamma_agreement, EmptyAnnotation, \
+    get_annotation_pairs_for_multiple_annotators, get_cooccurence_matrix
+
 
 def load_gitlab_project(
         gitlab_access_token: str,
@@ -799,17 +799,17 @@ class CatmaProject:
                 f"""
                 Results for "{level}"
                 -------------{len(level) * '-'}-
-                Scott's Pi:          {pi}
-                Cohen's Kappa:       {kappa}
-                Krippendorf's Alpha: {alpha}
+                Scott's pi:          {pi}
+                Cohen's kappa:       {kappa}
+                Krippendorf's alpha: {alpha}
                 """
             ))
 
         if return_as_dict:
             return {
-                "Scott's Pi": pi,
-                "Cohen's Kappa": kappa,
-                "Krippendorf's Alpha": alpha
+                "Scott's pi": pi,
+                "Cohen's kappa": kappa,
+                "Krippendorf's alpha": alpha
             }
         else:
             if verbose:
@@ -861,17 +861,11 @@ class CatmaProject:
 
         return AnnotationTask(data=data, distance=distance_function), annotation_pairs
 
-    def _return_iaa_result(self, metric_function, metric_name, level, confusion_matrix, verbose, annotation_task_override: AnnotationTask = None) -> Tuple[Union[float, Any], pd.DataFrame]:
+    def _return_iaa_result(self, metric_function, metric_name, level, confusion_matrix, verbose, matrix_type: str = "Confusion matrix") -> Tuple[Union[float, Any], pd.DataFrame]:
         try:
-            # TODO: think of a better way to handle this special case for Krippendorffs alpha,
             # as IAA calculation for multiple annotators needs special merging of annotations (see get_iaa_data_for_multiple_annotators
             # might want to add an additional iaa_data field to self
-            if annotation_task_override and metric_function.__name__ == 'alpha':
-                metric_result = annotation_task_override.alpha()
-                matrix_type = "Co-occurrence matrix"
-            else:
-                metric_result = metric_function()
-                matrix_type = "Confusion matrix"
+            metric_result = metric_function()
         except ZeroDivisionError:
             print(f"Couldn't calculate {metric_name} for level '{level}' due to missing matching annotations with the given settings.")
             return
@@ -907,7 +901,7 @@ class CatmaProject:
             verbose: bool = True
     ) -> Tuple[Union[float, Any], pd.DataFrame]:
         """
-        Computes the Scott's Pi inter-annotator-agreement (IAA) metric for two annotation collections.
+        Computes the Scott's pi inter-annotator-agreement (IAA) metric for two annotation collections.
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb) for details.
 
         Args:
@@ -935,7 +929,7 @@ class CatmaProject:
 
         confusion_matrix = get_confusion_matrix(annotation_pairs, level)
 
-        return self._return_iaa_result(annotation_task.pi, "Scott's Pi", level, confusion_matrix, verbose)
+        return self._return_iaa_result(annotation_task.pi, "Scott's pi", level, confusion_matrix, verbose)
 
     def calculate_cohens_kappa(
             self,
@@ -949,7 +943,7 @@ class CatmaProject:
             verbose: bool = True
     ) -> Tuple[Union[float, Any], pd.DataFrame]:
         """
-        Computes the Cohen's Kappa inter-annotator-agreement (IAA) metric for two annotation collections.
+        Computes the Cohen's kappa inter-annotator-agreement (IAA) metric for two annotation collections.
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb) for details.
 
         Args:
@@ -977,120 +971,8 @@ class CatmaProject:
 
         confusion_matrix = get_confusion_matrix(annotation_pairs, level)
 
-        return self._return_iaa_result(annotation_task.kappa, "Cohen's Kappa", level, confusion_matrix, verbose)
+        return self._return_iaa_result(annotation_task.kappa, "Cohen's kappa", level, confusion_matrix, verbose)
 
-    def get_cooccurence_matrix(self, annotationdata: set) -> pd.DataFrame:
-        """Generates cooccurence matrix for annotation data
-
-        Args:
-            annotationdata (Set[List[coderid,itemid,tag]]): List of overlapping annotations as a set.
-
-        Returns:
-            pd.DataFrame: Cooccurence matrix as pandas data frame.
-        """
-
-        # group tags by item
-        items_tags_grouped = defaultdict(list)
-        for coderid, itemid, tag in annotationdata:
-            items_tags_grouped[itemid].append(tag)
-
-        # count co-coccurences of tags
-        cooccurence_counter = Counter()
-        for tags in items_tags_grouped.values():
-            for pair in combinations(sorted(tags), 2):  # all possible combinations of two elements
-                cooccurence_counter[pair] += 1
-
-        # matrix
-        all_tags = sorted(set(tag for _, _, tag in annotationdata))
-
-        matrix = pd.DataFrame(0, index=all_tags, columns=all_tags)
-
-        for (a, b), count in cooccurence_counter.items():
-            matrix.loc[a, b] = count
-            matrix.loc[b, a] = count
-
-        return matrix
-
-    def get_iaa_data_for_multiple_annotators(
-            self,
-            ac_names: list = [],
-            tag_filter: list = [],  # to be passed to gitma get_annotation_pairs function
-            filter_both_ac: bool = True,  # to be passed to gitma get_annotation_pairs function
-            include_empty_annotations: bool = True,  # passed to get_iaa_data function of gitma
-            property_filter: str = None,
-    ) -> set:
-        """
-        Get annotation data in the NLTK format for IAA calculation for two or more annotators without duplicate pairs.
-        Args:
-            ac_names (list): List of annotation collection names to include in the IAA calculation. If empty, all ACs in the project will be used.
-            tag_filter (list): List of tags that should be included for iaa calculation. If empty, all tags will be used. Passed to get_annotation_pairs function of gitma.
-            filter_both_ac (bool): Whether to apply tag_filter on both ACs in the pair or just on the first AC. Default is True. Passed to get_annotation_pairs function of gitma.
-            include_empty_annotations (bool): Whether to include empty annotations in the IAA data. If `False`, only annotations with a matching annotation in the second collection are\
-                                                included. Default is True. Passed to get_iaa_data function of gitma.
-            property_filter (str, optional): Property to filter by as a string with the property name. If None, all properties will be used. Passed to get_annotation_pairs function of gitma.
-        Returns:
-            Set of annotation tuples in [NLTK format](https://www.nltk.org/api/nltk.metrics.agreement.html#nltk.metrics.agreement.AnnotationTask.__init__) for IAA calculation.
-        """
-
-        if ac_names == []:
-            print("No annotation collection names provided, using all ACs in the project.")
-            ac_names = list(self.ac_dict.keys())
-        else:
-            print("Using provided annotation collection names: ", ac_names)
-
-        if tag_filter == []:
-            print("No tag filter provided, using all annotations.")
-        else:
-            print(f"Using provided tag filter: {tag_filter}, with filter_both_ac set to {filter_both_ac}.")
-
-        if not property_filter:
-            print("No property filter provided, using all annotations.")
-        else:
-            print(f"Using provided property filter: {property_filter}.")
-
-        # Get annotation collection combinations and enumerate them for IAA calculation
-        # enumerate for mapping back to original indices after getting annotation pairs
-        ac_names_enum = list(enumerate(ac_names))
-
-        # All pairwise combinations of ACs
-        ac_combinations = list(combinations(range(len(ac_names)), 2))
-
-        # Set to store all matching annotations. As we do pairwise comparison, we do not want to keep duplicates from the pairwise comparison
-        pairwise_iaa_data = set()
-
-        for ac_pair in ac_combinations:
-            ac_first_index = ac_pair[0]  # this is the enumerated index of the first AC in the pair, in current setup, it is always 0th index since we are comparing the first AC against the rest of ACs.
-            ac_second_index = ac_pair[1]  # this is the enumerated index of the second AC in pairwise comparison, could be 1,2,3,...nth
-            ac_first_name = ac_names_enum[ac_first_index][1]  # name of the first AC in the pair
-            ac_second_name = ac_names_enum[ac_second_index][1]  # name of the second AC in the pair
-
-            # Get annotation pairs for the current AC combination
-            annotation_pairs = get_annotation_pairs(
-                self.ac_dict[ac_first_name],
-                self.ac_dict[ac_second_name],
-                filter_both_ac=filter_both_ac,
-                tag_filter=tag_filter,
-                property_filter=property_filter,
-            )
-
-            # Converts gitma annotation pairs to IAA data format (Coder, Item, Label)
-            iaa_data = list(
-                get_iaa_data(annotation_pairs,
-                             include_empty_annotations=include_empty_annotations)
-            )
-
-            # Map the coder indices in IAA data back to the original AC indices. Only first value in the tuple is changed, which is the coder index
-            coder_map = {
-                0: ac_first_index,
-                1: ac_second_index
-            }
-
-            coderid_mapped_iaa_data = [(coder_map[coder], item, label) for coder, item, label in iaa_data]
-
-            # add the IAA data for the current AC combination to final set
-            pairwise_iaa_data.update(coderid_mapped_iaa_data)
-
-        return pairwise_iaa_data
 
     # TODO: implement level parameter
     def calculate_krippendorffs_alpha(
@@ -1104,16 +986,16 @@ class CatmaProject:
             verbose: bool = True
     ) -> Tuple[Union[float, Any], pd.DataFrame]:
         """
-        Computes Krippendorff's Alpha inter-annotator-agreement (IAA) metric for multiple annotation collections based on NLTK implementation.
+        Computes Krippendorff's alpha inter-annotator-agreement (IAA) metric for multiple annotation collections based on NLTK implementation.
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb) for details.
 
         Args:
             ac_names (list): List of annotation collection names for IAA calculation. If empty, all ACs in the project will be used.
-            tag_filter (list): List of tags that should be included for iaa calculation. If empty, all tags will be used. Passed to get_annotation_pairs function of gitma.
-            filter_both_ac (bool): Whether to apply tag_filter on both ACs in the pair or just on the first AC. Default is True. Passed to get_annotation_pairs function of gitma.
+            tag_filter (list): List of tags that should be included for iaa calculation. If empty, all tags will be used.
+            filter_both_ac (bool): Whether to apply tag_filter on both ACs in the pair or just on the first AC. Default is True.
             include_empty_annotations (bool): Whether to include empty annotations in the IAA data. If `False`, only annotations with a matching annotation in the second collection are\
-                                                included. Default is True. Passed to get_iaa_data function of gitma.
-            property_filter (str, optional): Property to filter by. If None, all properties will be used. Passed to get_annotation_pairs function of gitma.
+                                                included. Default is True.
+            property_filter (str, optional): Property to filter by. If None, all properties will be used.
             distance (str, optional): The IAA distance function. Either 'binary' or 'interval'. See the\
                                           [NLTK API](https://www.nltk.org/api/nltk.metrics.html) for further information. Defaults to 'binary'.
             verbose (bool, optional): Whether to print results to stdout. Defaults to `True`.
@@ -1128,18 +1010,20 @@ class CatmaProject:
             distance_function = binary_distance
 
         # get matching annotation pairs
-        annotation_pairs = self.get_iaa_data_for_multiple_annotators(
+        annotation_pairs = get_annotation_pairs_for_multiple_annotators(
+            ac_dict=self.ac_dict,
             ac_names=ac_names,
             tag_filter=tag_filter,
             filter_both_ac=filter_both_ac,
             include_empty_annotations=include_empty_annotations,
-            property_filter=property_filter
+            property_filter=property_filter,
+            verbose=verbose
         )
 
         annotation_task = AnnotationTask(data=annotation_pairs, distance=distance_function)
-        co_matrix = self.get_cooccurence_matrix(annotation_pairs)
+        co_matrix = get_cooccurence_matrix(annotation_pairs)
 
-        return self._return_iaa_result(annotation_task.alpha, "Krippendorff's Alpha", 'tag', co_matrix, verbose, annotation_task_override=annotation_task)
+        return self._return_iaa_result(annotation_task.alpha, "Krippendorff's alpha", 'tag', co_matrix, verbose, matrix_type="Co-occurrence matrix")
 
     def gamma_agreement(
         self,

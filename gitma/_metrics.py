@@ -1,4 +1,7 @@
 import os
+from collections import defaultdict, Counter
+from itertools import combinations
+
 import numpy as np
 import pandas as pd
 import textwrap
@@ -169,6 +172,39 @@ def get_confusion_matrix(pair_list: List[Tuple[Annotation]], level: str = 'tag')
     return pd.DataFrame(tag_dict)
 
 
+def get_cooccurence_matrix(annotationdata: set) -> pd.DataFrame:
+    """Generates cooccurence matrix for annotation data
+
+    Args:
+        annotationdata (Set[List[coderid,itemid,tag]]): List of overlapping annotations as a set.
+
+    Returns:
+        pd.DataFrame: Cooccurence matrix as pandas data frame.
+    """
+
+    # group tags by item
+    items_tags_grouped = defaultdict(list)
+    for coderid, itemid, tag in annotationdata:
+        items_tags_grouped[itemid].append(tag)
+
+    # count co-coccurences of tags
+    cooccurence_counter = Counter()
+    for tags in items_tags_grouped.values():
+        for pair in combinations(sorted(tags), 2):  # all possible combinations of two elements
+            cooccurence_counter[pair] += 1
+
+    # matrix
+    all_tags = sorted(set(tag for _, _, tag in annotationdata))
+
+    matrix = pd.DataFrame(0, index=all_tags, columns=all_tags)
+
+    for (a, b), count in cooccurence_counter.items():
+        matrix.loc[a, b] = count
+        matrix.loc[b, a] = count
+
+    return matrix
+
+
 class EmptyTag:
     """Helper class for missing annotations.
     """
@@ -286,6 +322,94 @@ def get_annotation_pairs(
         )
 
     return pair_list
+
+
+def get_annotation_pairs_for_multiple_annotators(
+        ac_dict: dict[str, AnnotationCollection],
+        ac_names: list = [],
+        tag_filter: list = [],
+        filter_both_ac: bool = True,
+        include_empty_annotations: bool = True,
+        property_filter: str = None,
+        verbose: bool = True,
+) -> set:
+    """
+    Get annotation data in the NLTK format for IAA calculation for two or more annotators without duplicate pairs.
+    Args:
+        ac_dict (dict): Dictionary of all annotation collections.
+        ac_names (list): List of annotation collection names to include in the IAA calculation. If empty, all ACs in the project will be used.
+        tag_filter (list): List of tags that should be included for iaa calculation. If empty, all tags will be used.
+        filter_both_ac (bool): Whether to apply tag_filter on both ACs in the pair or just on the first AC. Default is True.
+        include_empty_annotations (bool): Whether to include empty annotations in the IAA data. If `False`, only annotations with a matching annotation\
+         in the second collection are included. Default is True.
+        property_filter (str, optional): Property to filter by as a string with the property name. If None, all properties will be used.\
+        verbose (bool, optional): Whether to print results to stdout. Defaults to `True`.
+    Returns:
+        Set of annotation tuples in [NLTK format](https://www.nltk.org/api/nltk.metrics.agreement.html#nltk.metrics.agreement.AnnotationTask.__init__) for IAA calculation.
+    """
+
+    if verbose:
+        if ac_names == []:
+            print("No annotation collection names provided, using all ACs in the project.")
+            ac_names = list(ac_dict.keys())
+        else:
+            print("Using provided annotation collection names: ", ac_names)
+
+        if tag_filter == []:
+            print("No tag filter provided, using all annotations.")
+        else:
+            print(f"Using provided tag filter: {tag_filter}, with filter_both_ac set to {filter_both_ac}.")
+
+        if not property_filter:
+            print("No property filter provided, using all annotations.")
+        else:
+            print(f"Using provided property filter: {property_filter}.")
+
+    # Get annotation collection combinations and enumerate them for IAA calculation
+    # enumerate for mapping back to original indices after getting annotation pairs
+    ac_names_enum = list(enumerate(ac_names))
+
+    # All pairwise combinations of ACs
+    ac_combinations = list(combinations(range(len(ac_names)), 2))
+
+    # Set to store all matching annotations. As we do pairwise comparison, we do not want to keep duplicates from the pairwise comparison
+    pairwise_iaa_data = set()
+
+    for ac_pair in ac_combinations:
+        ac_first_index = ac_pair[
+            0]  # this is the enumerated index of the first AC in the pair, in current setup, it is always 0th index since we are comparing the first AC against the rest of ACs.
+        ac_second_index = ac_pair[1]  # this is the enumerated index of the second AC in pairwise comparison, could be 1,2,3,...nth
+        ac_first_name = ac_names_enum[ac_first_index][1]  # name of the first AC in the pair
+        ac_second_name = ac_names_enum[ac_second_index][1]  # name of the second AC in the pair
+
+        # Get annotation pairs for the current AC combination
+        annotation_pairs = get_annotation_pairs(
+            ac_dict[ac_first_name],
+            ac_dict[ac_second_name],
+            filter_both_ac=filter_both_ac,
+            tag_filter=tag_filter,
+            property_filter=property_filter,
+            verbose=verbose
+        )
+
+        # Converts gitma annotation pairs to IAA data format (Coder, Item, Label)
+        iaa_data = list(
+            get_iaa_data(annotation_pairs,
+                         include_empty_annotations=include_empty_annotations)
+        )
+
+        # Map the coder indices in IAA data back to the original AC indices. Only first value in the tuple is changed, which is the coder index
+        coder_map = {
+            0: ac_first_index,
+            1: ac_second_index
+        }
+
+        coderid_mapped_iaa_data = [(coder_map[coder], item, label) for coder, item, label in iaa_data]
+
+        # add the IAA data for the current AC combination to final set
+        pairwise_iaa_data.update(coderid_mapped_iaa_data)
+
+    return pairwise_iaa_data
 
 
 def get_iaa_data(
