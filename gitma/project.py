@@ -953,7 +953,7 @@ class CatmaProject:
                                     matches to those in the first.
             tag_filter (list, optional): Which tags should be included. Defaults to `None` (all tags).
             filter_both_ac (bool, optional): Whether the tag filter should be applied to both annotation collections. Defaults to `True`\
-                                             (applies to both collections).
+                                             (applies `tag_filter` to both collections).
             level (str, optional): Whether the annotations' tags or a specified property (prefixed with 'prop:') should be compared. Defaults\
                                    to 'tag'.
             include_empty_annotations (bool, optional): If `False`, only annotations with a matching annotation in the second collection are\
@@ -990,10 +990,11 @@ class CatmaProject:
         See the [demo notebook](https://github.com/forTEXT/gitma/blob/main/demo/notebooks/inter_annotator_agreement.ipynb) for details.
 
         Args:
-            ac_names (list): List of annotation collection names for IAA calculation. If empty, all ACs in the project will be used.
-            tag_filter (list): List of tags that should be included for iaa calculation. If empty, all tags will be used.
-            filter_both_ac (bool): Whether to apply tag_filter on both ACs in the pair or just on the first AC. Default is True.
-            include_empty_annotations (bool): Whether to include empty annotations in the IAA data. If `False`, only annotations with a matching annotation in the second collection are\
+            ac_names (list): List of annotation collection names for IAA calculation. If empty, all annotation collections in the project will be used.
+            tag_filter (list, optional): List of tags that should be included for iaa calculation. If empty, all tags will be used.
+            filter_both_ac (bool, optional): Whether the tag filter should be applied to both annotation collections. Defaults to `True`\
+                                             (applies `tag_filter` to both collections).
+            include_empty_annotations (bool, optional): Whether to include empty annotations in the IAA data. If `False`, only annotations with a matching annotation in the second collection are\
                                                 included. Default is True.
             property_filter (str, optional): Property to filter by. If None, all properties will be used.
             distance (str, optional): The IAA distance function. Either 'binary' or 'interval'. See the\

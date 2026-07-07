@@ -22,10 +22,11 @@ def filter_ac_by_tag(
         ac1 (AnnotationCollection): First annotation collection.
         ac2 (AnnotationCollection): Second annotation collection.
         tag_filter (list, optional): The list of tags to be included. Defaults to None.
-        filter_both_ac (bool, optional): If `True` both collections get filtered. Defaults to True.
+        filter_both_ac (bool, optional): If `True` both collections get filtered. If `False`, only the first collection's annotations get filtered.\
+         Defaults to True.
 
     Returns:
-        Tuple[List[Annotation]]: Two filtered list of annotations.
+        Tuple[List[Annotation]]: Two filtered lists of annotations.
     """
     if tag_filter:
         ac1_annotations = [
@@ -173,13 +174,13 @@ def get_confusion_matrix(pair_list: List[Tuple[Annotation]], level: str = 'tag')
 
 
 def get_cooccurence_matrix(annotationdata: set) -> pd.DataFrame:
-    """Generates cooccurence matrix for annotation data
+    """Generates co-occurence matrix for annotation data
 
     Args:
         annotationdata (Set[List[coderid,itemid,tag]]): List of overlapping annotations as a set.
 
     Returns:
-        pd.DataFrame: Cooccurence matrix as pandas data frame.
+        pd.DataFramefilter_ac_by_tag: Co-occurence matrix as pandas data frame.
     """
 
     # group tags by item
@@ -187,7 +188,7 @@ def get_cooccurence_matrix(annotationdata: set) -> pd.DataFrame:
     for coderid, itemid, tag in annotationdata:
         items_tags_grouped[itemid].append(tag)
 
-    # count co-coccurences of tags
+    # count co-occurences of tags
     cooccurence_counter = Counter()
     for tags in items_tags_grouped.values():
         for pair in combinations(sorted(tags), 2):  # all possible combinations of two elements
@@ -337,9 +338,10 @@ def get_annotation_pairs_for_multiple_annotators(
     Get annotation data in the NLTK format for IAA calculation for two or more annotators without duplicate pairs.
     Args:
         ac_dict (dict): Dictionary of all annotation collections.
-        ac_names (list): List of annotation collection names to include in the IAA calculation. If empty, all ACs in the project will be used.
+        ac_names (list): List of annotation collection names to include in the IAA calculation. If empty, all annotation collections in the project will be used.
         tag_filter (list): List of tags that should be included for iaa calculation. If empty, all tags will be used.
-        filter_both_ac (bool): Whether to apply tag_filter on both ACs in the pair or just on the first AC. Default is True.
+        filter_both_ac (bool): Whether to apply tag_filter on both annotation collections in the pair or just on the first annotation collection.\
+         Default is True.
         include_empty_annotations (bool): Whether to include empty annotations in the IAA data. If `False`, only annotations with a matching annotation\
          in the second collection are included. Default is True.
         property_filter (str, optional): Property to filter by as a string with the property name. If None, all properties will be used.\
