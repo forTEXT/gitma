@@ -980,10 +980,11 @@ class CatmaProject:
             ac_names: list = [],
             tag_filter: list = [],
             filter_both_ac: bool = True,
+            level: str = 'tag',
             include_empty_annotations: bool = True,
             property_filter: str = None,
             distance: str = 'binary',
-            verbose: bool = True
+            verbose: bool = True,
     ) -> Tuple[Union[float, Any], pd.DataFrame]:
         """
         Computes Krippendorff's alpha inter-annotator-agreement (IAA) metric for multiple annotation collections based on NLTK implementation.
@@ -993,6 +994,8 @@ class CatmaProject:
             ac_names (list): List of annotation collection names for IAA calculation. If empty, all ACs in the project will be used.
             tag_filter (list): List of tags that should be included for iaa calculation. If empty, all tags will be used.
             filter_both_ac (bool): Whether to apply tag_filter on both ACs in the pair or just on the first AC. Default is True.
+            level (str, optional): 'tag' or any property with prefix 'prop:' in the annotation collections.\
+                Defaults to 'tag'.
             include_empty_annotations (bool): Whether to include empty annotations in the IAA data. If `False`, only annotations with a matching annotation in the second collection are\
                                                 included. Default is True.
             property_filter (str, optional): Property to filter by. If None, all properties will be used.
@@ -1015,6 +1018,7 @@ class CatmaProject:
             ac_names=ac_names,
             tag_filter=tag_filter,
             filter_both_ac=filter_both_ac,
+            level=level,
             include_empty_annotations=include_empty_annotations,
             property_filter=property_filter,
             verbose=verbose
@@ -1023,7 +1027,13 @@ class CatmaProject:
         annotation_task = AnnotationTask(data=annotation_pairs, distance=distance_function)
         co_matrix = get_cooccurence_matrix(annotation_pairs)
 
-        return self._return_iaa_result(annotation_task.alpha, "Krippendorff's alpha", 'tag', co_matrix, verbose, matrix_type="Co-occurrence matrix")
+        return self._return_iaa_result(
+            metric_function=annotation_task.alpha,
+            metric_name="Krippendorff's alpha",
+            level=level,
+            confusion_matrix=co_matrix,
+            verbose=verbose,
+            matrix_type="Co-occurrence matrix")
 
     def gamma_agreement(
         self,

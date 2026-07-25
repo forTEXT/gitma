@@ -331,6 +331,7 @@ def get_annotation_pairs_for_multiple_annotators(
         include_empty_annotations: bool = True,
         property_filter: str = None,
         verbose: bool = True,
+        level='tag',
 ) -> set:
     """
     Get annotation data in the NLTK format for IAA calculation for two or more annotators without duplicate pairs.
@@ -343,6 +344,8 @@ def get_annotation_pairs_for_multiple_annotators(
          in the second collection are included. Default is True.
         property_filter (str, optional): Property to filter by as a string with the property name. If None, all properties will be used.\
         verbose (bool, optional): Whether to print results to stdout. Defaults to `True`.
+        level (str, optional): 'tag' or any property with prefix 'prop:' in the annotation collections.\
+            Defaults to 'tag'.
     Returns:
         Set of annotation tuples in [NLTK format](https://www.nltk.org/api/nltk.metrics.agreement.html#nltk.metrics.agreement.AnnotationTask.__init__) for IAA calculation.
     """
@@ -364,9 +367,14 @@ def get_annotation_pairs_for_multiple_annotators(
         else:
             print(f"Using provided property filter: {property_filter}.")
 
+        if not level or level == 'tag':
+            print("No level provided, using 'tag' as default.")
+        else:
+            print(f"Using provided level: {level}.")
     # Get annotation collection combinations and enumerate them for IAA calculation
     # enumerate for mapping back to original indices after getting annotation pairs
     ac_names_enum = list(enumerate(ac_names))
+    print(f"Annotation collection names: {ac_names_enum}")
 
     # All pairwise combinations of ACs
     ac_combinations = list(combinations(range(len(ac_names)), 2))
@@ -394,11 +402,12 @@ def get_annotation_pairs_for_multiple_annotators(
         # Converts gitma annotation pairs to IAA data format (Coder, Item, Label)
         iaa_data = list(
             get_iaa_data(annotation_pairs,
+                         level=level,
                          include_empty_annotations=include_empty_annotations)
         )
 
         # Map the coder indices in IAA data back to the original AC indices. Only first value in the tuple is changed, which is the coder index
-        coder_map = {
+        coder_map = { # Umut: What about 2+ annotators?
             0: ac_first_index,
             1: ac_second_index
         }
