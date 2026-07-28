@@ -22,8 +22,8 @@ def filter_ac_by_tag(
         ac1 (AnnotationCollection): First annotation collection.
         ac2 (AnnotationCollection): Second annotation collection.
         tag_filter (list, optional): The list of tags to be included. Defaults to None.
-        filter_both_ac (bool, optional): If `True` both collections get filtered. If `False`, only the first collection's annotations get filtered.\
-         Defaults to True.
+        filter_both_ac (bool, optional): If `True` the `tag_filter` is applied to both collections, if `False`, the `tag_filter` is applied\
+         only to the first collection. Defaults to `True`.
 
     Returns:
         Tuple[List[Annotation]]: Two filtered lists of annotations.
@@ -180,7 +180,7 @@ def get_cooccurence_matrix(annotationdata: set) -> pd.DataFrame:
         annotationdata (Set[List[coderid,itemid,tag]]): List of overlapping annotations as a set.
 
     Returns:
-        pd.DataFramefilter_ac_by_tag: Co-occurence matrix as pandas data frame.
+        pd.DataFrame: Co-occurence matrix as pandas data frame.
     """
 
     # group tags by item
@@ -339,9 +339,9 @@ def get_annotation_pairs_for_multiple_annotators(
     Args:
         ac_dict (dict): Dictionary of all annotation collections.
         ac_names (list): List of annotation collection names to include in the IAA calculation. If empty, all annotation collections in the project will be used.
-        tag_filter (list): List of tags that should be included for iaa calculation. If empty, all tags will be used.
-        filter_both_ac (bool): Whether to apply tag_filter on both annotation collections in the pair or just on the first annotation collection.\
-         Default is True.
+        tag_filter (list): List of tags that should be included for IAA calculation. If empty, all tags will be used.
+        filter_both_ac (bool, optional): If `True` the `tag_filter` is applied to both collections, if `False`, the `tag_filter` is applied\
+         only to the first collection. Defaults to `True`.
         include_empty_annotations (bool): Whether to include empty annotations in the IAA data. If `False`, only annotations with a matching annotation\
          in the second collection are included. Default is True.
         property_filter (str, optional): Property to filter by as a string with the property name. If None, all properties will be used.\

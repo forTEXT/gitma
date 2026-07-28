@@ -744,8 +744,8 @@ class CatmaProject:
             ac2_name_or_inst (str): The name or instance of the second annotation collection, whose annotations will be searched for\
                                     matches to those in the first.
             tag_filter (list, optional): Which tags should be included. Defaults to `None` (all tags).
-            filter_both_ac (bool, optional): Whether the tag filter should be applied to both annotation collections. Defaults to `True`\
-                                             (applies to both collections).
+            filter_both_ac (bool, optional): If `True` the `tag_filter` is applied to both collections, if `False`, the `tag_filter` is applied\
+                 only to the first collection. Defaults to `True`.
             level (str, optional): Whether the annotations' tags or a specified property (prefixed with 'prop:') should be compared. Defaults\
                                    to 'tag'.
             include_empty_annotations (bool, optional): If `False`, only annotations with a matching annotation in the second collection are\
@@ -910,8 +910,8 @@ class CatmaProject:
             ac2_name_or_inst (str): The name or instance of the second annotation collection, whose annotations will be searched for\
                                     matches to those in the first.
             tag_filter (list, optional): Which tags should be included. Defaults to `None` (all tags).
-            filter_both_ac (bool, optional): Whether the tag filter should be applied to both annotation collections. Defaults to `True`\
-                                             (applies to both collections).
+            filter_both_ac (bool, optional): If `True` the `tag_filter` is applied to both collections, if `False`, the `tag_filter` is applied\
+                 only to the first collection. Defaults to `True`.
             level (str, optional): Whether the annotations' tags or a specified property (prefixed with 'prop:') should be compared. Defaults\
                                    to 'tag'.
             include_empty_annotations (bool, optional): If `False`, only annotations with a matching annotation in the second collection are\
@@ -952,8 +952,8 @@ class CatmaProject:
             ac2_name_or_inst (str): The name or instance of the second annotation collection, whose annotations will be searched for\
                                     matches to those in the first.
             tag_filter (list, optional): Which tags should be included. Defaults to `None` (all tags).
-            filter_both_ac (bool, optional): Whether the tag filter should be applied to both annotation collections. Defaults to `True`\
-                                             (applies `tag_filter` to both collections).
+            filter_both_ac (bool, optional): If `True` the `tag_filter` is applied to both collections, if `False`, the `tag_filter` is applied\
+                 only to the first collection. Defaults to `True`.
             level (str, optional): Whether the annotations' tags or a specified property (prefixed with 'prop:') should be compared. Defaults\
                                    to 'tag'.
             include_empty_annotations (bool, optional): If `False`, only annotations with a matching annotation in the second collection are\
@@ -991,7 +991,7 @@ class CatmaProject:
 
         Args:
             ac_names (list): List of annotation collection names for IAA calculation. If empty, all annotation collections in the project will be used.
-            tag_filter (list, optional): List of tags that should be included for iaa calculation. If empty, all tags will be used.
+            tag_filter (list, optional): List of tags that should be included for IAA calculation. If empty, all tags will be used.
             filter_both_ac (bool, optional): Whether the tag filter should be applied to both annotation collections. Defaults to `True`\
                                              (applies `tag_filter` to both collections).
             include_empty_annotations (bool, optional): Whether to include empty annotations in the IAA data. If `False`, only annotations with a matching annotation in the second collection are\
