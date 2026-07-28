@@ -7,9 +7,9 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     description="Load CATMA annotations from their Git data",
     url="https://github.com/forTEXT/gitma",
-    python_requires="==3.9.*",
+    python_requires=">=3.13, <3.14",
     install_requires=[
-        "cvxopt==1.2.7",
+        "cvxopt==1.3.2",
         "jupyter",
         "networkx",
         "nltk",
@@ -20,8 +20,7 @@ setuptools.setup(
         "python-gitlab",
         "scipy",
         "Cython",
-        # avoid spacy >=3.8.0 for now due to install problem on ARM Linux, ref: https://github.com/explosion/cython-blis/issues/117#issuecomment-2596810409
-        "spacy<3.8.0",
+        "spacy==3.8.14",
         "tabulate"
     ]
 )

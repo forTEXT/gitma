@@ -23,8 +23,8 @@ RUN git clone https://github.com/forTEXT/gitma.git ./src \
 RUN conda create --yes \
     --name gitma  \
     --channel conda-forge \
-        python=3.9 \
-        cvxopt=1.2.7 \
+        python=3.13 \
+        cvxopt=1.3.2 \
         coin-or-cbc \
         cvxpy \
         glpk \
@@ -40,8 +40,7 @@ RUN conda create --yes \
         python-gitlab \
         qdldl-python \
         scipy \
-        # avoid spacy >=3.8.0 for now due to install problem on ARM Linux, ref: https://github.com/explosion/cython-blis/issues/117#issuecomment-2596810409
-        spacy\<3.8.0 \
+        spacy=3.8.14 \
         tabulate
 
 RUN source /opt/conda/bin/activate \
@@ -49,7 +48,7 @@ RUN source /opt/conda/bin/activate \
     && conda init bash \
     && python -m pip install \
         git+https://github.com/forTEXT/gitma \
-        "pygamma-agreement[CBC]==0.5.6" \
+        "pygamma-agreement[CBC]==0.5.9" \
     && conda clean -afy \
     && find /opt/conda/ -follow -type f -name '*.a' -delete \
     && find /opt/conda/ -follow -type f -name '*.pyc' -delete \
