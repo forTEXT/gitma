@@ -32,4 +32,3 @@ To install locally for development use: `pip install -e .`
 
 Some functions in this package still rely on calling Git via subprocess. We are working on changing these to use pygit2 instead, so that a separate Git
 installation (with valid saved credentials for your CATMA account) will no longer be required in future.
-# catma_planning
