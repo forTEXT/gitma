@@ -361,6 +361,8 @@ class CatmaProject:
             ) from e
         finally:
             os.chdir(cwd)
+        if gitlab_access_token:
+            self.gitlab_access_token = gitlab_access_token
 
     def __repr__(self):
         documents = [text.title for text in self.texts]
