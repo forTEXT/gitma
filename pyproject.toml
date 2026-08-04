@@ -1,0 +1,46 @@
+[project]
+name = "gitma"
+version = "2.1.0"
+description = "Access and process CATMA projects via CATMA's GitLab backend"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Michael Vauth" },
+    { name = "Malte Meister" },
+    { name = "Immanuel von Detten" },
+    { name = "Mari Akazawa" },
+    { name = "Umut Irmaksever" },
+    { name = "Dominik Gerstorfer" },
+    { name = "Hans Ole Hatzel" },
+    { name = "Darsana Kazhungil Chitaranjan" },
+    { name = "Janis von Keitz" },
+    { name = "Evelyn Gius" },
+]
+requires-python = ">=3.13, <3.14"
+dependencies = [
+    "cvxopt==1.3.2",
+    "jupyter",
+    "networkx",
+    "nltk",
+    "numpy",
+    "pandas",
+    "plotly",
+    "pygit2",
+    "python-gitlab",
+    "scipy",
+    "Cython",
+    "spacy==3.8.14",
+    "tabulate"
+]
+
+[project.optional-dependencies]
+pygamma = [
+    "pygamma-agreement[CBC]==0.5.9"
+]
+
+[project.urls]
+Homepage = "https://catma.de/documentation/access-your-project-data/gitma/"
+Documentation = "https://gitma.readthedocs.io/en/latest/index.html"
+Repository = "https://github.com/forTEXT/gitma"
+Issues = "https://github.com/forTEXT/gitma/issues"
