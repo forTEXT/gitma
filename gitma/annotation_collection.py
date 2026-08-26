@@ -283,7 +283,6 @@ class AnnotationCollection:
             )
 
         ## pygit2 implementation
-        ### TODO! Can we make this into a dedicated function? Should it lie under CatmaProject or AnnotationCollection? - Umut
         repo_path = f'{self.projects_directory}{self.directory}'
         repo = Repository(repo_path)
 
@@ -302,7 +301,7 @@ class AnnotationCollection:
             [repo.head.target]  # parents of the new commit
         )
         ### Push
-        creds = UserPass("none", gitlab_access_token) # TODO!: need to verify the username as none, should it be username of the token owner?
+        creds = UserPass("none", gitlab_access_token)
         callbacks = RemoteCallbacks(credentials=creds)
         remote = repo.remotes['origin']
         remote.push(['refs/heads/master'], callbacks=callbacks)

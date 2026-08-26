@@ -80,7 +80,8 @@ def create_gold_annotations(
     ac1 = project.ac_dict[ac_1_name]
     ac2 = project.ac_dict[ac_2_name]
 
-    gold_uuid = project.ac_dict[gold_ac_name].uuid
+    gold_ac = project.ac_dict[gold_ac_name]
+    gold_uuid = gold_ac.uuid
 
     if not os.path.isdir(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}/annotations/'):
         os.mkdir(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}/annotations/')
@@ -124,10 +125,11 @@ def create_gold_annotations(
 
     if push_to_gitlab:
         # upload gold annotations via git
-        os.chdir(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}')
-        subprocess.run(['git', 'add', '.'])
-        subprocess.run(['git', 'commit', '-m', 'new gold annotations'])
-        subprocess.run(['git', 'push', 'origin', 'HEAD:master'])
+        gold_ac.push_annotations(commit_message='new gold annotations')
+        # os.chdir(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}')
+        # subprocess.run(['git', 'add', '.'])
+        # subprocess.run(['git', 'commit', '-m', 'new gold annotations'])
+        # subprocess.run(['git', 'push', 'origin', 'HEAD:master'])
 
     print(textwrap.dedent(
         f"""
