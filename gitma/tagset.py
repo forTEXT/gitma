@@ -18,7 +18,7 @@ class Tagset:
         self.uuid: str = tagset_uuid
 
         #: The path of the tagset within the project's folder structure.
-        self.path: str = project_uuid + '/tagsets/' + tagset_uuid
+        self.path: str = os.path.join(project_uuid, 'tagsets', tagset_uuid)
 
         try:
             with open(self.path + '/header.json', 'r', encoding='utf-8', newline='') as header_input:

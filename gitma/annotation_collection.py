@@ -84,10 +84,10 @@ def clean_text_in_ac_df(annotation: str) -> str:
 
 
 def load_annotations(catma_project, ac, context: int):
-    base_dir = f'{os.getcwd()}/{catma_project.uuid}/collections/{ac.uuid}/annotations/'
+    base_dir = os.path.join(catma_project.project_path, 'collections', ac.uuid, 'annotations')
     # load all annotation collection page files
     for filename in os.listdir(base_dir):
-        page_file_path = base_dir + filename
+        page_file_path = os.path.join(base_dir, filename)
         page_file_annotations = []
 
         with open(page_file_path, 'r', encoding='utf-8', newline='') as page_file:
@@ -164,10 +164,10 @@ class AnnotationCollection:
         self.catma_project = catma_project
 
         #: The annotation collection's directory.
-        self.directory: str = f'{catma_project.uuid}/collections/{self.uuid}/'
+        self.directory: str = os.path.join(catma_project.project_path, 'collections', self.uuid)
 
         try:
-            with open(self.directory + 'header.json', 'r', encoding='utf-8', newline='') as header_json:
+            with open(os.path.join(self.directory, 'header.json'), 'r', encoding='utf-8', newline='') as header_json:
                 self.header: str = json.load(header_json)
         except FileNotFoundError:
             raise FileNotFoundError(
@@ -182,14 +182,14 @@ class AnnotationCollection:
 
         #: The document of the annotation collection as a gitma.Text object.
         self.text: Text = Text(
-            project_uuid=catma_project.uuid,
+            project_uuid=catma_project.project_path,
             document_uuid=self.plain_text_id
         )
 
         #: The document's version.
         self.text_version: str = self.header.get('sourceDocumentVersion')
 
-        if os.path.isdir(self.directory + 'annotations/'):
+        if os.path.isdir(os.path.join(self.directory, 'annotations')):
             #: List of annotations in annotation collection as gitma.Annotation objects.
             self.annotations: List[Annotation] = sorted(list(load_annotations(
                 catma_project=catma_project,
@@ -283,7 +283,8 @@ class AnnotationCollection:
             )
 
         ## pygit2 implementation
-        repo_path = f'{self.projects_directory}{self.directory}'
+        repo_path = self.directory
+
         repo = Repository(repo_path)
 
         ### Stage all changes 
