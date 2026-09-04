@@ -1,4 +1,3 @@
-import subprocess
 import os
 import json
 import textwrap
@@ -57,7 +56,7 @@ def load_gitlab_project(
     callbacks = pygit2.RemoteCallbacks(credentials=creds)
     pygit2.clone_repository(
         url=gitlab_project.http_url_to_repo,
-        path=backup_directory + gitlab_project.name,
+        path=os.path.join(backup_directory, gitlab_project.name),
         bare=False,
         callbacks=callbacks
     )
@@ -103,13 +102,13 @@ def get_ac_name(project_uuid: str, directory: str) -> str:
     """Gets an annotation collection's name.
 
     Args:
-        project_uuid (str): CATMA project UUID
+        project_uuid (str): Name of a CATMA project directory.
         directory (str): annotation collection directory
 
     Returns:
         str: annotation collection name
     """
-    with open(f'{project_uuid}/collections/{directory}/header.json', 'r', encoding='utf-8', newline='') as header_input:
+    with open(os.path.join(project_uuid, 'collections', directory, 'header.json'), 'r', encoding='utf-8', newline='') as header_input:
         header_dict = json.load(header_input)
 
     return header_dict['name']
@@ -133,15 +132,16 @@ def load_annotation_collections(
     Returns:
         Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]: List and dict of annotation collections.
     """
-    collections_directory = catma_project.uuid + '/collections/'
-
+    # collections_directory = catma_project.uuid + '/collections/'
+    collections_directory = os.path.join(catma_project.projects_directory, catma_project.uuid, 'collections')
+    
     if included_acs:        # selects annotation collections listed in included_acs
         annotation_collections = [
             AnnotationCollection(
                 catma_project=catma_project,
                 ac_uuid=directory
             ) for directory in os.listdir(collections_directory)
-            if get_ac_name(catma_project.uuid, directory) in included_acs
+            if get_ac_name(catma_project.project_path, directory) in included_acs
         ]
     elif excluded_acs:      # selects all annotation collections except for the excluded_acs
         annotation_collections = [
@@ -149,7 +149,7 @@ def load_annotation_collections(
                 catma_project=catma_project,
                 ac_uuid=directory
             ) for directory in os.listdir(collections_directory)
-            if get_ac_name(catma_project.uuid, directory) not in excluded_acs
+            if get_ac_name(catma_project.project_path, directory) not in excluded_acs
         ]
     elif ac_filter_keyword:  # selects annotation collections with the given ac_filter_keyword
         annotation_collections = [
@@ -157,7 +157,7 @@ def load_annotation_collections(
                 catma_project=catma_project,
                 ac_uuid=directory
             ) for directory in os.listdir(collections_directory)
-            if ac_filter_keyword in get_ac_name(catma_project.uuid, directory)
+            if ac_filter_keyword in get_ac_name(catma_project.project_path, directory)
         ]
     else:                   # selects all annotation collections
         annotation_collections = [
@@ -180,13 +180,13 @@ def test_tagset_directory(
     """Tests if tagset has header.json to filter empty tagsets from loading process.
 
     Args:
-        project_uuid (str): UUID.
+        project_uuid (str): Name of a CATMA project directory.
         tagset_uuid (str): UUID.
 
     Returns:
         boolean: True if header.json exists.
     """
-    tagset_dir = f'{project_uuid}/tagsets/{tagset_uuid}/header.json'
+    tagset_dir = os.path.join(project_uuid, 'tagsets', tagset_uuid, 'header.json')
     if os.path.isfile(tagset_dir):
         return True
     return False
@@ -195,12 +195,12 @@ def load_tagsets(project_uuid: str) -> Tuple[List[Tagset], Dict[str, Tagset]]:
     """Generates list and dict of tagsets.
 
     Args:
-        project_uuid (str): CATMA project UUID.
+        project_uuid (str): Name of a CATMA project directory.
 
     Returns:
         Tuple[List[Tagset], Dict[str, Tagset]]: Tagsets as list and dictionary with UUIDs as keys.
     """
-    tagsets_directory = project_uuid + '/tagsets/'
+    tagsets_directory = os.path.join(project_uuid, 'tagsets')
     tagsets = [
         Tagset(
             project_uuid=project_uuid,
@@ -218,12 +218,12 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
     """Generates list and dict of CATMA texts.
 
     Args:
-        project_uuid (str): CATMA project UUID.
+        project_uuid (str): Name of a CATMA project directory.
 
     Returns:
         Tuple[List[Text], Dict[Text]]: List and dictionary of documents.
     """
-    texts_directory = project_uuid + '/documents/'
+    texts_directory = os.path.join(project_uuid, 'documents')
     texts = [
         Text(
             project_uuid=project_uuid,
@@ -271,6 +271,10 @@ class CatmaProject:
         # get the current directory to return to after loading the project
         cwd = os.getcwd()
 
+        #: The directory where the project is located.
+        # self.projects_directory: str = projects_directory
+        self.projects_directory = os.path.join(cwd, projects_directory)
+
         # TODO: what we're calling UUID here is actually the full GitLab project name, which is unlikely to change and contains a UUID
         #       the CATMA project name is stored in the GitLab project description field and can change
         if load_from_gitlab:
@@ -288,25 +292,31 @@ class CatmaProject:
                 project_name=project_name
             )
 
-        #: The directory where the project is located.
-        self.projects_directory: str = projects_directory
+        # set access token for gitlab
+        if gitlab_access_token:
+            self.gitlab_access_token = gitlab_access_token
 
         #: The project's name.
         self.name: str = self.uuid[43:]  # NB: the actual name can be different if the project is renamed or the name contains whitespace or special characters
 
-        if not os.path.isdir(self.projects_directory) or not os.path.isdir(f'{self.projects_directory}/{self.uuid}'):
+        #: The absolute path of the project's directory.
+        self.project_path: str = os.path.join(self.projects_directory, self.uuid)
+
+        if not os.path.isdir(self.projects_directory) or not os.path.isdir(os.path.join(self.projects_directory, self.uuid)):
             raise FileNotFoundError(
                 f'The CATMA project "{self.uuid}" could not been found in this directory: {self.projects_directory}. '
                 f'Make sure the project clone worked properly and that the projects_directory parameter is correct.'
             )
 
-        os.chdir(self.projects_directory)  # everything following is relative to this directory
+        # os.chdir(self.projects_directory)  # everything following is relative to this directory
 
         try:
             # Load tagsets
             print('Loading tagsets ...')
-            if os.path.isdir(self.uuid + '/tagsets/'):
-                tagsets, tagset_dict = load_tagsets(project_uuid=self.uuid)
+            tagset_directory = os.path.join(self.projects_directory, self.uuid, 'tagsets')
+            # if os.path.isdir(self.uuid + '/tagsets/'):
+            if os.path.isdir(tagset_directory):
+                tagsets, tagset_dict = load_tagsets(project_uuid=self.project_path)
 
                 #: List of gitma.Tagset objects.
                 self.tagsets: List[Tagset] = tagsets
@@ -320,8 +330,9 @@ class CatmaProject:
 
             # Load texts
             print('Loading documents ...')
-            if os.path.isdir(self.uuid + '/documents/'):
-                texts, text_dict = load_texts(project_uuid=self.uuid)
+            document_directory = os.path.join(self.projects_directory, self.uuid, 'documents')
+            if os.path.isdir(document_directory):
+                texts, text_dict = load_texts(project_uuid=self.project_path)
 
                 #: List of the gitma.Text objects.
                 self.texts: List[Text] = texts
@@ -335,7 +346,8 @@ class CatmaProject:
 
             # Load annotation collections
             print('Loading annotation collections ...')
-            if os.path.isdir(self.uuid + '/collections/'):
+            collections_folder = os.path.join(self.projects_directory, self.uuid, 'collections')
+            if os.path.isdir(collections_folder):
                 annotation_collections, ac_dict = load_annotation_collections(
                     catma_project=self,
                     included_acs=included_acs,
@@ -357,10 +369,12 @@ class CatmaProject:
 
         except FileNotFoundError as e:
             raise FileNotFoundError(
-                f"Some components of your CATMA project could not be loaded."
+                f"Some components of your CATMA project could not be loaded. \
+                Error message: {e}. "
             ) from e
-        finally:
-            os.chdir(cwd)
+        # finally:
+        #     os.chdir(cwd)
+
 
     def __repr__(self):
         documents = [text.title for text in self.texts]
@@ -400,22 +414,60 @@ class CatmaProject:
         with open(f'{directory}{self.name}.json', 'w', encoding='utf-8', newline='') as json_output:
             json_output.write(json.dumps(output_dict))
 
+    def pull(self, remote_name='origin', branch='master') -> None:
+        """Pulls the latest changes from project's repository using pygit2.
+        Followed this example: https://github.com/MichaelBoselowitz/pygit2-examples/blob/master/examples.py#L54
+        """
+        repo = pygit2.Repository(os.path.join(self.projects_directory, self.uuid))
+        for remote in repo.remotes:
+            if remote.name == remote_name:
+                remote.fetch()
+                remote_master_id = repo.lookup_reference('refs/remotes/origin/%s' % (branch)).target
+                merge_result, _ = repo.merge_analysis(remote_master_id)
+                # Up to date, do nothing
+                if merge_result & pygit2.GIT_MERGE_ANALYSIS_UP_TO_DATE:
+                    return
+                # We can just fastforward
+                elif merge_result & pygit2.GIT_MERGE_ANALYSIS_FASTFORWARD:
+                    repo.checkout_tree(repo.get(remote_master_id))
+                    try:
+                        master_ref = repo.lookup_reference('refs/heads/%s' % (branch))
+                        master_ref.set_target(remote_master_id)
+                    except KeyError:
+                        repo.create_branch(branch, repo.get(remote_master_id))
+                    repo.head.set_target(remote_master_id)
+                elif merge_result & pygit2.GIT_MERGE_ANALYSIS_NORMAL:
+                    repo.merge(remote_master_id)
+
+                    if repo.index.conflicts is not None:
+                        for conflict in repo.index.conflicts:
+                            print('Conflicts found in:', conflict[0].path)
+                        # raise AssertionError('Conflicts have been found, pull aborted. Please resolve conflicts.')
+                        raise RuntimeError('Conflicts have been found, pull aborted. Please resolve conflicts.')
+                    user = repo.default_signature
+                    tree = repo.index.write_tree()
+                    commit = repo.create_commit('HEAD',
+                                                user,
+                                                user,
+                                                'Merge!',
+                                                tree,
+                                                [repo.head.target, remote_master_id])
+                    # We need to do this or git CLI will think we are still merging.
+                    repo.state_cleanup()
+                else:
+                    raise RuntimeError('Unknown merge analysis result')
+
+
     def update(self) -> None:
         """Updates local git folder and reloads CatmaProject.
-
-        Warning: This method can only be used if you have [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) installed.
         """
-        cwd = os.getcwd()
-        os.chdir(f'{self.projects_directory}{self.uuid}/')
+        self.pull()
 
-        subprocess.run(['git', 'pull'])
-
-        os.chdir('../')
         # Load tagsets
-        self.tagsets, self.tagset_dict = load_tagsets(project_uuid=self.uuid)
+        self.tagsets, self.tagset_dict = load_tagsets(project_uuid=self.project_path)
 
         # Load texts
-        self.texts, self.text_dict = load_texts(project_uuid=self.uuid)
+        self.texts, self.text_dict = load_texts(project_uuid=self.project_path)
 
         # Load annotation collections
         self.annotation_collections, self.ac_dict = load_annotation_collections(
@@ -424,8 +476,6 @@ class CatmaProject:
         )
 
         print('Updated the CATMA project')
-
-        os.chdir(cwd)
 
     def annotations(self) -> Generator[Annotation, None, None]:
         """Generator that yields all annotations as gitma.annotation.Annotation objects.

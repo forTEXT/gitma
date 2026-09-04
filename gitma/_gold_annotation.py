@@ -1,5 +1,4 @@
 import os
-import subprocess
 import textwrap
 from typing import List, Union
 from gitma.annotation import Annotation, get_annotation_segments
@@ -74,20 +73,21 @@ def create_gold_annotations(
 
     if excluded_tags is None:
         excluded_tags = []
-        
-    cwd = os.getcwd()
 
     ac1 = project.ac_dict[ac_1_name]
     ac2 = project.ac_dict[ac_2_name]
 
-    gold_uuid = project.ac_dict[gold_ac_name].uuid
+    gold_ac = project.ac_dict[gold_ac_name]
+    gold_uuid = gold_ac.uuid
 
-    if not os.path.isdir(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}/annotations/'):
-        os.mkdir(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}/annotations/')
+    gold_annotations_directory = os.path.join(project.project_path, 'collections', gold_uuid, 'annotations')
+
+    if not os.path.isdir(gold_annotations_directory):
+        os.makedirs(gold_annotations_directory, exist_ok=True)
     else:
-        for f in os.listdir(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}/annotations/'):
+        for f in os.listdir(gold_annotations_directory):
             # removes all files in gold annotation collection to prevent double gold annotations:
-            os.remove(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}/annotations/{f}')
+            os.remove(os.path.join(gold_annotations_directory, f))
 
     al1 = [an for an in ac1.annotations if an not in excluded_tags]
     al2 = [an for an in ac2.annotations if an not in excluded_tags]
@@ -124,10 +124,8 @@ def create_gold_annotations(
 
     if push_to_gitlab:
         # upload gold annotations via git
-        os.chdir(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}')
-        subprocess.run(['git', 'add', '.'])
-        subprocess.run(['git', 'commit', '-m', 'new gold annotations'])
-        subprocess.run(['git', 'push', 'origin', 'HEAD:master'])
+        commit_message = f"Added {copied_annotations} gold annotations into annotation collection '{gold_ac_name}'"
+        gold_ac.push_annotations(commit_message=commit_message)
 
     print(textwrap.dedent(
         f"""
@@ -137,4 +135,3 @@ def create_gold_annotations(
             Wrote {copied_annotations} gold annotations into annotation collection '{gold_ac_name}'.
         """
     ))
-    os.chdir(cwd)

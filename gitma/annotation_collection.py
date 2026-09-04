@@ -11,7 +11,7 @@ from gitma.annotation import Annotation
 from gitma.tag import Tag
 from gitma._export_annotations import to_stanford_tsv
 from gitma._vizualize import plot_annotations, plot_scaled_annotations, duplicate_rows
-
+from pygit2 import Repository, UserPass, RemoteCallbacks
 
 def split_property_dict_to_column(ac_df):
     """
@@ -84,10 +84,10 @@ def clean_text_in_ac_df(annotation: str) -> str:
 
 
 def load_annotations(catma_project, ac, context: int):
-    base_dir = f'{os.getcwd()}/{catma_project.uuid}/collections/{ac.uuid}/annotations/'
+    base_dir = os.path.join(catma_project.project_path, 'collections', ac.uuid, 'annotations')
     # load all annotation collection page files
     for filename in os.listdir(base_dir):
-        page_file_path = base_dir + filename
+        page_file_path = os.path.join(base_dir, filename)
         page_file_annotations = []
 
         with open(page_file_path, 'r', encoding='utf-8', newline='') as page_file:
@@ -160,11 +160,14 @@ class AnnotationCollection:
         #: The parent project's UUID.
         self.project_uuid: str = catma_project.uuid
 
+        # Assign the parent project to the annotation collection
+        self.catma_project = catma_project
+
         #: The annotation collection's directory.
-        self.directory: str = f'{catma_project.uuid}/collections/{self.uuid}/'
+        self.directory: str = os.path.join(catma_project.project_path, 'collections', self.uuid)
 
         try:
-            with open(self.directory + 'header.json', 'r', encoding='utf-8', newline='') as header_json:
+            with open(os.path.join(self.directory, 'header.json'), 'r', encoding='utf-8', newline='') as header_json:
                 self.header: str = json.load(header_json)
         except FileNotFoundError:
             raise FileNotFoundError(
@@ -179,14 +182,14 @@ class AnnotationCollection:
 
         #: The document of the annotation collection as a gitma.Text object.
         self.text: Text = Text(
-            project_uuid=catma_project.uuid,
+            project_uuid=catma_project.project_path,
             document_uuid=self.plain_text_id
         )
 
         #: The document's version.
         self.text_version: str = self.header.get('sourceDocumentVersion')
 
-        if os.path.isdir(self.directory + 'annotations/'):
+        if os.path.isdir(os.path.join(self.directory, 'annotations')):
             #: List of annotations in annotation collection as gitma.Annotation objects.
             self.annotations: List[Annotation] = sorted(list(load_annotations(
                 catma_project=catma_project,
@@ -262,6 +265,7 @@ class AnnotationCollection:
             raise ValueError(
                 f"Given property doesn't exist. Choose one of these: {prop_cols}")
 
+    
     def push_annotations(self, commit_message: str = 'new annotations') -> None:
         """Process `git add .`, `git commit` and `git push` for a single annotation collection.
 
@@ -271,13 +275,51 @@ class AnnotationCollection:
         Args:
             commit_message (str, optional): Customize the commit message. Defaults to 'new annotations'.
         """
-        cwd = os.getcwd()
-        os.chdir(f'{self.projects_directory}{self.directory}')
-        subprocess.run(['git', 'add', '.'])
-        subprocess.run(['git', 'commit', '-m', commit_message])
-        subprocess.run(['git', 'push', 'origin', 'master'])
-        os.chdir(cwd)
-        print(f'Pushed annotations from collection {self.name}.')
+        gitlab_access_token = self.catma_project.gitlab_access_token
+
+        if not gitlab_access_token:
+            raise ValueError(
+                "No Gitlab access token found. Please provide a valid access token to push annotations to the CATMA Gitlab backend."
+            )
+
+        ## pygit2 implementation
+        repo_path = self.directory
+
+        repo = Repository(repo_path)
+
+        ### Stage all changes 
+        repo.index.add_all()
+        #### if no changes are staged, exit
+        if not repo.index.entries:
+            print(f"No changes to push for annotation collection {self.name}.")
+            return
+        repo.index.write()
+        ### Commit
+        tree = repo.index.write_tree()
+        author = committer = repo.default_signature
+        repo.create_commit(
+            'refs/heads/master',  # the name of the reference to update
+            author,  # the author of the commit
+            committer,  # the committer of the commit
+            commit_message,  # the commit message
+            tree,  # the tree object this commit points to
+            [repo.head.target]  # parents of the new commit
+        )
+        ### Push
+        creds = UserPass("none", gitlab_access_token)
+        callbacks = RemoteCallbacks(credentials=creds)
+        remote = repo.remotes['origin']
+        remote.push(['refs/heads/master'], callbacks=callbacks)
+        print(f"Pushed annotations from collection {self.name} to the CATMA Gitlab backend with pygit2.")
+
+        # Legacy implementation with subprocess calls
+        # cwd = os.getcwd()
+        # os.chdir(f'{self.projects_directory}{self.directory}')
+        # subprocess.run(['git', 'add', '.'])
+        # subprocess.run(['git', 'commit', '-m', commit_message])
+        # subprocess.run(['git', 'push', 'origin', 'master'])
+        # os.chdir(cwd)
+        # print(f'Pushed annotations from collection {self.name}.')
     
     def plot_annotations(self, y_axis: str = 'tag', color_prop: str = None):
         """Creates an interactive [Plotly Scatter Plot](https://plotly.com/python/line-and-scatter/) to explore this annotation collection.
@@ -575,8 +617,8 @@ class AnnotationCollection:
         an_dict = self.annotation_dict()
 
         
-        cwd = os.getcwd()
-        os.chdir(self.projects_directory)
+        # cwd = os.getcwd()
+        # os.chdir(self.projects_directory)
         annotation_counter = 0
         missed_annotation_counter = 0
         for _, row in annotation_table.iterrows():
@@ -594,11 +636,12 @@ class AnnotationCollection:
                 missed_annotation_counter += 1
         
         if push_to_gitlab:
-            os.chdir(self.directory)
-            subprocess.run(['git', 'add', '.'])
-            subprocess.run(['git', 'commit', '-m', 'new property annotations'])
-            subprocess.run(['git', 'push', 'origin', 'HEAD:master'])
-        os.chdir(cwd)
+        #     os.chdir(self.directory)
+        #     subprocess.run(['git', 'add', '.'])
+        #     subprocess.run(['git', 'commit', '-m', 'new property annotations'])
+        #     subprocess.run(['git', 'push', 'origin', 'HEAD:master'])
+        # os.chdir(cwd)
+            self.push_annotations(commit_message='new property annotations')
         print(f"Updated values for {annotation_counter} annotations.")
         if not push_to_gitlab:
             print(f'Your annotations are stored in {self.directory}')
