@@ -289,6 +289,10 @@ class AnnotationCollection:
 
         ### Stage all changes 
         repo.index.add_all()
+        #### if no changes are staged, exit
+        if not repo.index.entries:
+            print(f"No changes to push for annotation collection {self.name}.")
+            return
         repo.index.write()
         ### Commit
         tree = repo.index.write_tree()

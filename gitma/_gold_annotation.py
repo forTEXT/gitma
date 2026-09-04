@@ -124,11 +124,8 @@ def create_gold_annotations(
 
     if push_to_gitlab:
         # upload gold annotations via git
-        gold_ac.push_annotations(commit_message='new gold annotations')
-        # os.chdir(f'{project.projects_directory}{project.uuid}/collections/{gold_uuid}')
-        # subprocess.run(['git', 'add', '.'])
-        # subprocess.run(['git', 'commit', '-m', 'new gold annotations'])
-        # subprocess.run(['git', 'push', 'origin', 'HEAD:master'])
+        commit_message = f"Added {copied_annotations} gold annotations into annotation collection '{gold_ac_name}'"
+        gold_ac.push_annotations(commit_message=commit_message)
 
     print(textwrap.dedent(
         f"""

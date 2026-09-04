@@ -56,7 +56,7 @@ def load_gitlab_project(
     callbacks = pygit2.RemoteCallbacks(credentials=creds)
     pygit2.clone_repository(
         url=gitlab_project.http_url_to_repo,
-        path=backup_directory + gitlab_project.name,
+        path=os.path.join(backup_directory, gitlab_project.name),
         bare=False,
         callbacks=callbacks
     )
@@ -442,8 +442,8 @@ class CatmaProject:
                     if repo.index.conflicts is not None:
                         for conflict in repo.index.conflicts:
                             print('Conflicts found in:', conflict[0].path)
-                        raise AssertionError('Conflicts have been found, pull aborted. Please resolve conflicts.')
-
+                        # raise AssertionError('Conflicts have been found, pull aborted. Please resolve conflicts.')
+                        raise RuntimeError('Conflicts have been found, pull aborted. Please resolve conflicts.')
                     user = repo.default_signature
                     tree = repo.index.write_tree()
                     commit = repo.create_commit('HEAD',
@@ -455,7 +455,7 @@ class CatmaProject:
                     # We need to do this or git CLI will think we are still merging.
                     repo.state_cleanup()
                 else:
-                    raise AssertionError('Unknown merge analysis result')
+                    raise RuntimeError('Unknown merge analysis result')
 
 
     def update(self) -> None:

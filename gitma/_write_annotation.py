@@ -24,7 +24,8 @@ def find_tag_by_name(tagset: Tagset, tag_name: str):
 
 def get_new_annotation_uuid_and_path(annotation_collection_uuid: str):
     new_uuid = f'CATMA_{str(uuid.uuid1()).upper()}'
-    new_path = f'collections/{annotation_collection_uuid}/annotations/{new_uuid}'
+    new_path = os.path.join('collections', annotation_collection_uuid, 'annotations', f'{new_uuid}')
+    
     return new_uuid, new_path
 
 
@@ -109,9 +110,16 @@ def write_annotation_json(
         new_annotation_relative_path = new_annotation_relative_path.replace(new_annotation_uuid, uuid_override)
         new_annotation_uuid = uuid_override
 
-    tag_relative_path = os.path.relpath(tag.path, project_path).replace('\\', '/')
-    tag_relative_path = tag_relative_path[:tag_relative_path.rindex('/')]
-
+    tag_relative_path = os.path.relpath(tag.path, project_path).replace('\\', '/') # fixes Windows path separator issue, which uses backslashes instead of forward slashes
+    try:
+        tag_relative_path = tag_relative_path[:tag_relative_path.rindex('/')]
+    except ValueError: # if the tag is in the root of the tagset, there is no '/' in the path and rindex() will throw a ValueError
+        print(f"Tag '{tag.name}' is in the root of the tagset '{tagset.name}' and has no relative path. Using tagset path instead.")
+        tag_relative_path = os.path.relpath(tagset.path, project_path).replace('\\', '/')
+    except Exception as e:
+        print(f"Unexpected error while getting relative path for tag '{tag.name}' in tagset '{tagset.name}': {e}")
+        
+    
     context_dict = {
         Tag.SYSTEM_PROPERTY_UUID_CATMA_MARKUPTIMESTAMP: f'{tag_relative_path}/{Tag.SYSTEM_PROPERTY_UUID_CATMA_MARKUPTIMESTAMP}',
         Tag.SYSTEM_PROPERTY_UUID_CATMA_MARKUPAUTHOR: f'{tag_relative_path}/{Tag.SYSTEM_PROPERTY_UUID_CATMA_MARKUPAUTHOR}'
