@@ -11,7 +11,8 @@ from gitma.annotation import Annotation
 from gitma.tag import Tag
 from gitma._export_annotations import to_stanford_tsv
 from gitma._vizualize import plot_annotations, plot_scaled_annotations, duplicate_rows
-from pygit2 import Repository, UserPass, RemoteCallbacks
+from pygit2 import Repository, UserPass, RemoteCallbacks, GitError
+
 
 def split_property_dict_to_column(ac_df):
     """
@@ -269,6 +270,7 @@ class AnnotationCollection:
     def push_annotations(self, commit_message: str = 'new annotations') -> None:
         """Process `git add .`, `git commit` and `git push` for a single annotation collection.
 
+        TODO: remove warning
         *Note*: Works only if git is installed and the CATMA access token is stored in the **git
         credential manager**.
 
@@ -290,7 +292,7 @@ class AnnotationCollection:
         ### Stage all changes 
         repo.index.add_all()
         #### if no changes are staged, exit
-        if not repo.index.entries:
+        if not repo.status():
             print(f"No changes to push for annotation collection {self.name}.")
             return
         repo.index.write()
@@ -309,17 +311,13 @@ class AnnotationCollection:
         creds = UserPass("none", gitlab_access_token)
         callbacks = RemoteCallbacks(credentials=creds)
         remote = repo.remotes['origin']
-        remote.push(['refs/heads/master'], callbacks=callbacks)
-        print(f"Pushed annotations from collection {self.name} to the CATMA Gitlab backend with pygit2.")
 
-        # Legacy implementation with subprocess calls
-        # cwd = os.getcwd()
-        # os.chdir(f'{self.projects_directory}{self.directory}')
-        # subprocess.run(['git', 'add', '.'])
-        # subprocess.run(['git', 'commit', '-m', commit_message])
-        # subprocess.run(['git', 'push', 'origin', 'master'])
-        # os.chdir(cwd)
-        # print(f'Pushed annotations from collection {self.name}.')
+        try:
+            remote.push(['refs/heads/master'], callbacks=callbacks)
+            print(f"Pushed annotations from collection {self.name} to the CATMA Gitlab backend.")
+        except GitError as e:
+            print(f"Error pushing annotations to the CATMA Gitlab backend: {e}")
+
     
     def plot_annotations(self, y_axis: str = 'tag', color_prop: str = None):
         """Creates an interactive [Plotly Scatter Plot](https://plotly.com/python/line-and-scatter/) to explore this annotation collection.
