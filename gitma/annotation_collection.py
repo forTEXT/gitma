@@ -1,7 +1,6 @@
 import json
 import os
 import string
-import subprocess
 import re
 import pandas as pd
 from typing import List, Union, Dict
