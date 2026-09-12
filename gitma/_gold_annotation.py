@@ -83,7 +83,7 @@ def create_gold_annotations(
     gold_annotations_directory = os.path.join(project.project_path, 'collections', gold_uuid, 'annotations')
 
     if not os.path.isdir(gold_annotations_directory):
-        os.makedirs(gold_annotations_directory, exist_ok=True)
+        os.makedirs(gold_annotations_directory)
     else:
         for f in os.listdir(gold_annotations_directory):
             # removes all files in gold annotation collection to prevent double gold annotations:

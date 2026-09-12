@@ -634,12 +634,7 @@ class AnnotationCollection:
                 missed_annotation_counter += 1
         
         if push_to_gitlab:
-        #     os.chdir(self.directory)
-        #     subprocess.run(['git', 'add', '.'])
-        #     subprocess.run(['git', 'commit', '-m', 'new property annotations'])
-        #     subprocess.run(['git', 'push', 'origin', 'HEAD:master'])
-        # os.chdir(cwd)
-            self.push_annotations(commit_message='new property annotations')
+            self.push_annotations(commit_message=f'Updated values for {annotation_counter} annotations after importing from CSV file with GitMA.')
         print(f"Updated values for {annotation_counter} annotations.")
         if not push_to_gitlab:
-            print(f'Your annotations are stored in {self.directory}')
+            print(f'Your annotations are stored in {self.directory}.')
