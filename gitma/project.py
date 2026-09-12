@@ -9,6 +9,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from nltk.metrics.agreement import AnnotationTask
 from nltk.metrics import interval_distance, binary_distance
+from pygit2 import UserPass
 
 from gitma.text import Text
 from gitma.tagset import Tagset
@@ -132,7 +133,6 @@ def load_annotation_collections(
     Returns:
         Tuple[List[AnnotationCollection], Dict[str, AnnotationCollection]]: List and dict of annotation collections.
     """
-    # collections_directory = catma_project.uuid + '/collections/'
     collections_directory = os.path.join(catma_project.projects_directory, catma_project.uuid, 'collections')
     
     if included_acs:        # selects annotation collections listed in included_acs
@@ -421,7 +421,9 @@ class CatmaProject:
         repo = pygit2.Repository(os.path.join(self.projects_directory, self.uuid))
         for remote in repo.remotes:
             if remote.name == remote_name:
-                remote.fetch()
+                creds = UserPass("none", self.gitlab_access_token)
+                callbacks = pygit2.RemoteCallbacks(credentials=creds)
+                remote.fetch(callbacks=callbacks)
                 remote_master_id = repo.lookup_reference('refs/remotes/origin/%s' % (branch)).target
                 merge_result, _ = repo.merge_analysis(remote_master_id)
                 # Up to date, do nothing
@@ -442,14 +444,13 @@ class CatmaProject:
                     if repo.index.conflicts is not None:
                         for conflict in repo.index.conflicts:
                             print('Conflicts found in:', conflict[0].path)
-                        # raise AssertionError('Conflicts have been found, pull aborted. Please resolve conflicts.')
                         raise RuntimeError('Conflicts have been found, pull aborted. Please resolve conflicts.')
                     user = repo.default_signature
                     tree = repo.index.write_tree()
                     commit = repo.create_commit('HEAD',
                                                 user,
                                                 user,
-                                                'Merge!',
+                                                f'Merging {branch} into master via GitMA.',
                                                 tree,
                                                 [repo.head.target, remote_master_id])
                     # We need to do this or git CLI will think we are still merging.
