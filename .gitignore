@@ -1,6 +1,7 @@
 # development tooling
 .git
 .idea
+.test_projects
 
 # python
 .venv
