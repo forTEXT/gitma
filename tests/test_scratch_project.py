@@ -262,7 +262,7 @@ class TestScratchProject(unittest.TestCase):
         '''
         project = self.project
 
-        self.assertEqual(len(project.texts), 1)
+        self.assertEqual(len(project.texts), 1, f"Expected 1 document in the project, but found {len(project.texts)}.")
         text = project.text_dict[TEXT_TITLE]
         self.assertEqual(text.uuid, self.text_uuid)
         self.assertNotEqual(len(text.plain_text), 0)
@@ -314,7 +314,7 @@ class TestScratchProject(unittest.TestCase):
                 )
             print(f"[PREP:ADD_ANNOTATIONS] Added {len(ac_annotations)} annotations to annotation collection: {ac_name}.")
 
-    def test_add_annotations(self):
+    def test_a_add_annotations(self):
         '''Adds annotations with random start and end points to the annotation collections.
         This test checks the following conditions:
         - Checks the number of annotations in each annotation collection against ANNOTATIONS_PER_AC.
@@ -329,17 +329,17 @@ class TestScratchProject(unittest.TestCase):
         annotation_count = 0
         for ac_name in self.ac_names:
             ac = project.ac_dict[ac_name]
-            self.assertEqual(len(ac.annotations), ANNOTATIONS_PER_AC)
+            self.assertEqual(len(ac.annotations), ANNOTATIONS_PER_AC, f"Expected {ANNOTATIONS_PER_AC} annotations in collection {ac_name}, but found {len(ac.annotations)}.")
 
             for an in ac.annotations:
-                self.assertIn(an.tag.name, allowed_tags)
-                self.assertGreaterEqual(an.start_point, 0)
-                self.assertLess(an.start_point, an.end_point)
-                self.assertLessEqual(an.end_point, len(text))
+                self.assertIn(an.tag.name, allowed_tags, f"Annotation tag name '{an.tag.name}' is not in the allowed tags: {allowed_tags}")
+                self.assertGreaterEqual(an.start_point, 0, f"Annotation start point {an.start_point} is less than 0.")
+                self.assertLess(an.start_point, an.end_point, f"Annotation start point {an.start_point} is not less than end point {an.end_point}.")
+                self.assertLessEqual(an.end_point, len(text), f"Annotation end point {an.end_point} is not less than or equal to text length {len(text)}.")
             annotation_count += len(ac.annotations)
         print(f"[TEST:ADD_ANNOTATIONS] Verified {annotation_count} annotations in the project.")
 
-    def test_a_push_annotations(self):
+    def test_b_push_annotations(self):
         '''Tests `AnnotationCollection.push_annotations` by pushing to a local bare remote.
         This test checks the following conditions:
         - Pushing creates a local commit with the given message and a clean working tree.
@@ -369,14 +369,17 @@ class TestScratchProject(unittest.TestCase):
         # No changes validation
         with contextlib.redirect_stdout(io.StringIO()) as buf: # capture the output of the second push
             ac.push_annotations()
-        self.assertIn('No changes to push', buf.getvalue()) # check that the second push prints "No changes to push"
-        self.assertEqual(repo.lookup_reference('refs/heads/master').target, master.target) # second push does not create a new commit
-        self.assertEqual(repo.status(), {}) # second push does not change the working tree
-        self.assertEqual(remote_repo.lookup_reference('refs/heads/master').target, remote_target) # second push does not change the remote
+        self.assertIn('No changes to push', buf.getvalue(), "Expected 'No changes to push' in the output of the second push.")
+        self.assertEqual(repo.lookup_reference('refs/heads/master').target, master.target, "second push does not create a new commit")
+        self.assertEqual(repo.status(), {}, "second push does not change the working tree")
+        self.assertEqual(remote_repo.lookup_reference('refs/heads/master').target, remote_target, "second push does not change the remote")
         print(f"[TEST:PUSH_ANNOTATIONS] Pushed annotations from collection {ac.name} to the local bare remote in {self.remote_dir}.")
 
-    def test_b_create_gold_annotations_full_match(self):
-        '''Tests the gold annotation functionality by copying annotations from one collection to another.'''
+    def test_c_create_gold_annotations(self):
+        '''
+        Tests the gold annotation functionality by copying annotations from one collection to another.
+        `create_gold_annotations` is called with the same annotation collection for both `ac_1_name` and `ac_2_name`, and with `push_to_gitlab=True`. This triggers new annotations being added 
+        '''
         project = self.project
         ac_1_name = self.ac_names[0]
         ac_2_name = self.ac_names[0]
@@ -390,10 +393,18 @@ class TestScratchProject(unittest.TestCase):
             copy_property_values_if_equal=True,
             push_to_gitlab=True,
         )
-        self.assertEqual(len(project.ac_dict[GOLD_AC_NAME].annotations), len(project.ac_dict[ac_1_name].annotations))
+        project = self._load_project()  # reload the project to get the latest state after gold annotations creation
+
+        self.assertEqual(len(project.ac_dict[GOLD_AC_NAME].annotations),
+                         len(project.ac_dict[ac_1_name].annotations),
+                         "Expected the same number of annotations in the gold collection as in the source collection.")
         print(f"[TEST:GOLD_ANNOTATIONS_FULL_MATCH] Created gold annotations in collection: {GOLD_AC_NAME} in {project.name} from the same {ac_1_name} annotation collection. All annotations should match and be copied and a git commit should be created.")
 
-        
+
+    def test_e_pull_annotations(self):
+        self.project.pull()
+        print(f"[TEST:PULL_ANNOTATIONS] Pulled annotations from the local bare remote in {self.remote_dir}.")
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Run the scratch CATMA project tests.',
