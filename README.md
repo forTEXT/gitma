@@ -30,5 +30,4 @@ To install locally for development use: `pip install -e .`
 
 ## Additional Notes
 
-Some functions in this package still rely on calling Git via subprocess. We are working on changing these to use pygit2 instead, so that a separate Git
-installation (with valid saved credentials for your CATMA account) will no longer be required in future.
+Git related functionality is implemented using [pygit2](https://www.pygit2.org/). Make sure to have the access token for CATMA Gitlab instance. See the demo notebooks for instructions on how to set up the access token.

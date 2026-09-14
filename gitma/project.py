@@ -416,6 +416,7 @@ class CatmaProject:
 
     def pull(self, remote_name='origin', branch='master') -> None:
         """Pulls the latest changes from project's repository using pygit2.
+        Gitlab access token is required for this function to work. 
         Followed this example: https://github.com/MichaelBoselowitz/pygit2-examples/blob/master/examples.py#L54
         """
         repo = pygit2.Repository(os.path.join(self.projects_directory, self.uuid))

@@ -136,7 +136,7 @@ class Tag:
 
         Args:
             old_prop (str): The old property's name.
-            new_prop (str): The new proeprty's name.
+            new_prop (str): The new property's name.
         """
         for item in self.properties:
             if item.name == old_prop:

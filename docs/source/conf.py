@@ -34,7 +34,7 @@ copyright = '2026, Michael Vauth'
 author = 'Michael Vauth'
 
 # The full version, including alpha/beta/rc tags
-release = '1.5.3'
+release = '1.5.3' # TODO!: Should we use the version from gitma.__version__ instead? Or update the value to 2.1.0?
 
 doctest_global_setup = "import gitma"
 autodoc_default_flags = ['members']
