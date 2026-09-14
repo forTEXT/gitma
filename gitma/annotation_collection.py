@@ -268,10 +268,8 @@ class AnnotationCollection:
     
     def push_annotations(self, commit_message: str = 'new annotations') -> None:
         """Process `git add .`, `git commit` and `git push` for a single annotation collection.
-
-        TODO: remove warning
-        *Note*: Works only if git is installed and the CATMA access token is stored in the **git
-        credential manager**.
+        Processes the push workflow for a single annotation collection to the CATMA Gitlab backend.
+        Uses pygit2, and runs the equivalent of `git add & git commit  & git push` flow.
 
         Args:
             commit_message (str, optional): Customize the commit message. Defaults to 'new annotations'.
