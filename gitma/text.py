@@ -1,4 +1,5 @@
 import json
+import os
 
 
 class Text:
@@ -11,8 +12,8 @@ class Text:
     def __init__(self, project_uuid: str, document_uuid: str):
         #: The text's UUID.
         self.uuid: str = document_uuid
-        with open(project_uuid + '/documents/' + document_uuid +
-                  '/header.json', 'r', encoding='utf-8', newline='') as text_header_input:
+        with open(os.path.join(project_uuid, 'documents', document_uuid,
+                  'header.json'), 'r', encoding='utf-8', newline='') as text_header_input:
             text_header = json.load(text_header_input)
 
         #: The text's title.
@@ -21,7 +22,7 @@ class Text:
         #: The text's author.
         self.author: str = text_header['gitContentInfoSet']['author']
 
-        text_file_path = f"{project_uuid}/documents/{document_uuid}/{document_uuid}.txt"
+        text_file_path = os.path.join(project_uuid, 'documents', document_uuid, f'{document_uuid}.txt')
         with open(text_file_path, 'r', encoding='utf-8', newline='') as document:
             #: The text as a plain text. The offset annotation data refers to this plain text.
             self.plain_text: str = document.read()
