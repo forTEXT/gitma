@@ -8,12 +8,12 @@ class TestAnnotation(unittest.TestCase):
     def test__copy_without_compare_annotation(self):
         # test copying an annotation by opening the demo project and copying an existing one
         project = CatmaProject(
-            projects_directory='../demo/projects/',
+            projects_directory='demo/projects/',
             project_name='CATMA_9385E190-13CD-44BE-8A06-32FA95B7EEFA_GitMA_Demo_Project'
         )
 
-        annotation_collection_1 = project.annotation_collections[0]
-        annotation_collection_2 = project.annotation_collections[1]
+        annotation_collection_1 = project.ac_dict['ac_2']
+        annotation_collection_2 = project.ac_dict['ac_1']
 
         annotation = annotation_collection_1.annotations[0]
 
@@ -23,9 +23,9 @@ class TestAnnotation(unittest.TestCase):
             timestamp_override='2023-10-13T11:39:18.305+02:00'
         )
 
-        relative_page_file_path = f'../demo/projects/{project.uuid}/{project_relative_page_file_path}'
+        relative_page_file_path = f'demo/projects/{project.uuid}/{project_relative_page_file_path}'
 
-        with (open('test_annotation_expected_output_1.json', 'r') as expected, open(relative_page_file_path, 'r') as actual):
+        with (open(os.path.join('tests', 'test_annotation_expected_output_1.json'), 'r') as expected, open(relative_page_file_path, 'r') as actual):
             self.assertListEqual(list(expected), list(actual))  # could do this instead: https://stackoverflow.com/a/76842754/207981
 
         # delete output page file
@@ -34,12 +34,12 @@ class TestAnnotation(unittest.TestCase):
     def test__copy_with_compare_annotation(self):
         # test copying an annotation by opening the demo project and copying an existing one, also supplying compare_annotation
         project = CatmaProject(
-            projects_directory='../demo/projects/',
+            projects_directory='demo/projects/',
             project_name='CATMA_9385E190-13CD-44BE-8A06-32FA95B7EEFA_GitMA_Demo_Project'
         )
 
-        annotation_collection_1 = project.annotation_collections[0]
-        annotation_collection_2 = project.annotation_collections[1]
+        annotation_collection_1 = project.ac_dict['ac_2']
+        annotation_collection_2 = project.ac_dict['ac_1']
 
         annotation = annotation_collection_1.annotations[0]
 
@@ -50,9 +50,9 @@ class TestAnnotation(unittest.TestCase):
             timestamp_override='2023-10-13T11:39:18.305+02:00'
         )
 
-        relative_page_file_path = f'../demo/projects/{project.uuid}/{project_relative_page_file_path}'
+        relative_page_file_path = f'demo/projects/{project.uuid}/{project_relative_page_file_path}'
 
-        with (open('test_annotation_expected_output_2.json', 'r') as expected, open(relative_page_file_path, 'r') as actual):
+        with (open(os.path.join('tests', 'test_annotation_expected_output_2.json'), 'r') as expected, open(relative_page_file_path, 'r') as actual):
             self.assertListEqual(list(expected), list(actual))  # could do this instead: https://stackoverflow.com/a/76842754/207981
 
         # delete output page file

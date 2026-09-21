@@ -63,8 +63,6 @@ After you finished the property annotations within the csv file you can load the
    )
 
 
-.. caution::
-   The push to gitlab will only work if you have git installed and your CATMA access token is stored in the git credential manager.
 
 **Step 4 (optional):** Import your annotation to CATMA
 
