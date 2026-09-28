@@ -1,5 +1,6 @@
 # GitMA
 
+[![Documentation](https://readthedocs.org/projects/gitma/badge/?version=latest)](https://gitma.readthedocs.io/en/latest/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6330464.svg)](https://doi.org/10.5281/zenodo.6330464)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/forTEXT/gitma/HEAD?labpath=demo%2Fnotebooks%2Fexplore_annotations.ipynb)
 
@@ -24,9 +25,34 @@ well as the above notebooks. This is a good way to see what GitMA can do.
 
 ## Installation
 
-Install using `pip install git+https://github.com/forTEXT/gitma`
+GitMA requires Python 3.13 and is installed directly from this repository:
 
-To install locally for development use: `pip install -e .`
+```
+pip install git+https://github.com/forTEXT/gitma
+```
+
+To pin a specific release, append the tag:
+
+```
+pip install git+https://github.com/forTEXT/gitma@2.1.0
+```
+
+Optional extras:
+
+```
+pip install "gitma[pygamma] @ git+https://github.com/forTEXT/gitma"   # gamma agreement support
+```
+
+Every [release](https://github.com/forTEXT/gitma/releases) also has a prebuilt
+wheel and source distribution attached.
+
+For a local development setup see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Contributing and Releases
+
+- [CONTRIBUTING.md](CONTRIBUTING.md) — development setup, tests, documentation
+- [CHANGELOG.md](CHANGELOG.md) — what changed in each version
+- [RELEASING.md](RELEASING.md) — how maintainers cut a release
 
 ## Additional Notes
 

@@ -30,11 +30,18 @@ def setup(app):
 # -- Project information -----------------------------------------------------
 
 project = 'GitMA'
-copyright = '2026, Michael Vauth'
-author = 'Michael Vauth'
+copyright = '2026, forTEXT / GitMA contributors'
+author = 'The GitMA contributors'
 
-# The full version, including alpha/beta/rc tags
-release = '1.5.3'
+# The full version, including alpha/beta/rc tags. Read from the installed package
+# metadata so that it can never drift from the version in pyproject.toml.
+from importlib.metadata import PackageNotFoundError, version as _version  # noqa: E402
+
+try:
+    release = _version('gitma')
+except PackageNotFoundError:
+    release = '0.0.0.dev0'
+version = '.'.join(release.split('.')[:2])
 
 doctest_global_setup = "import gitma"
 autodoc_default_flags = ['members']

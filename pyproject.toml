@@ -1,3 +1,7 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
 [project]
 name = "gitma"
 version = "2.1.0"
@@ -17,26 +21,82 @@ authors = [
     { name = "Janis von Keitz" },
     { name = "Evelyn Gius" },
 ]
+keywords = [
+    "CATMA",
+    "annotation",
+    "digital humanities",
+    "inter-annotator agreement",
+    "text analysis",
+]
+# Note: no "License :: ..." classifier - PEP 639 forbids combining those with the
+# `license` SPDX expression above.
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Text Processing :: Linguistic",
+]
+# The upper bound is deliberate: spacy is pinned to a version that publishes no
+# wheels beyond CPython 3.13. Revisit on each new Python release - see RELEASING.md.
 requires-python = ">=3.13, <3.14"
+# These are floors, not pins: `uv.lock` pins exact versions for local development,
+# but users install straight from Git and get a fresh resolution, so every runtime
+# import needs a bound it is actually known to work with. Unless noted otherwise the
+# floor is the oldest release that supports CPython 3.13.
+# Every entry below is imported by the package - keep it that way, and run
+# `uv run python -X importtime -c "import gitma"` if you are unsure who needs what.
 dependencies = [
-    "cvxopt==1.3.2",
-    "jupyter",
-    "networkx",
-    "nltk",
-    "numpy",
-    "pandas",
-    "plotly",
-    "pygit2",
-    "python-gitlab",
-    "scipy",
-    "Cython",
+    "ipython>=8.29",         # IPython.display.display, in gitma/_network.py
+    "networkx>=3.4",
+    # Floor is NOT just "oldest with 3.13 support": 3.10.0 and 3.10.1 shipped an
+    # import hook (nltk/inisec.py) that blocked any import nltk initiated whose
+    # origin resolved inside the working directory. `uv` puts .venv in the project
+    # root, so on those two versions `import gitma` fails from the repository root
+    # with "Blocked import of regex from current working directory". Upstream
+    # deleted the hook again in 3.10.2. Do not lower this bound.
+    "nltk>=3.10.2",
+    "numpy>=2.1",
+    "pandas>=2.2.3",
+    "plotly>=5.24",
+    "pygit2>=1.16",
+    "python-gitlab>=5.0",
+    # Not imported directly: networkx needs scipy for the kamada_kawai_layout that
+    # gitma.Network defaults to, and only declares it as an optional extra.
+    "scipy>=1.14.1",
     "spacy==3.8.14",
-    "tabulate"
 ]
 
 [project.optional-dependencies]
 pygamma = [
-    "pygamma-agreement[CBC]==0.5.9"
+    "pygamma-agreement[CBC]==0.5.9",
+    # A transitive dependency of pygamma-agreement, pinned here because 1.3.2 is the
+    # last version that builds cleanly on the platforms we support. Nothing in GitMA
+    # imports it, so it must not appear in the core dependencies.
+    "cvxopt==1.3.2",
+]
+# `docs` is an extra rather than a dependency group because Read the Docs installs
+# via `pip install .[docs]` and cannot yet consume PEP 735 dependency groups.
+docs = [
+    "commonmark==0.9.1",
+    "myst-parser>=4.0",
+    "pydata-sphinx-theme>=0.16",
+    "sphinx>=8.1",
+    "sphinx-autodoc-typehints>=2.5",
+]
+
+# PEP 735 groups are never published as part of the distribution, so purely local
+# tooling belongs here rather than in optional-dependencies.
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+]
+# Needed to run demo/notebooks, not to use the library. Kept out of the runtime
+# dependencies so that `pip install gitma` does not drag in the whole Jupyter stack
+# (the Docker demo image installs jupyterlab via conda, and Binder provides its own).
+notebooks = [
+    "jupyterlab>=4.2",
 ]
 
 [project.urls]
@@ -44,3 +104,32 @@ Homepage = "https://catma.de/documentation/access-your-project-data/gitma/"
 Documentation = "https://gitma.readthedocs.io/en/latest/index.html"
 Repository = "https://github.com/forTEXT/gitma"
 Issues = "https://github.com/forTEXT/gitma/issues"
+Changelog = "https://github.com/forTEXT/gitma/blob/main/CHANGELOG.md"
+
+# Without this the flat repository layout would make the backend try to package
+# `demo`, `docker`, `docs`, `tests` and `main.py` as well.
+[tool.hatch.build.targets.wheel]
+packages = ["gitma"]
+
+[tool.hatch.build.targets.sdist]
+# The sdist ships a runnable test suite, which means it also has to ship the demo
+# project the tests read from. Nothing checks this automatically, so when you add a
+# fixture, add it here too and re-run the tests from an unpacked sdist - see
+# CONTRIBUTING.md.
+include = [
+    "/gitma",
+    "/tests",
+    "/demo/projects",
+    "/CHANGELOG.md",
+    "/README.md",
+]
+
+[tool.uv]
+# uv.lock is written at revision 3; older uv versions fail to parse it with a much
+# less obvious error than this one.
+required-version = ">=0.8"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = ["--strict-markers", "--strict-config", "-ra"]
