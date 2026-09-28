@@ -94,7 +94,7 @@ dev = [
 ]
 # Needed to run demo/notebooks, not to use the library. Kept out of the runtime
 # dependencies so that `pip install gitma` does not drag in the whole Jupyter stack
-# (the Docker demo image installs jupyterlab via conda, and Binder provides its own).
+# (the Docker demo image installs jupyterlab explicitly, and Binder provides its own).
 notebooks = [
     "jupyterlab>=4.2",
 ]

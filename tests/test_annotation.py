@@ -5,6 +5,12 @@ from pathlib import Path
 from gitma import CatmaProject
 
 TESTS_DIR = Path(__file__).resolve().parent
+# Anchored on __file__ rather than the working directory so that the suite runs both
+# from the repository root (as `testpaths` in pyproject.toml implies) and from inside
+# tests/. The trailing separator is required: CatmaProject and write_annotation_json
+# build paths by string concatenation.
+DEMO_PROJECTS_DIR = f'{TESTS_DIR.parent / "demo" / "projects"}{os.sep}'
+DEMO_PROJECT_NAME = 'CATMA_9385E190-13CD-44BE-8A06-32FA95B7EEFA_GitMA_Demo_Project'
 
 
 def _remove_if_exists(path: str) -> None:
@@ -17,12 +23,6 @@ def _remove_if_exists(path: str) -> None:
     """
     if os.path.exists(path):
         os.remove(path)
-# Anchored on __file__ rather than the working directory so that the suite runs both
-# from the repository root (as `testpaths` in pyproject.toml implies) and from inside
-# tests/. The trailing separator is required: CatmaProject and write_annotation_json
-# build paths by string concatenation.
-DEMO_PROJECTS_DIR = f'{TESTS_DIR.parent / "demo" / "projects"}{os.sep}'
-DEMO_PROJECT_NAME = 'CATMA_9385E190-13CD-44BE-8A06-32FA95B7EEFA_GitMA_Demo_Project'
 
 
 class TestAnnotation(unittest.TestCase):
