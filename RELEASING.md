@@ -100,6 +100,9 @@ through the checklist in order.
      [docker/gitma.sh](docker/gitma.sh), and the sample build command at the top
      of the Dockerfile. Never re-push an already-published image tag - the example
      below uses 0.0.14 because 0.0.13 is the version currently in the tree.
+   - The logo footer also carries a date next to the version. Set it to the date
+     you make the bump, in the same edit - it is the only part of the container's
+     greeting a user can date the image by, and nothing checks it.
    - Build with `--build-arg GITMA_VERSION=<the tag pushed in step 6>`. This is
      what makes the image reproducible: omit it and the build falls back to the
      `main` default, so the published image contains whatever `main` happened to
