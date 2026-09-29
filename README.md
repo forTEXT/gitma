@@ -25,26 +25,38 @@ well as the above notebooks. This is a good way to see what GitMA can do.
 
 ## Installation
 
-GitMA requires Python 3.13 and is installed directly from this repository:
+GitMA requires Python 3.13 (3.14 is not supported yet) and is installed directly
+from this repository:
 
 ```
 pip install git+https://github.com/forTEXT/gitma
 ```
 
-To pin a specific release, append the tag:
+If you manage your project with [uv](https://docs.astral.sh/uv/), add it with:
+
+```
+uv add git+https://github.com/forTEXT/gitma
+```
+
+To pin a specific [release](https://github.com/forTEXT/gitma/releases), append the
+tag:
 
 ```
 pip install git+https://github.com/forTEXT/gitma@2.2.0
 ```
 
-Optional extras:
+Gamma agreement support is an optional extra:
 
 ```
-pip install "gitma[pygamma] @ git+https://github.com/forTEXT/gitma"   # gamma agreement support
+pip install "gitma[pygamma] @ git+https://github.com/forTEXT/gitma"
 ```
 
-Every [release](https://github.com/forTEXT/gitma/releases) also has a prebuilt
-wheel and source distribution attached.
+Releases from 2.2.0 onwards also have a prebuilt wheel and source distribution
+attached, which you can install instead of building from the repository.
+
+Cloning and reading a project works with GitMA alone. Updating a project or
+pushing annotations back to CATMA also requires a `git` installation with saved
+credentials for your CATMA account - see [Additional Notes](#additional-notes).
 
 For a local development setup see [CONTRIBUTING.md](CONTRIBUTING.md).
 
