@@ -23,6 +23,18 @@ You'll find 4 Jupyter Notebooks in the demo/notebooks directory:
 We have also created a ready to use [Docker image](https://github.com/forTEXT/gitma/blob/main/docker/README.md) that includes GitMA and all dependencies, as
 well as the above notebooks. This is a good way to see what GitMA can do.
 
+To run the notebooks from a clone of this repository instead, sync the
+`notebooks` dependency group, which provides JupyterLab:
+
+```
+uv sync --group notebooks
+uv run jupyter lab
+```
+
+JupyterLab is deliberately not a dependency of the library itself, so installing
+GitMA does not pull in the whole Jupyter stack; the Docker image and Binder each
+bring their own.
+
 ## Installation
 
 GitMA requires Python 3.13 (3.14 is not supported yet) and is installed directly
