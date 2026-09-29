@@ -7,28 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.1.0] - 2026-09-29
-
-### Added
-
-- Krippendorff's alpha as an inter-annotator agreement measure, including a
-  `property_filter` parameter and an example in the IAA demo notebook.
-- Generation of a co-occurrence matrix for annotations.
-- Separate Scott's pi and Cohen's kappa IAA methods.
-- `verbose` parameter to suppress detailed IAA output.
+## [2.2.0] - 2026-09-29
 
 ### Changed
 
-- **Breaking:** the default for the `filter_both_ac` parameter in the IAA score
-  calculations is now `True`. Results of previous runs are not directly
-  comparable; see the inter-annotator agreement demo notebook for details.
-- **Breaking:** the minimum supported Python version is now 3.13 (previously 3.9),
-  and dependencies were updated accordingly.
-- IAA score names now match the spelling used in the literature (capitalised
-  author name, lower-case Greek letter).
-- IAA result handling was unified in a single `_return_iaa_result` function, and
-  `get_cooccurrence_matrix` / `get_annotation_pairs_for_multiple_annotators` moved
-  to `gitma/_metrics.py`.
 - Packaging now uses `pyproject.toml` with the Hatchling build backend and a
   `uv.lock` lockfile. `setup.py` has been removed; project metadata lives in
   exactly one place.
@@ -57,11 +39,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   hook that refused any import originating inside the working directory, which
   made `import gitma` fail from a project directory containing a virtual
   environment - the standard `uv` layout. Upstream removed the hook in 3.10.2.
-
-### Fixed
-
-- Krippendorff's alpha output is now labelled correctly.
-- A bug in `merge_annotations_per_document`.
 
 ### Removed
 
@@ -93,6 +70,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `.python-version`.
 - `.python-version` pins the interpreter that `uv` provisions.
 
+## [2.1.0] - 2026-07-29
+
+### Added
+
+- Krippendorff's alpha as an inter-annotator agreement measure, including a
+  `property_filter` parameter and an example in the IAA demo notebook.
+- Generation of a co-occurrence matrix for annotations.
+- Separate Scott's pi and Cohen's kappa IAA methods.
+- `verbose` parameter to suppress detailed IAA output.
+
+### Changed
+
+- **Breaking:** the default for the `filter_both_ac` parameter in the IAA score
+  calculations is now `True`. Results of previous runs are not directly
+  comparable; see the inter-annotator agreement demo notebook for details.
+- **Breaking:** the minimum supported Python version is now 3.13 (previously 3.9),
+  and dependencies were updated accordingly.
+- IAA score names now match the spelling used in the literature (capitalised
+  author name, lower-case Greek letter).
+- IAA result handling was unified in a single `_return_iaa_result` function, and
+  `get_cooccurrence_matrix` / `get_annotation_pairs_for_multiple_annotators` moved
+  to `gitma/_metrics.py`.
+- The Docker demo image was bumped to 0.0.12.
+
+### Fixed
+
+- Krippendorff's alpha output is now labelled correctly.
+- A bug in `merge_annotations_per_document`.
+
 ## [2.0.5] - 2025-06-05
 
 ## [2.0.4] - 2025-02-07
@@ -112,7 +118,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Changes for releases up to and including 2.0.5 predate this changelog. Use the
 comparison links below to review the commits that went into each of them.
 
-[Unreleased]: https://github.com/forTEXT/gitma/compare/2.1.0...HEAD
+[Unreleased]: https://github.com/forTEXT/gitma/compare/2.2.0...HEAD
+[2.2.0]: https://github.com/forTEXT/gitma/compare/2.1.0...2.2.0
 [2.1.0]: https://github.com/forTEXT/gitma/compare/2.0.5...2.1.0
 [2.0.5]: https://github.com/forTEXT/gitma/compare/2.0.4...2.0.5
 [2.0.4]: https://github.com/forTEXT/gitma/compare/2.0.3...2.0.4

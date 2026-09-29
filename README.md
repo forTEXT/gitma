@@ -34,7 +34,7 @@ pip install git+https://github.com/forTEXT/gitma
 To pin a specific release, append the tag:
 
 ```
-pip install git+https://github.com/forTEXT/gitma@2.1.0
+pip install git+https://github.com/forTEXT/gitma@2.2.0
 ```
 
 Optional extras:

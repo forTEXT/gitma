@@ -53,19 +53,19 @@ through the checklist in order.
 5. **Open a pull request with the bump** and merge it once reviewed.
 
 6. **Tag the merge commit on `main` and push the tag.** Use the bare version
-   number, matching the existing tags (`1.0.0` ... `2.0.5`):
+   number, matching the existing tags (`1.0.0` ... `2.2.0`):
 
    ```bash
    git checkout main && git pull
-   git tag -a 2.2.0 -m "GitMA 2.2.0"
-   git push origin 2.2.0
+   git tag -a 2.3.0 -m "GitMA 2.3.0"
+   git push origin 2.3.0
    ```
 
 7. **Build the distributions from the tag and publish the GitHub Release.**
    Build from a clean tree so that no local edits leak into the artifacts:
 
    ```bash
-   git checkout 2.2.0
+   git checkout 2.3.0
    rm -rf dist/
    uv build
    ```
@@ -75,8 +75,8 @@ through the checklist in order.
    `dist/`), or with the `gh` CLI:
 
    ```bash
-   gh release create 2.2.0 dist/* \
-       --title "2.2.0" \
+   gh release create 2.3.0 dist/* \
+       --title "2.3.0" \
        --notes-file <(awk '/^## \[2\.2\.0\]/{c=1;next} c&&/^## \[/{exit} c' CHANGELOG.md)
    ```
 
@@ -110,7 +110,7 @@ through the checklist in order.
 
      ```bash
      docker buildx build --platform linux/amd64,linux/arm64 \
-         --build-arg GITMA_VERSION=2.2.0 \
+         --build-arg GITMA_VERSION=2.3.0 \
          --tag maltem/gitma-demo:0.0.14 --tag maltem/gitma-demo:latest --push .
      ```
 
@@ -123,8 +123,8 @@ The tag is what identifies the release, so a bad tag can simply be replaced
 before anyone depends on it:
 
 ```bash
-git tag -d 2.2.0
-git push origin :refs/tags/2.2.0
+git tag -d 2.3.0
+git push origin :refs/tags/2.3.0
 ```
 
 Then fix the problem and re-tag. If the GitHub Release was already created, delete

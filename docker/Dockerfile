@@ -3,7 +3,7 @@
 # to be, and the published image is not reproducible.
 #
 #   docker buildx build --platform linux/amd64,linux/arm64 \
-#       --build-arg GITMA_VERSION=2.1.0 \
+#       --build-arg GITMA_VERSION=2.2.0 \
 #       --tag maltem/gitma-demo:0.0.13 --tag maltem/gitma-demo:latest --push .
 #
 # Consider adding --no-cache as per https://docs.docker.com/build/building/best-practices/#rebuild-your-images-often
