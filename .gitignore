@@ -1,17 +1,23 @@
 # development tooling
-.git
 .idea
+.vscode
 
 # python
 .venv
 .ipynb_checkpoints
 __pycache__
 requ.txt
-build
+.pytest_cache
+*.egg-info
+
+# build artifacts (never commit these - they are produced by `uv build` / `make html`)
+/build
+/dist
+docs/build
 
 # user-based data and sample project data
-user_projects
-*.egg-info
+user_projects/*
+!user_projects/README.md
 *.csv
 own_work.py
 own_notebook.ipynb

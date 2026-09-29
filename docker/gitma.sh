@@ -1,6 +1,6 @@
 #!/bin/bash
-source /opt/conda/bin/activate
-conda activate gitma
+# GitMA is installed into the image's system Python, so there is no environment
+# to activate here.
 
 red='\033[31m'
 green='\033[32m'
@@ -40,13 +40,10 @@ run_jupyter() {
 
 update_gitma() {
   echo ""
-  echo "$(color_blue 'Updating Conda environment')"
-  echo ""
-  conda update -y -n gitma --all
-  echo ""
   echo "$(color_blue 'Updating GitMA')"
   echo ""
-  python -m pip install --upgrade git+https://github.com/forTEXT/gitma
+  # --upgrade covers the dependencies as well as GitMA itself.
+  python -m pip install --upgrade "gitma[pygamma] @ git+https://github.com/forTEXT/gitma"
 }
 
 reinstall_demo(){
@@ -87,7 +84,7 @@ print_logo(){
   $blue       \__\/                             $purple    \__\/         \__\/     
   
   $clear$italic$blue                                   https://github.com/forTEXT/gitma
-  $clear$italic$blue                                   v0.0.12 2026-07-28
+  $clear$italic$blue                                   v0.0.13 2026-09-28
   $clear$italic$blue                                   CATMA 7
   $clear"
 }
