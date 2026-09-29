@@ -30,8 +30,8 @@ def setup(app):
 # -- Project information -----------------------------------------------------
 
 project = 'GitMA'
-copyright = '2026, forTEXT / GitMA contributors'
-author = 'The GitMA contributors'
+copyright = '2026, Michael Vauth'
+author = 'Michael Vauth'
 
 # The full version, including alpha/beta/rc tags. Read from the installed package
 # metadata so that it can never drift from the version in pyproject.toml.
