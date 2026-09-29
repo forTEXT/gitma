@@ -85,12 +85,8 @@ def clean_text_in_ac_df(annotation: str) -> str:
 
 def load_annotations(catma_project, ac, context: int):
     base_dir = f'{os.getcwd()}/{catma_project.uuid}/collections/{ac.uuid}/annotations/'
-    # load all annotation collection page files, sorted so that annotations sharing a
-    # start point keep a stable order regardless of the filesystem's listing order
-    for filename in sorted(os.listdir(base_dir)):
-        if not filename.lower().endswith('.json'):
-            continue
-
+    # load all annotation collection page files
+    for filename in os.listdir(base_dir):
         page_file_path = base_dir + filename
         page_file_annotations = []
 

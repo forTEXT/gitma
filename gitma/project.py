@@ -135,15 +135,12 @@ def load_annotation_collections(
     """
     collections_directory = catma_project.uuid + '/collections/'
 
-    # os.listdir returns entries in arbitrary, filesystem-dependent order. Sorting
-    # them keeps `annotation_collections` (and everything derived from it) identical
-    # across machines and operating systems.
     if included_acs:        # selects annotation collections listed in included_acs
         annotation_collections = [
             AnnotationCollection(
                 catma_project=catma_project,
                 ac_uuid=directory
-            ) for directory in sorted(os.listdir(collections_directory))
+            ) for directory in os.listdir(collections_directory)
             if get_ac_name(catma_project.uuid, directory) in included_acs
         ]
     elif excluded_acs:      # selects all annotation collections except for the excluded_acs
@@ -151,7 +148,7 @@ def load_annotation_collections(
             AnnotationCollection(
                 catma_project=catma_project,
                 ac_uuid=directory
-            ) for directory in sorted(os.listdir(collections_directory))
+            ) for directory in os.listdir(collections_directory)
             if get_ac_name(catma_project.uuid, directory) not in excluded_acs
         ]
     elif ac_filter_keyword:  # selects annotation collections with the given ac_filter_keyword
@@ -159,7 +156,7 @@ def load_annotation_collections(
             AnnotationCollection(
                 catma_project=catma_project,
                 ac_uuid=directory
-            ) for directory in sorted(os.listdir(collections_directory))
+            ) for directory in os.listdir(collections_directory)
             if ac_filter_keyword in get_ac_name(catma_project.uuid, directory)
         ]
     else:                   # selects all annotation collections
@@ -167,7 +164,7 @@ def load_annotation_collections(
             AnnotationCollection(
                 catma_project=catma_project,
                 ac_uuid=directory
-            ) for directory in sorted(os.listdir(collections_directory))
+            ) for directory in os.listdir(collections_directory)
             if directory.startswith('C_') or directory.startswith('CATMA_')
         ]
 
@@ -208,7 +205,7 @@ def load_tagsets(project_uuid: str) -> Tuple[List[Tagset], Dict[str, Tagset]]:
         Tagset(
             project_uuid=project_uuid,
             tagset_uuid=directory
-        ) for directory in sorted(os.listdir(tagsets_directory))
+        ) for directory in os.listdir(tagsets_directory)
         # ignore empty tagsets
         if test_tagset_directory(project_uuid, directory)
     ]
@@ -231,7 +228,7 @@ def load_texts(project_uuid: str) -> Tuple[List[Text], Dict[str, Text]]:
         Text(
             project_uuid=project_uuid,
             document_uuid=directory
-        ) for directory in sorted(os.listdir(texts_directory))
+        ) for directory in os.listdir(texts_directory)
         if directory.startswith('D_')
     ]
 

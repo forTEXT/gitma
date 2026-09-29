@@ -55,21 +55,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   hook that refused any import originating inside the working directory, which
   made `import gitma` fail from a project directory containing a virtual
   environment - the standard `uv` layout. Upstream removed the hook in 3.10.2.
-- Annotation collections, tagsets and documents are loaded in a deterministic,
-  sorted order. Previously the order came from `os.listdir` and varied between
-  machines and operating systems, so `project.annotation_collections[0]` could
-  refer to different collections on different systems.
 
 ### Fixed
 
 - Krippendorff's alpha output is now labelled correctly.
 - A bug in `merge_annotations_per_document`.
-- Writing an annotation into an annotation collection that does not contain any
-  annotations yet no longer fails with `FileNotFoundError`. Git does not track
-  empty directories, so such a collection arrives without its `annotations`
-  directory and it now gets created on demand.
-- Annotation page file loading skips non-JSON files instead of reporting them as
-  malformed.
 
 ### Removed
 
