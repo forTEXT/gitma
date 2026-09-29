@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-09-29
+
 ### Added
 
 - Krippendorff's alpha as an inter-annotator agreement measure, including a
@@ -110,7 +112,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Changes for releases up to and including 2.0.5 predate this changelog. Use the
 comparison links below to review the commits that went into each of them.
 
-[Unreleased]: https://github.com/forTEXT/gitma/compare/2.0.5...HEAD
+[Unreleased]: https://github.com/forTEXT/gitma/compare/2.1.0...HEAD
+[2.1.0]: https://github.com/forTEXT/gitma/compare/2.0.5...2.1.0
 [2.0.5]: https://github.com/forTEXT/gitma/compare/2.0.4...2.0.5
 [2.0.4]: https://github.com/forTEXT/gitma/compare/2.0.3...2.0.4
 [2.0.3]: https://github.com/forTEXT/gitma/compare/2.0.2...2.0.3
