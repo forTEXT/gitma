@@ -295,6 +295,8 @@ class CatmaProject:
         # set access token for gitlab
         if gitlab_access_token:
             self.gitlab_access_token = gitlab_access_token
+        else:
+            self.gitlab_access_token = None
 
         #: The project's name.
         self.name: str = self.uuid[43:]  # NB: the actual name can be different if the project is renamed or the name contains whitespace or special characters

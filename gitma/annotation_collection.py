@@ -612,8 +612,6 @@ class AnnotationCollection:
         an_dict = self.annotation_dict()
 
         
-        # cwd = os.getcwd()
-        # os.chdir(self.projects_directory)
         annotation_counter = 0
         missed_annotation_counter = 0
         for _, row in annotation_table.iterrows():
