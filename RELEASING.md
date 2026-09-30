@@ -138,9 +138,10 @@ it in the web UI first.
   `pygamma-agreement==0.5.9` are capped too, but they now live in the `pygamma`
   extra and so only constrain users who ask for it.) When the spaCy pin is
   relaxed - or if spaCy is made optional, since only `to_stanford_tsv` uses it -
-  the cap can be widened. Widening means: update `requires-python`, bump
-  `.python-version`, and update the `python` version in `.readthedocs.yaml` and
-  the `FROM` line of `docker/Dockerfile`.
+  the cap can be widened. Widening means: update `requires-python` and the
+  `Programming Language :: Python :: 3.x` classifiers, bump `.python-version`,
+  and update `binder/runtime.txt`, the `python` version in `.readthedocs.yaml`
+  and the `FROM` line of `docker/Dockerfile`.
 - **Dependency updates.** There is no automated dependency bot, so run
   `uv lock --upgrade` periodically, re-run the checks in step 1, and commit the
   refreshed lockfile. Watch GitHub's Dependabot security alerts for the

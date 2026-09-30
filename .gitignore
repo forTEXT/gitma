@@ -2,6 +2,9 @@
 .idea
 .vscode
 
+# llm dev tools
+.claude
+
 # python
 .venv
 .ipynb_checkpoints
@@ -23,3 +26,5 @@ own_work.py
 own_notebook.ipynb
 _gamma_own.py
 dev_dashboard.ipynb
+
+
