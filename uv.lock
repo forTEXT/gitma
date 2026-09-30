@@ -521,7 +521,7 @@ requires-dist = [
     { name = "ipython", specifier = ">=8.29" },
     { name = "myst-parser", marker = "extra == 'docs'", specifier = ">=4.0" },
     { name = "networkx", specifier = ">=3.4" },
-    { name = "nltk", specifier = ">=3.10.2" },
+    { name = "nltk", specifier = ">=3.10.3" },
     { name = "numpy", specifier = ">=2.1" },
     { name = "pandas", specifier = ">=2.2.3" },
     { name = "plotly", specifier = ">=5.24" },

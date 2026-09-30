@@ -56,7 +56,7 @@ dependencies = [
     # root, so on those two versions `import gitma` fails from the repository root
     # with "Blocked import of regex from current working directory". Upstream
     # deleted the hook again in 3.10.2. Do not lower this bound.
-    "nltk>=3.10.2",
+    "nltk>=3.10.3",
     "numpy>=2.1",
     "pandas>=2.2.3",
     "plotly>=5.24",
