@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Annotation collections, tagsets and documents are loaded in a deterministic,
+  sorted order. Previously the order came from `os.listdir` and varied between
+  machines and operating systems, so `project.annotation_collections[0]` could
+  refer to different collections on different systems.
+
+### Fixed
+
+- Writing an annotation into an annotation collection that does not contain any
+  annotations yet no longer fails with `FileNotFoundError`. Git does not track
+  empty directories, so such a collection arrives without its `annotations`
+  directory and it now gets created on demand.
+- Annotation page file loading skips non-JSON files instead of reporting them as
+  malformed.
+
 ## [2.2.0] - 2026-09-29
 
 ### Changed

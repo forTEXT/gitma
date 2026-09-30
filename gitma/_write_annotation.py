@@ -163,6 +163,10 @@ def write_annotation_json(
     annotation_byte_size = len(annotation_json.encode('utf-8'))
 
     annotations_base_path = f'collections/{annotation_collection.uuid}/annotations/'
+    # Git does not track empty directories, so a collection that has no annotations yet
+    # arrives without its 'annotations' directory after a clone. Writing the first
+    # annotation into such a collection has to create it.
+    os.makedirs(annotations_base_path, exist_ok=True)
     current_page_file_path = _get_current_page_file_path(annotations_base_path)  # <annotations_base_path><username>_<pagenumber>.json
 
     if os.path.isfile(current_page_file_path) and os.path.getsize(current_page_file_path) + annotation_byte_size > MAX_ANNOTATION_PAGE_FILE_SIZE_BYTES:
