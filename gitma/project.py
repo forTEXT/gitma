@@ -428,7 +428,8 @@ class CatmaProject:
                 creds = UserPass("none", self.gitlab_access_token)
                 callbacks = pygit2.RemoteCallbacks(credentials=creds)
                 remote.fetch(callbacks=callbacks)
-                remote_master_id = repo.lookup_reference('refs/remotes/origin/%s' % (branch)).target
+                remote_master_id = repo.lookup_reference(f'refs/remotes/{remote_name}/{branch}').target
+
                 merge_result, _ = repo.merge_analysis(remote_master_id)
                 # Up to date, do nothing
                 if merge_result & pygit2.GIT_MERGE_ANALYSIS_UP_TO_DATE:
