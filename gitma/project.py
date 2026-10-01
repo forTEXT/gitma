@@ -269,11 +269,8 @@ class CatmaProject:
             gitlab_access_token: str = None,
             backup_directory: str = './'):
         # get the current directory to return to after loading the project
-        cwd = os.getcwd()
+        # cwd = os.getcwd()
 
-        #: The directory where the project is located.
-        # self.projects_directory: str = projects_directory
-        self.projects_directory = os.path.join(cwd, projects_directory)
 
         # TODO: what we're calling UUID here is actually the full GitLab project name, which is unlikely to change and contains a UUID
         #       the CATMA project name is stored in the GitLab project description field and can change
@@ -291,6 +288,10 @@ class CatmaProject:
                 projects_directory=projects_directory,
                 project_name=project_name
             )
+
+        #: The directory where the project is located.
+        # self.projects_directory: str = projects_directory
+        self.projects_directory = os.path.abspath(projects_directory)
 
         # set access token for gitlab
         if gitlab_access_token:
