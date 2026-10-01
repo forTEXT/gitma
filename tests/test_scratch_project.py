@@ -400,6 +400,23 @@ class TestScratchProject(unittest.TestCase):
                          "Expected the same number of annotations in the gold collection as in the source collection.")
         print(f"[TEST:GOLD_ANNOTATIONS_FULL_MATCH] Created gold annotations in collection: {GOLD_AC_NAME} in {project.name} from the same {ac_1_name} annotation collection. All annotations should match and be copied and a git commit should be created.")
 
+    def test_find_tagset_by_name(self):
+        from gitma._write_annotation import find_tagset_by_name
+        project = self.project
+        tagset_name = list(TAGSETS.keys())[0]
+        tagset = find_tagset_by_name(project, tagset_name)
+        self.assertEqual(tagset.name, tagset_name, f"Expected tagset name '{tagset_name}', but got '{tagset.name}'.")
+        print(f"[TEST:FIND_TAGSET_BY_NAME] Found tagset with name: {tagset_name} in project: {project.name}.")
+
+    def test_find_tag_by_name(self):
+        from gitma._write_annotation import find_tag_by_name, find_tagset_by_name
+        project = self.project
+        tagset_name = list(TAGSETS.keys())[0]
+        tagset = find_tagset_by_name(project, tagset_name)
+        tag_name = TAGSETS[tagset_name][0]
+        tag = find_tag_by_name(tagset, tag_name)
+        self.assertEqual(tag.name, tag_name, f"Expected tag name '{tag_name}', but got '{tag.name}'.")
+        print(f"[TEST:FIND_TAG_BY_NAME] Found tag with name: {tag_name} in tagset: {tagset_name} in project: {project.name}.")
 
     def test_e_pull_annotations(self):
         self.project.pull()
