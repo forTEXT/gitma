@@ -13,7 +13,6 @@ MAX_ANNOTATION_PAGE_FILE_SIZE_BYTES = 200000
 
 
 def find_tagset_by_name(project, tagset_name: str):
-    # tagset = [tagset for tagset in project.tagsets if tagset.name == tagset_name][0]
     tagset = next((tagset for tagset in project.tagsets if tagset.name == tagset_name), None)
     if tagset is None:
         raise ValueError(f"Tagset '{tagset_name}' not found in project '{project.name}'. Available tagsets: {[tagset.name for tagset in project.tagsets]}')")
@@ -21,7 +20,6 @@ def find_tagset_by_name(project, tagset_name: str):
 
 
 def find_tag_by_name(tagset: Tagset, tag_name: str):
-    # tag = [tag for tag in tagset.tags if tag.name == tag_name][0]
     tag = next((tag for tag in tagset.tags if tag.name == tag_name), None)
     if tag is None:
         raise ValueError(f"Tag '{tag_name}' not found in tagset '{tagset.name}'. Available tags: {[tag.name for tag in tagset.tags]}')")
