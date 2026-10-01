@@ -62,7 +62,7 @@ def _tree_paths(repo, tree, path=''):
     paths = []
     for entry in tree:
         entry_path = f'{path}/{entry.name}' if path else entry.name
-        if entry.type == pygit2.GIT_OBJECT_TREE:
+        if entry.type == 'tree':
             paths.extend(_tree_paths(repo, repo[entry.id], entry_path))
         else:
             paths.append(entry_path)

@@ -28,8 +28,7 @@ def find_tag_by_name(tagset: Tagset, tag_name: str):
 
 def get_new_annotation_uuid_and_path(annotation_collection_uuid: str):
     new_uuid = f'CATMA_{str(uuid.uuid1()).upper()}'
-    new_path = os.path.join('collections', annotation_collection_uuid, 'annotations', f'{new_uuid}')
-    
+    new_path = f'collections/{annotation_collection_uuid}/annotations/{new_uuid}'
     return new_uuid, new_path
 
 
