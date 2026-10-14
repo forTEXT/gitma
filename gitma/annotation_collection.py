@@ -287,7 +287,6 @@ class AnnotationCollection:
         repo = Repository(repo_path)
 
         ### Stage all changes 
-        # repo.index.add_all([os.path.relpath(self.directory, repo.workdir)])
         repo.index.add_all()
         #### if no changes are staged, exit
         if not repo.status():
