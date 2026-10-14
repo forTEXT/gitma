@@ -282,12 +282,13 @@ class AnnotationCollection:
             )
 
         ## pygit2 implementation
-        repo_path = self.directory
+        repo_path = self.catma_project.project_path
 
         repo = Repository(repo_path)
 
         ### Stage all changes 
-        repo.index.add_all([os.path.relpath(self.directory, repo.workdir)])
+        # repo.index.add_all([os.path.relpath(self.directory, repo.workdir)])
+        repo.index.add_all()
         #### if no changes are staged, exit
         if not repo.status():
             print(f"No changes to push for annotation collection {self.name}.")
