@@ -9,6 +9,7 @@ import stat
 import sys
 import unittest
 import uuid
+from pathlib import Path
 
 import pygit2
 
@@ -143,7 +144,7 @@ class TestScratchProject(unittest.TestCase):
 
         cls.remote_dir = os.path.join(cls.projects_directory, 'origin.git')
         pygit2.init_repository(cls.remote_dir, bare=True, initial_head='master')
-        repo.remotes.create('origin', 'file:///' + cls.remote_dir.replace(os.sep, '/'))
+        repo.remotes.create('origin', Path(cls.remote_dir).resolve().as_uri())
         print(f'[SETUP] Initialized git repo in {cls.project_dir} and a bare remote in {cls.remote_dir}.')
 
     @classmethod
