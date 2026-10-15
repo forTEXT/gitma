@@ -13,6 +13,7 @@ Table of contents
    intro
    installation
    gitma
+   changelog
    cite_as
 
 

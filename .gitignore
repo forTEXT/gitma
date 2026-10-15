@@ -2,6 +2,10 @@
 .git
 .idea
 .test_projects
+.vscode
+
+# llm dev tools
+.claude
 
 # python
 .venv
@@ -13,6 +17,15 @@ build
 # user-based data and sample project data
 user_projects
 *.egg-info
+
+# build artifacts (never commit these - they are produced by `uv build` / `make html`)
+/build
+/dist
+docs/build
+
+# user-based data and sample project data
+user_projects/*
+!user_projects/README.md
 *.csv
 own_work.py
 own_notebook.ipynb

@@ -1,0 +1,16 @@
+# Binder configuration for the demo notebooks.
+#
+# repo2docker, which builds the Binder image, does not recognise projects that only
+# have a pyproject.toml - it looks for requirements.txt, setup.py, Pipfile or
+# environment.yml. Without this file it would build a bare Python image and none of
+# the notebooks in demo/notebooks would be able to `import gitma`.
+#
+# Installing "." builds the project with the Hatchling backend declared in
+# pyproject.toml, so the dependency list lives in exactly one place. repo2docker
+# supplies JupyterLab itself, hence no Jupyter packages here.
+#
+# The interpreter comes from the sibling runtime.txt, NOT from .python-version,
+# which repo2docker does not read. Without it repo2docker picks its own default
+# (older than 3.13) and this line fails with "Package 'gitma' requires a different
+# Python", because pyproject.toml declares requires-python = ">=3.13, <3.14".
+.
