@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.1] - 2026-10-15
+
+- Replacing calls to git via subprocesses with the library usage of pygit2
+- Embedded CLAUDE.md and edited .gitignore accordingly
+- Security fixes for dependencies (nltk, tornado)
+- Harmonize version numbering between library and Docker image, Docker image now 
+  uses same version as the Python package
+
 ## [2.2.0] - 2026-09-29
 
 ### Changed
@@ -118,7 +126,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Changes for releases up to and including 2.0.5 predate this changelog. Use the
 comparison links below to review the commits that went into each of them.
 
-[Unreleased]: https://github.com/forTEXT/gitma/compare/2.2.0...HEAD
+[Unreleased]: https://github.com/forTEXT/gitma/compare/2.2.1...HEAD
+[2.2.1]: https://github.com/forTEXT/gitma/compare/2.2.1...HEAD
 [2.2.0]: https://github.com/forTEXT/gitma/compare/2.1.0...2.2.0
 [2.1.0]: https://github.com/forTEXT/gitma/compare/2.0.5...2.1.0
 [2.0.5]: https://github.com/forTEXT/gitma/compare/2.0.4...2.0.5

@@ -54,7 +54,7 @@ To pin a specific [release](https://github.com/forTEXT/gitma/releases), append t
 tag:
 
 ```
-pip install git+https://github.com/forTEXT/gitma@2.2.0
+pip install git+https://github.com/forTEXT/gitma@2.2.1
 ```
 
 Gamma agreement support is an optional extra:

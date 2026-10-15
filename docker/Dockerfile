@@ -3,7 +3,7 @@
 # to be, and the published image is not reproducible.
 #
 #   docker buildx build --platform linux/amd64,linux/arm64 \
-#       --build-arg GITMA_VERSION=2.2.0 \
+#       --build-arg GITMA_VERSION=2.2.1 \
 #       --tag maltem/gitma-demo:0.0.13 --tag maltem/gitma-demo:latest --push .
 #
 # Consider adding --no-cache as per https://docs.docker.com/build/building/best-practices/#rebuild-your-images-often
@@ -14,7 +14,7 @@
 FROM python:3.13-slim
 
 LABEL maintainer="GitMA Team" \
-      version="0.0.13"
+      version="2.2.1"
 
 # The GitMA git ref to build the image from. The default is for local test builds
 # only - published images are built from a release tag, see the build command above.

@@ -53,7 +53,7 @@ through the checklist in order.
 5. **Open a pull request with the bump** and merge it once reviewed.
 
 6. **Tag the merge commit on `main` and push the tag.** Use the bare version
-   number, matching the existing tags (`1.0.0` ... `2.2.0`):
+   number, matching the existing tags (`1.0.0` ... `2.2.1`):
 
    ```bash
    git checkout main && git pull
