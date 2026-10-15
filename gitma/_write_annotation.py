@@ -13,18 +13,22 @@ MAX_ANNOTATION_PAGE_FILE_SIZE_BYTES = 200000
 
 
 def find_tagset_by_name(project, tagset_name: str):
-    tagset = [tagset for tagset in project.tagsets if tagset.name == tagset_name][0]
+    tagset = next((tagset for tagset in project.tagsets if tagset.name == tagset_name), None)
+    if tagset is None:
+        raise ValueError(f"Tagset '{tagset_name}' not found in project '{project.name}'. Available tagsets: {[tagset.name for tagset in project.tagsets]}')")
     return tagset
 
 
 def find_tag_by_name(tagset: Tagset, tag_name: str):
-    tag = [tag for tag in tagset.tags if tag.name == tag_name][0]
+    tag = next((tag for tag in tagset.tags if tag.name == tag_name), None)
+    if tag is None:
+        raise ValueError(f"Tag '{tag_name}' not found in tagset '{tagset.name}'. Available tags: {[tag.name for tag in tagset.tags]}')")
     return tag
 
 
 def get_new_annotation_uuid_and_path(annotation_collection_uuid: str):
     new_uuid = f'CATMA_{str(uuid.uuid1()).upper()}'
-    new_path = f'collections/{annotation_collection_uuid}/annotations/{new_uuid}'
+    new_path = os.path.join('collections', annotation_collection_uuid, 'annotations', f'{new_uuid}')
     return new_uuid, new_path
 
 
@@ -57,10 +61,10 @@ def _get_current_page_file_path(annotations_base_path: str, username: str = 'Git
         page_no = len(pages)-1
         last_page = pages[-1]
 
-        if os.path.getsize(f'{annotations_base_path}{last_page}') >= MAX_ANNOTATION_PAGE_FILE_SIZE_BYTES or force_new:
+        if os.path.getsize(os.path.join(annotations_base_path, last_page)) >= MAX_ANNOTATION_PAGE_FILE_SIZE_BYTES or force_new:
             page_no += 1
 
-    return f'{annotations_base_path}{username}_{page_no}.json'
+    return os.path.join(annotations_base_path, f'{username}_{page_no}.json')
 
 
 def write_annotation_json(
@@ -96,8 +100,7 @@ def write_annotation_json(
         str: The project-relative path of the page file that the annotation was written to.
     """
 
-    cwd = os.getcwd()
-    os.chdir(project.projects_directory + project.uuid)
+    project_path = project.project_path
 
     text = project.text_dict[text_title]
     annotation_collection = project.ac_dict[annotation_collection_name]
@@ -110,8 +113,16 @@ def write_annotation_json(
         new_annotation_relative_path = new_annotation_relative_path.replace(new_annotation_uuid, uuid_override)
         new_annotation_uuid = uuid_override
 
-    tag_relative_path = tag.path[tag.path.index('/')+1:tag.path.rindex('/')]
-
+    tag_relative_path = os.path.relpath(tag.path, project_path).replace('\\', '/') # fixes Windows path separator issue, which uses backslashes instead of forward slashes
+    try:
+        tag_relative_path = tag_relative_path[:tag_relative_path.rindex('/')]
+    except ValueError: # if the tag is in the root of the tagset, there is no '/' in the path and rindex() will throw a ValueError
+        print(f"Tag '{tag.name}' is in the root of the tagset '{tagset.name}' and has no relative path. Using tagset path instead.")
+        tag_relative_path = os.path.relpath(tagset.path, project_path).replace('\\', '/')
+    except Exception as e:
+        print(f"Unexpected error while getting relative path for tag '{tag.name}' in tagset '{tagset.name}': {e}")
+        
+    
     context_dict = {
         Tag.SYSTEM_PROPERTY_UUID_CATMA_MARKUPTIMESTAMP: f'{tag_relative_path}/{Tag.SYSTEM_PROPERTY_UUID_CATMA_MARKUPTIMESTAMP}',
         Tag.SYSTEM_PROPERTY_UUID_CATMA_MARKUPAUTHOR: f'{tag_relative_path}/{Tag.SYSTEM_PROPERTY_UUID_CATMA_MARKUPAUTHOR}'
@@ -162,7 +173,7 @@ def write_annotation_json(
     annotation_json = json.dumps([json_dict], indent=2)
     annotation_byte_size = len(annotation_json.encode('utf-8'))
 
-    annotations_base_path = f'collections/{annotation_collection.uuid}/annotations/'
+    annotations_base_path = os.path.join(project_path, 'collections', annotation_collection.uuid, 'annotations')
     current_page_file_path = _get_current_page_file_path(annotations_base_path)  # <annotations_base_path><username>_<pagenumber>.json
 
     if os.path.isfile(current_page_file_path) and os.path.getsize(current_page_file_path) + annotation_byte_size > MAX_ANNOTATION_PAGE_FILE_SIZE_BYTES:
@@ -185,6 +196,4 @@ def write_annotation_json(
 
         current_page_file.write(annotation_json.encode('utf-8'))
 
-    os.chdir(cwd)
-
-    return current_page_file_path
+    return f'collections/{annotation_collection.uuid}/annotations/{os.path.basename(current_page_file_path)}'

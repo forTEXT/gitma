@@ -1,5 +1,7 @@
 # development tooling
+.git
 .idea
+.test_projects
 .vscode
 
 # llm dev tools
@@ -10,7 +12,10 @@
 .ipynb_checkpoints
 __pycache__
 requ.txt
-.pytest_cache
+build
+
+# user-based data and sample project data
+user_projects
 *.egg-info
 
 # build artifacts (never commit these - they are produced by `uv build` / `make html`)
@@ -25,3 +30,4 @@ user_projects/*
 own_work.py
 own_notebook.ipynb
 _gamma_own.py
+dev_dashboard.ipynb

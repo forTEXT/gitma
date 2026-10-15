@@ -18,10 +18,10 @@ class Tagset:
         self.uuid: str = tagset_uuid
 
         #: The path of the tagset within the project's folder structure.
-        self.path: str = project_uuid + '/tagsets/' + tagset_uuid
+        self.path: str = os.path.join(project_uuid, 'tagsets', tagset_uuid)
 
         try:
-            with open(self.path + '/header.json', 'r', encoding='utf-8', newline='') as header_input:
+            with open(os.path.join(self.path, 'header.json'), 'r', encoding='utf-8', newline='') as header_input:
                 header = json.load(header_input)
         except FileNotFoundError:
             raise FileNotFoundError(
@@ -42,7 +42,7 @@ class Tagset:
             for file in filenames:
                 if file == 'propertydefs.json':             # if a file is a tag JSON file
                     # create a Tag object
-                    new_tag = Tag(dirpath + '/' + file)
+                    new_tag = Tag(os.path.join(dirpath, file))
                     # and store it in a list
                     self.tags.append(new_tag)
                     # and store it in a dict

@@ -138,7 +138,7 @@ def get_overlap_percentage(an_pair: List[Annotation]) -> float:
 
 
 def get_confusion_matrix(pair_list: List[Tuple[Annotation]], level: str = 'tag') -> pd.DataFrame:
-    """Generates confusion matrix for two 
+    """Generates confusion matrix for two annotation lists.
 
     Args:
         pair_list (List[Tuple[Annotation]]): List of overlapping annotations as tuples.
