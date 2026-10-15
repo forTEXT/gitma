@@ -14,7 +14,7 @@
 FROM python:3.13-slim
 
 LABEL maintainer="GitMA Team" \
-      version="2.2.1"
+      version="0.0.14"
 
 # The GitMA git ref to build the image from. The default is for local test builds
 # only - published images are built from a release tag, see the build command above.
