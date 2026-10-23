@@ -6,7 +6,7 @@
 #       --build-arg GITMA_VERSION=2.2.1 \
 #       --tag maltem/gitma-demo:2.2.1 --tag maltem/gitma-demo:latest --push .
 #
-# Consider adding --no-cache as per https://docs.docker.com/build/building/best-practices/#rebuild-your-images-often
+# Consider adding --pull --no-cache as per https://docs.docker.com/build/building/best-practices/#rebuild-your-images-often
 
 # Debian (glibc) on purpose. This image is built entirely from PyPI wheels, and
 # the manylinux wheels it depends on - cylp above all - are not published for
