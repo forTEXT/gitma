@@ -23,19 +23,84 @@ from gitma._metrics import get_annotation_pairs, get_iaa_data, get_confusion_mat
     get_annotation_pairs_for_multiple_annotators, get_cooccurence_matrix
 
 
+def pull_project(
+        project_path: str,
+        gitlab_access_token: str,
+        remote_name: str = 'origin',
+        branch: str = 'master') -> None:
+    """Pulls the latest changes from a project's repository using pygit2.
+
+    GitLab access token is required for this function to work.
+    Followed this example: https://github.com/MichaelBoselowitz/pygit2-examples/blob/master/examples.py#L54
+
+    Args:
+        project_path (str): The local path of the project clone.
+        gitlab_access_token (str): A valid access token for CATMA's GitLab backend.
+        remote_name (str, optional): The name of the git remote. Defaults to 'origin'.
+        branch (str, optional): The name of the remote branch to pull. Defaults to 'master'.
+
+    Raises:
+        RuntimeError: If the merge produces conflicts or an unknown merge analysis result.
+    """
+    repo = pygit2.Repository(project_path)
+    for remote in repo.remotes:
+        if remote.name == remote_name:
+            creds = UserPass("none", gitlab_access_token)
+            callbacks = pygit2.RemoteCallbacks(credentials=creds)
+            remote.fetch(callbacks=callbacks)
+            remote_master_id = repo.lookup_reference(f'refs/remotes/{remote_name}/{branch}').target
+
+            merge_result, _ = repo.merge_analysis(remote_master_id)
+            # Up to date, do nothing
+            if merge_result & pygit2.GIT_MERGE_ANALYSIS_UP_TO_DATE:
+                return
+            # We can just fastforward
+            elif merge_result & pygit2.GIT_MERGE_ANALYSIS_FASTFORWARD:
+                repo.checkout_tree(repo.get(remote_master_id))
+                try:
+                    master_ref = repo.lookup_reference('refs/heads/%s' % (branch))
+                    master_ref.set_target(remote_master_id)
+                except KeyError:
+                    repo.create_branch(branch, repo.get(remote_master_id))
+                repo.head.set_target(remote_master_id)
+            elif merge_result & pygit2.GIT_MERGE_ANALYSIS_NORMAL:
+                repo.merge(remote_master_id)
+
+                if repo.index.conflicts is not None:
+                    for conflict in repo.index.conflicts:
+                        print('Conflicts found in:', conflict[0].path)
+                    raise RuntimeError('Conflicts have been found, pull aborted. Please resolve conflicts.')
+                user = repo.default_signature
+                tree = repo.index.write_tree()
+                repo.create_commit('HEAD',
+                                   user,
+                                   user,
+                                   f'Merging {branch} into master via GitMA.',
+                                   tree,
+                                   [repo.head.target, remote_master_id])
+                # We need to do this or git CLI will think we are still merging.
+                repo.state_cleanup()
+            else:
+                raise RuntimeError('Unknown merge analysis result')
+            return
+
+
 def load_gitlab_project(
         gitlab_access_token: str,
         project_name: str,
-        backup_directory: str = './') -> str:
+        backup_directory: str = './',
+        update: bool = False) -> str:
     """Loads a CATMA project from the GitLab backend.
 
     Args:
         gitlab_access_token (str): A valid access token for CATMA's GitLab backend.
         project_name (str): The CATMA project name (or a part thereof - a search is performed in the GitLab backend using this value).
         backup_directory (str, optional): Where to clone the CATMA project. Defaults to './'.
+        update (bool, optional): Whether to pull the latest changes from the GitLab backend if the project already exists in the backup_directory. Defaults to False.
 
     Raises:
         Exception: If no CATMA project with the given name could be found.
+        RuntimeError: If pulling an existing project results in merge conflicts or an unknown merge analysis result.
 
     Returns:
         str: The GitLab project name.
@@ -51,19 +116,30 @@ def load_gitlab_project(
         raise Exception("Couldn't find the given CATMA project!")
 
     gitlab_project = gl.projects.get(id=gitlab_project_id)
-
-    # clone the project in the defined directory
-    creds = pygit2.UserPass('none', gitlab_access_token)
-    callbacks = pygit2.RemoteCallbacks(credentials=creds)
-    pygit2.clone_repository(
-        url=gitlab_project.http_url_to_repo,
-        path=os.path.join(backup_directory, gitlab_project.name),
-        bare=False,
-        callbacks=callbacks
-    )
-
-    return gitlab_project.name
-
+    project_path = os.path.join(backup_directory, gitlab_project.name)
+    if not os.path.exists(project_path):
+        # clone the project in the defined directory
+        creds = pygit2.UserPass('none', gitlab_access_token)
+        callbacks = pygit2.RemoteCallbacks(credentials=creds)
+        pygit2.clone_repository(
+            url=gitlab_project.http_url_to_repo,
+            path=project_path,
+            bare=False,
+            callbacks=callbacks
+        )
+        return gitlab_project.name
+    else:
+        if update:
+            print(f'Project "{gitlab_project.name}" already exists in directory "{backup_directory}". Pulling latest changes ...')
+            pull_project(
+                project_path=project_path,
+                gitlab_access_token=gitlab_access_token
+            )
+        else:
+            print(
+                f'Project "{gitlab_project.name}" already exists in directory "{backup_directory}".'
+                f' No pulling operation has been performed. To pull the latest changes set the parameter "update" to True.')
+        return gitlab_project.name
 
 def get_local_project_uuid(
         projects_directory: str,
@@ -422,46 +498,12 @@ class CatmaProject:
         Gitlab access token is required for this function to work. 
         Followed this example: https://github.com/MichaelBoselowitz/pygit2-examples/blob/master/examples.py#L54
         """
-        repo = pygit2.Repository(os.path.join(self.projects_directory, self.uuid))
-        for remote in repo.remotes:
-            if remote.name == remote_name:
-                creds = UserPass("none", self.gitlab_access_token)
-                callbacks = pygit2.RemoteCallbacks(credentials=creds)
-                remote.fetch(callbacks=callbacks)
-                remote_master_id = repo.lookup_reference(f'refs/remotes/{remote_name}/{branch}').target
-
-                merge_result, _ = repo.merge_analysis(remote_master_id)
-                # Up to date, do nothing
-                if merge_result & pygit2.GIT_MERGE_ANALYSIS_UP_TO_DATE:
-                    return
-                # We can just fastforward
-                elif merge_result & pygit2.GIT_MERGE_ANALYSIS_FASTFORWARD:
-                    repo.checkout_tree(repo.get(remote_master_id))
-                    try:
-                        master_ref = repo.lookup_reference('refs/heads/%s' % (branch))
-                        master_ref.set_target(remote_master_id)
-                    except KeyError:
-                        repo.create_branch(branch, repo.get(remote_master_id))
-                    repo.head.set_target(remote_master_id)
-                elif merge_result & pygit2.GIT_MERGE_ANALYSIS_NORMAL:
-                    repo.merge(remote_master_id)
-
-                    if repo.index.conflicts is not None:
-                        for conflict in repo.index.conflicts:
-                            print('Conflicts found in:', conflict[0].path)
-                        raise RuntimeError('Conflicts have been found, pull aborted. Please resolve conflicts.')
-                    user = repo.default_signature
-                    tree = repo.index.write_tree()
-                    commit = repo.create_commit('HEAD',
-                                                user,
-                                                user,
-                                                f'Merging {branch} into master via GitMA.',
-                                                tree,
-                                                [repo.head.target, remote_master_id])
-                    # We need to do this or git CLI will think we are still merging.
-                    repo.state_cleanup()
-                else:
-                    raise RuntimeError('Unknown merge analysis result')
+        pull_project(
+            project_path=os.path.join(self.projects_directory, self.uuid),
+            gitlab_access_token=self.gitlab_access_token,
+            remote_name=remote_name,
+            branch=branch
+        )
 
 
     def update(self) -> None:
